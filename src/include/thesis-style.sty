@@ -1,0 +1,396 @@
+% Based on https://github.com/kris7t/stochastic-analysis/
+
+\NeedsTeXFormat{LaTeX2e}
+
+\ProvidesPackage{thesis-style}
+
+%
+% Encoding and language
+%
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+
+\def\magyarOptions{defaults=over-1.4,dottedtocline=unchanged}
+\RequirePackage[magyar,english]{babel}
+
+\RequirePackage{csquotes}
+
+%
+% Typography
+%
+
+% Use Bistream Charter, Cabin and Inconsolata
+\RequirePackage[charter]{mathdesign}
+\RequirePackage[scaled=.98]{XCharter}
+\RequirePackage[scaled=.97,medium]{ClearSans}
+\RequirePackage[scaled=1.04,varqu,varl]{inconsolata}
+\RequirePackage[scr=boondoxo]{mathalfa}
+\let\mathcal\mathscr
+
+% Improve microtypography and add tracking to small-caps text
+\RequirePackage[final,babel,kerning,tracking,letterspace=50]{microtype}
+
+% Microtypographic settings for Hungarian text (see Hungarian babel
+% 1.5 manual, p. 5)
+\DeclareMicrotypeBabelHook{magyar,hungarian}{kerning=magyar,spacing=}
+\SetExtraKerning[context=magyar,unit=space]{encoding={T1,OT1,LY1}}{%
+  :={500,},;={500,},?={500,},!={500,}}
+
+% Sans serif chapter titles
+\renewcommand*{\chapnamefont}{\normalfont\huge\textit}
+\renewcommand*{\chapnamefont}{\normalfont\huge\clearthin\color{black!75}}
+\renewcommand*{\chapnumfont}{\chapnamefont}
+\renewcommand*{\chaptitlefont}{\normalfont\Huge\sffamily\bfseries\color{black}}
+\renewcommand*{\cftchapterfont}{\normalfont\sffamily\bfseries}
+\renewcommand*{\cftchapterpagefont}{\cftchapterfont}
+
+% Sans serif headings
+\setsecheadstyle{\Large\sffamily\bfseries}
+\setsubsecheadstyle{\large\sffamily\bfseries}
+\setsubsubsecheadstyle{\normalsize\sffamily\bfseries}
+\setparaheadstyle{\normalsize\sffamily\bfseries}
+\setsubparaheadstyle{\normalsize\sffamily\bfseries}
+
+% Captions
+\captionnamefont{\normalfont\sffamily}
+\captiondelim{\quad}
+\captiontitlefont{\normalfont}
+
+% Use a command to write upright parentheses even in italic text
+\newcommand{\paren}[1]{\textup(#1\textup)}
+
+%
+% Document divisions
+%
+
+% Number subsections
+\setsecnumdepth{subsection}
+\settocdepth{subsection}
+
+% Display current chapter and section in the header
+\newcommand*{\markstyle}[1]{\color{black!75}{\textsft{#1}}}
+\newcommand*{\leftmarkstyle}[1]{{\markstyle{\textls*[30]{\MakeUppercase{#1}}}}}
+\copypagestyle{my}{ruled}
+\makeevenhead{my}{\textsf{\thepage}}{}{\leftmarkstyle{\leftmark}}
+\makeoddhead{my}{\markstyle{\rightmark}}{}{\textsf{\thepage}}
+\makeevenfoot{my}{}{}{}
+\makeoddfoot{my}{}{}{}
+\makepsmarks{my}{%
+  \def\chaptermark##1{%
+    \markboth{##1}{}}%
+  \def\tocmark{%
+    \markboth{\contentsname}{}}
+  \def\sectionmark##1{%
+    \markright{%
+      \ifnum\c@secnumdepth > \z@
+      \thesection.~%
+      \fi
+      ##1}}}
+\pagestyle{my}
+
+% Customize chapter page numbers
+\copypagestyle{plain}{ruled}
+\makeevenhead{plain}{\textsf{\thepage}}{}{}
+\makeoddhead{plain}{}{}{\textsf{\thepage}}
+\makeevenfoot{plain}{}{}{}
+\makeoddfoot{plain}{}{}{}
+
+%
+% Tables and lists
+%
+
+\RequirePackage{array,booktabs,mdwlist,paralist,multirow}
+
+% Make tabulars looser, but do not affect matrices
+\newenvironment{tighttabular}{}{}
+\let\tighttabular\tabular\let\endtighttabular\endtabular
+\renewenvironment{tabular}{%
+  \renewcommand*{\arraystretch}{1.2}
+  \tighttabular}{\endtighttabular}
+
+%
+% Mathematics I
+%
+
+\RequirePackage{amsmath,relsize,stackengine,mleftright,mathtools,upgreek,nicefrac,bm,blkarray}
+
+\allowdisplaybreaks
+
+% Print small equation numbers
+% http://tex.stackexchange.com/a/100151/8744
+\def\tagform@#1{\maketag@@@{\small(#1)\@@italiccorr}}
+
+% We will use ntheorem, so we must load empheq with the ntheorem option.
+\RequirePackage[ntheorem]{empheq}
+
+%
+% References I
+%
+
+% Varioref and hyperref MUST be loaded before ntheorem!
+
+% Varioref prints intelligent references that refer to a page number
+% if the referred label is on a different page.
+\RequirePackage{varioref}
+
+% Use cleveref for labels far away (loaded after hyperref)
+\renewcommand*{\reftextfaraway}[1]{on~\cpageref{#1}}
+
+% Now we can load hyperref
+\RequirePackage[
+  hyperfootnotes=false,
+  breaklinks=true,
+  hypertexnames=false,
+  plainpages=false,
+  pdfpagelabels=true,
+  hidelinks
+]{hyperref}
+
+%
+% Mathematics II: Theorems
+%
+
+% ntheorem wants to create an \openbox command, but it is already defined.
+\let\openbox\relax
+
+% Load ntheorem with amsmath and hyperref compatibility.
+% Empheq was already made ntheorem-aware.
+\RequirePackage[amsmath,thmmarks,framed,hyperref]{ntheorem}
+\RequirePackage{framed}
+
+% Sans serif theorem headers
+\theoremheaderfont{\normalfont\sffamily\bfseries}
+\theorembodyfont{\normalfont}
+
+% Emulate an amsthm-style proof environment
+% ntheorem does not support this is amsmath and hyperref compatibility
+% is enabled.
+% Lifted and modified from ntheorem.sty
+\newcounter{proof}
+\newcounter{currproofctr}
+\newcounter{endproofctr}
+\newcommand*{\openbox}{\leavevmode
+  \hbox to.77778em{%
+    \hfil\vrule
+  \vbox to.675em{\hrule width.6em\vfil\hrule}%
+  \vrule\hfil}}
+\gdef\proofSymbol{\openbox}
+\providecommand{\proofname}{Proof}
+\newenvironment{proof}[1][\proofname]{%
+  \th@nonumberplain
+  \def\theorem@headerfont{\itshape}%
+  \normalfont
+  \theoremsymbol{\ensuremath{_\blacksquare}}%
+  \@thm{proof}{proof}{#1.}%
+}{\@endtheorem}
+
+% Upright parentheses in theorem titles, leave an em space after
+% theorem number
+\newtheoremstyle{my}%
+{\labelsep=1em\item[\hskip\labelsep \theorem@headerfont ##1~##2\theorem@separator]}%
+{\labelsep=1em\item[\hskip\labelsep {\theorem@headerfont ##1~##2}~\paren{##3}\theorem@separator]}
+\theoremstyle{my}
+\theoremseparator{}
+
+% Highlight theorems with a rule
+\theoreminframepreskip{0cm}
+\theoreminframepostskip{0cm}
+\theoremframepreskip{0.5\baselineskip}
+\theoremframepostskip{0.5\baselineskip}
+\def\theoremframecommand{{\color{black!15}\vrule width 4pt\hspace{7pt}}}
+
+%
+% References II
+%
+
+% Cleveref must be loaded after ntheorem
+
+
+% Cleveref adds the type of the referred entity (eg. Section~1.1) to
+% the reference. 
+\RequirePackage[capitalise,noabbrev]{cleveref}
+% Protect pages and equations from capitalization
+\crefname{page}{{p}age}{{p}ages}
+\crefname{equation}{{e}q.}{{e}qs.}
+
+% Make \labelref varioref-aware
+\DeclareRobustCommand{\labelvref}{\cref@vref{labelcref}}
+\DeclareRobustCommand{\labelfullref}{\cref@fullref{labelcref}}
+
+% Only number referred equations
+\RequirePackage{autonum}
+% Make autonum cleveref- and varioref-aware
+\autonum@generatePatchedReferenceCSL{Cref}
+\autonum@generatePatchedReferenceCSL{labelcref}
+\autonum@generatePatchedReferenceCSL{vref}
+\autonum@generatePatchedReferenceCSL{Vref}
+\autonum@generatePatchedReferenceCSL{labelvref}
+\autonum@generatePatchedReferenceCSL{fullref}
+\autonum@generatePatchedReferenceCSL{Fullref}
+\autonum@generatePatchedReferenceCSL{labelfullref}
+
+% Do not print anything if the referred label is near.
+\renewcommand*{\reftextfaceafter}{}
+\renewcommand*{\reftextfacebefore}{}
+\renewcommand*{\reftextbefore}{}
+\renewcommand*{\reftextafter}{}
+\renewcommand*{\reftextcurrent}{}
+
+% http://tex.stackexchange.com/a/44186
+\patchcmd{\cref@old@@vpageref}{\reftextfacebefore}{\unskip}{}{}
+\patchcmd{\cref@old@@vpageref}{\reftextfaceafter}{\unskip}{}{}
+\patchcmd{\cref@old@@vpageref}{\reftextbefore}{\unskip}{}{}
+\patchcmd{\cref@old@@vpageref}{\reftextbefore}{\unskip}{}{}
+\patchcmd{\cref@old@@vpageref}{\reftextafter}{\unskip}{}{}
+\patchcmd{\cref@old@@vpageref}{\reftextafter}{\unskip}{}{}
+\patchcmd{\cref@old@@vpageref}{\reftextcurrent}{\unskip}{}{}
+
+
+%
+% Mathematics III
+%
+
+% We must define theorems after cleveref.
+
+% Define theorem-like environments
+\newshadedtheorem{thm}{Theorem}[chapter]
+\newshadedtheorem{prop}[thm]{Proposition}
+\newshadedtheorem{lem}[thm]{Lemma}
+\newshadedtheorem{dfn}[thm]{Definition}
+\newshadedtheorem{obs}[thm]{Observation}
+
+\theoreminframepreskip{1pt}
+\theoreminframepostskip{1pt}
+\newshadedtheorem{example}{Example}[chapter]
+\newshadedtheorem{runningExample}[example]{Running example}
+
+%
+% Graphics
+%
+
+\RequirePackage{graphicx}
+
+\RequirePackage{tikz}
+\usetikzlibrary{arrows.meta,calc,chains,shadows,shapes.multipart,matrix,positioning}
+
+% Create a bg layer for drawings
+\pgfdeclarelayer{bg}
+\pgfsetlayers{bg,main}
+
+%
+% Algorithms
+%
+
+\RequirePackage[ruled,algochapter,vlined,linesnumbered,commentsnumbered]{algorithm2e}
+
+% Integration with cleveref
+\crefname{algocf}{Algorithm}{Algorithms}
+\Crefname{algocf}{Algorithm}{Algorithms}
+
+% Algorithm style
+\DontPrintSemicolon
+\SetAlgoCaptionSeparator{\kern1em\unskip}
+\SetCommentSty{textnormal}
+\SetFuncSty{textnormal}
+\SetArgSty{textnormal}
+\newcommand*{\textalcapsty}[1]{{\sffamily\bfseries#1}}
+\SetAlCapSty{textalcapsty}
+
+% New keywords
+\newcommand*{\KwAllocate}[1]{\KwSty{allocate} \ArgSty{#1}}
+\newcommand*{\KwMessage}[1]{\KwSty{message} \ArgSty{\enquote{#1}}}
+\newcommand*{\KwError}[1]{\KwSty{error} \ArgSty{\enquote{#1}}}
+\SetKwFor{ParFor}{parallel for}{do}{end for}
+\SetKw{KwDownto}{downto}
+
+% Floating algorithms
+\newenvironment{algorithmhere}{}{}
+\let\algorithmhere\algorithm
+\let\endalgorithmhere\endalgorithm
+\renewenvironment{algorithm}{\algorithmhere[t]}{\endalgorithmhere}
+
+%
+% Bibliography
+%
+
+% Bibliography is (Author, year) style and generated by biber
+\RequirePackage[
+  style=numeric-comp,
+  maxnames=2,
+  maxbibnames=99,
+  uniquename=init,
+  uniquelist=false,
+  backref=false,
+  doi=true,
+  isbn=true,
+  eprint=true,
+  natbib=true,
+  hyperref=true,
+  autolang=hyphen,
+  language=english,
+  backend=biber
+]{biblatex}
+
+% Remove unneccessary data from references at runtime rather than
+% editing the .bib file
+\AtEveryBibitem{
+  % Remove detailed address and date info
+  \clearlist{address}
+  \clearfield{date}
+  \clearlist{location}
+  \clearfield{month}
+
+  % Remove editor except for books
+  \ifentrytype{book}{}{
+    \ifentrytype{inbook}{}{
+      \clearname{editor}
+    }
+  }
+
+  % If there is a doi, there is no need for other identifiers
+  \iffieldundef{doi}{}{
+    \clearfield{url}
+    \clearfield{isbn}
+    \clearfield{issn}
+    \clearfield{eprint}
+  }
+
+  % If there is an eprint location, there is no need for other identifiers
+  \iffieldundef{eprint}{}{
+    \clearfield{url}
+    \clearfield{isbn}
+    \clearfield{issn}
+  }
+
+  % Uncomment this to remove all urls
+  %  \clearfield{url}}{}
+}
+
+% Bibliography is "References"
+\DefineBibliographyStrings{english}{%
+  bibliography = {References}
+}
+
+% Use upright parentheses only in the bibliography and references
+\renewcommand*{\bibopenparen}{\textup(}
+\renewcommand*{\bibcloseparen}{\textup)}
+
+% Hack for complex citations
+\DeclareCiteCommand{\nakedcite}
+  {\usebibmacro{cite:init}%
+   \usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \usebibmacro{cite:comp}}
+  {}
+  {\usebibmacro{cite:dump}%
+   \usebibmacro{postnote}}
+
+%
+% Miscellaneous
+%
+
+\RequirePackage{xspace,needspace}
+\RequirePackage{blindtext}
+
+\endinput
