@@ -9,5 +9,6 @@ addons:
     - texlive-fonts-recommended
     - texlive-xetex
     - texlive-science
+    - latexmk
 script:
   - make
