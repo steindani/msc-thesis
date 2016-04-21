@@ -1,34 +1,34 @@
 diploma.pdf
 
 ## Core latex/pdflatex auxiliary files:
-*.aux
-*.lof
-*.log
-*.lot
-*.fls
-*.out
-*.toc
+/**/*.aux
+/**/*.lof
+/**/*.log
+/**/*.lot
+/**/*.fls
+/**/*.out
+/**/*.toc
 
 ## Intermediate documents:
-*.dvi
+/**/*.dvi
 # these rules might exclude image files for figures etc.
 # *.ps
 # *.eps
 # *.pdf
 
 ## Bibliography auxiliary files (bibtex/biblatex/biber):
-*.bbl
-*.bcf
-*.blg
-*-blx.aux
-*-blx.bib
-*.run.xml
+/**/*.bbl
+/**/*.bcf
+/**/*.blg
+/**/*-blx.aux
+/**/*-blx.bib
+/**/*.run.xml
 
 ## Build tool auxiliary files:
-*.fdb_latexmk
-*.synctex.gz
-*.synctex.gz(busy)
-*.pdfsync
+/**/*.fdb_latexmk
+/**/*.synctex.gz
+/**/*.synctex.gz(busy)
+/**/*.pdfsync
 
 ## Auxiliary and intermediate files from other packages:
 

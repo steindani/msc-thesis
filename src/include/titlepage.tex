@@ -1,32 +1,38 @@
-\hypersetup{pageanchor=false}
-%--------------------------------------------------------------------------------------
-%	The title page
-%--------------------------------------------------------------------------------------
-\begin{titlepage}
-\begin{center}
-\includegraphics[width=60mm,keepaspectratio]{figures/bme_logo.pdf}\\
-\vspace{0.3cm}
-\textbf{\bme}\\
-\textmd{\vik}\\
-\textmd{\viktanszek}\\[5cm]
+\thispagestyle{empty}
 
-\vspace{0.4cm}
-{\huge \bfseries \vikcim}\\[0.8cm]
-\vspace{0.5cm}
-\textsc{\Large \vikdoktipus}\\[4cm]
+\begin{tikzpicture}[overlay,remember picture]
+  \node at (current page.center) [yshift=1cm] {%
+    \begin{minipage}{\textwidth}
 
-{
-	\renewcommand{\arraystretch}{0.85}
-	\begin{tabular}{cc}
-	 \makebox[7cm]{\emph{\keszitette}} & \makebox[7cm]{\emph{\konzulens}} \\ \noalign{\smallskip}
-	 \makebox[7cm]{\szerzo} & \makebox[7cm]{\vikkonzulensA} \\
-	  & \makebox[7cm]{\vikkonzulensB} \\
-	\end{tabular}
-}
+      \centering
 
-\vfill
-{\large \today}
-\end{center}
-\end{titlepage}
-\hypersetup{pageanchor=false}
+      \includegraphics[width=7cm]{include/figures/bme_logo}
+      \vspace{0.3cm}
 
+      \bme \\
+      \vik \\
+      \bmemit \\
+      \vspace{3.5cm}
+
+      {\Huge\sffamily\bfseries \titlepagetitle \par}
+      \vspace{1cm}
+
+      {\large \vikdoctype \par}
+      \vspace{2cm}
+
+      {\Large
+        \authors: \\ \vspace{0.3cm}
+        \authori
+
+        \vspace{1cm}
+        \advisors: \\ \vspace{0.3cm}
+        \advisori \\
+        \advisorii\par}
+
+      \vspace{1.5cm}
+      {\large \viktdkyear.\par}
+
+    \end{minipage}};
+\end{tikzpicture}
+
+\cleardoublepage

@@ -10,5 +10,4 @@ addons:
     - texlive-xetex
     - texlive-science
 script:
-  - cd src
-  - make test
+  - make

@@ -1,8 +1,7 @@
 % Based on https://github.com/kris7t/stochastic-analysis/
-
 \NeedsTeXFormat{LaTeX2e}
 
-\ProvidesPackage{thesis-style}
+\ProvidesPackage{include/thesis}
 
 %
 % Encoding and language
@@ -15,6 +14,7 @@
 \RequirePackage[magyar,english]{babel}
 
 \RequirePackage{csquotes}
+\RequirePackage{etex}
 
 %
 % Typography
@@ -22,7 +22,8 @@
 
 % Use Bistream Charter, Cabin and Inconsolata
 \RequirePackage[charter]{mathdesign}
-\RequirePackage[scaled=.98]{XCharter}
+%\RequirePackage[scaled=.98]{XCharter}
+\RequirePackage[scaled=0.9]{PTSerif}
 \RequirePackage[scaled=.97,medium]{ClearSans}
 \RequirePackage[scaled=1.04,varqu,varl]{inconsolata}
 \RequirePackage[scr=boondoxo]{mathalfa}
@@ -208,7 +209,7 @@
 
 
 % Cleveref adds the type of the referred entity (eg. Section~1.1) to
-% the reference. 
+% the reference.
 \RequirePackage[capitalise,noabbrev]{cleveref}
 % Protect pages and equations from capitalization
 \crefname{page}{{p}age}{{p}ages}
@@ -393,4 +394,22 @@
 \RequirePackage{xspace,needspace}
 \RequirePackage{blindtext}
 
+% Language-dependent typesetting
+\newcommand{\selecthungarian}{
+	\selectlanguage{magyar}
+	\setlength{\parindent}{2em}
+	\setlength{\parskip}{0em}
+	\frenchspacing
+}
+
+\newcommand{\selectenglish}{
+	\selectlanguage{english}
+	\setlength{\parindent}{0em}
+	\setlength{\parskip}{0.5em}
+	\nonfrenchspacing
+}
+
 \endinput
+
+% For roman numbering at the end of the main matter
+\RequirePackage{refcount}
