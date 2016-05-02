@@ -161,7 +161,14 @@ TAJS initially (in 2009) tried to warn programmers for the following problematic
  \item \url{http://www.srl.inf.ethz.ch/workshop2014/eth-moeller.pdf}
 \end{itemize}
 
-
+\subsubsection{Tern}
+\begin{itemize}
+ \item \url{http://marijnhaverbeke.nl/blog/tern.html}
+ \item \url{http://ternjs.net/doc/manual.html#infer}
+ \item \url{http://ternjs.net/doc/manual.html#typedef}
+ \item \url{https://github.com/angelozerr/tern.java}
+ \item \url{https://github.com/ternjs/tern/blob/master/lib/infer.js}
+\end{itemize}
 
 \subsubsection{JSNice -- Programming Tools with Big Data and Conditional Random Fields (ETHZ)}
 \begin{itemize}
@@ -177,15 +184,6 @@ TAJS initially (in 2009) tried to warn programmers for the following problematic
 \item \url{https://wiki.mozilla.org/TypeInference}
 \item \url{https://github.com/dimvar/doctorjs}
 \item \url{https://github.com/mozilla/doctorjs}
-\end{itemize}
-
-\subsubsection{Tern}
-\begin{itemize}
- \item \url{http://marijnhaverbeke.nl/blog/tern.html}
- \item \url{http://ternjs.net/doc/manual.html#infer}
- \item \url{http://ternjs.net/doc/manual.html#typedef}
- \item \url{https://github.com/angelozerr/tern.java}
- \item \url{https://github.com/ternjs/tern/blob/master/lib/infer.js}
 \end{itemize}
 
 \subsubsection{JS0 -- PhD (2006) @ University of London}
@@ -205,11 +203,71 @@ TAJS initially (in 2009) tried to warn programmers for the following problematic
 
 
 \section{Graph Databases}
+
+
 \subsection{Adequate Database Solutions}
-- Neo4j
-- Titan
-- Dragon (?)
-- Cayley...
+Since my thesis work is based on graph-based data handling, it is essential to use a technique that is suitable. In this case suitable is better described as being fast, flexible, versatile, easy to use and deploy. In this section I go over some of the most promising candidates and justify why I've chosen Neo4j as the foundation of my approach.
+
+\subsubsection{Neo4j}
+Neo4j is one of the most popular and most mature NoSQL graph databases developed by \emph{Neo Technology}. It's open-source, well-documented and steadily-developed. It's available in two editions: a free \emph{Community Edition} and a paid \emph{Enterprise Edition}.~\cite{neo4j}
+
+\paragraph{Architecture}
+Since Neo4j was written in Java (and Scala), it can be used to start a new project quick and easy. In respect of connection, it can be deployed two ways: in \emph{server mode} the database is started separately and listens for queries on its HTTP REST and Bolt interface; where in \emph{embedded mode} it runs in the same JVM as the only client application.
+
+\paragraph{Data Model}
+The graph model in Neo4j, \code{Neo4jGraph} is an implementation of the \emph{TinkerPop} graph computing framework's \emph{Blueprints} property graph data model. More precisely it is a labeled property graph, since the relations are labeled and the nodes can also hold multiple labels; the nodes and relations can both hold properties.
+
+Unfortunately the relations are only binary, ternary (and n-ary $n>2$) relations can only be stored with an introduced indirection, a connection node connecting every node in the relation.
+
+\paragraph{Sharding}
+Although the \emph{Enterprise Edition} of Neo4j has a high availability solution and supports clustered replication and cache sharding, it does not support sharded data storage over a cluster of devices. This results in the advantage of low latency (clustering provides scale out capabilities for read), the ability to handle transactions and having ACID as the consistency model.~\cite{neo4j-product}
+
+\paragraph{Query Language}
+Neo4j provides two methods for data query out-of-the-box: an object-oriented native Java API for graph navigation and Cypher, a graph pattern description and query language with declarative and imperative traits. Additional interfaces may be loaded as a plugin, like the imperative Gremlin query interface~\cite{neo4j-gremlin-plugin}.
+
+One of Cypher's best features is the readibility of its syntax. It provides an intuitive way to describe patterns of nodes and relations in the graph and also connections between subpatterns using bound identifiers for nodes and relations. Cypher also manages the indexes and constraints of the graph database. Negative application conditions (NAC) can be also expressed, describing the cases where the query should not return a match.
+
+Other interesting and useful features of Cypher includes:
+\begin{itemize}
+  \item Repetition bound (or unbound) transitive closure over an edge. The label of the edge can be also set to one label or a set of labels. Given sequence of labeled edges (with or without bound labels of nodes) can not be set on its own, but temporary edges can be utilized to emulate this behavior.
+  \item Stored procedures are a very welcome new feature of the latest (as of May, 2016) Cypher and Neo4j version (v3.0). Procedures written in Java can be stored in the server as a plugin and called from the queries abolishing the need for manual logic-based calls in case it was not possible to formalize a query for it (ranging from duplicating a node (with parameters and labels) to infering the metamodel (from the nodes and relations already in the database)).
+  \item Parametrized queries may be utilized for faster evaluation.
+  \item List predicates evaluating predicates for all/any/none or single one nodes of the path.
+  \item Iterating and unwinding a collection in the query
+  \item Finding the shortest path
+  \item Mathematical functions
+  \item Query profiling
+\end{itemize}
+
+\textquote[\cite{neo4j-developer}]{Since October 2015 the openCypher project aims to provide an open grammar, language specification, technical compatibility kit and reference implementation of parser, planner and runtime for Cypher.}
+
+\paragraph{Other Advantages and Disadvantages}
+\begin{itemize}
+  \item[+] When Neo4j is deployed in server mode, besides the REST and Bolt interfaces, a web GUI is also available, where a read-evaluate-print loop (REPL) interface helps the user with interactive querying. The results are either shown in a table or an also interactive graph display, where the user can automatically add necessary nodes and relations from the database (without explicitly executing another query). It also supplies the user with information about the contents of the database, labels, indexes.
+  \item[+] Graph Gists are interactive teaching tools allowing the visitor of the site to learn about various domains modeled in Neo4j and learn from the example queries.
+\end{itemize}
+
+\subsubsection{Titan}
+\paragraph{Architecture}
+\paragraph{Data Model}
+\paragraph{Sharding}
+\paragraph{Query Language}
+
+
+\subsubsection{Dragon (?)}
+\paragraph{Architecture}
+\paragraph{Data Model}
+\paragraph{Sharding}
+\paragraph{Query Language}
+
+
+\subsubsection{Cayley...}
+\paragraph{Architecture}
+\paragraph{Data Model}
+\paragraph{Sharding}
+\paragraph{Query Language}
+
+
 
 \subsection{Query Languages and Evaluation Strategies}
 There are numerous strategies to define and execute a query. Queries can be expressed in imperative programming languages over a data access interface such as the Eclipse Modeling Framework (EMF, see \ref{emf}), or with declarative languages, processed by a query framework, such as OCL~\cite{OCL} or EMF-IncQuery~\cite{IncQuery}.
