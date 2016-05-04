@@ -248,10 +248,33 @@ Other interesting and useful features of Cypher includes:
 \end{itemize}
 
 \subsubsection{Titan}
+\textquote[\cite{titan}]{Titan is a scalable graph database optimized for storing and querying graphs containing hundreds of billions of vertices and edges distributed across a multi-machine cluster. Titan is a transactional database that can support thousands of concurrent users executing complex graph traversals in real time.}
+
+Titan was developed by \emph{Aurelius} until the company was aquired by \emph{DataStax} in 2015. DataStax has expressed its intentions to preserve the effort made by front-end users dependent on Titan and ensures the current users that the foreseeable merging procedure to DataStax Enterprise solutions will be as simple as possible~\cite{titan-datastax-acquirement}.
+
 \paragraph{Architecture}
+\textquote[\cite{titan-arch,titan-benefits}]{Titan is designed to support the processing of graphs so large that they require storage and computational capacities beyond what a single machine can provide. Titan implements robust, modular interfaces for data persistence, data indexing, and client access. Titan’s modular architecture allows it to interoperate with a wide range of storage, index, and client technologies; it also eases the process of extending Titan to support new ones.}
+
+Titan is based on one or more disk-based storage and indexing adapters. Titan comes out-of-the-box with 3 data storage adapters: \emph{Cassandra}, \emph{HBase}, and \emph{BerkeleyDB}; and also 2 indexing adapters: \emph{Elasticsearch} and \emph{Lucene}. These indexing adapters speed up and enable more complex queries.
+
+Like Neo4j, applications based on Titan can also interact with it in two ways~\cite{titan-arch}:
+\begin{itemize}
+  \item Embedding Titan in the application allows direct querying against the graph within the same JVM. In this case query execution, caching, transaction handling all happens in the same JVM. The data retrieval from the storage adapters can be either local or remote.
+  \item With a local or remote Titan instance one can interact by submitting Gremlin queries to the server.
+\end{itemize}
+
+
 \paragraph{Data Model}
+Titan natively supports the property graph data model exposed by \emph{TinkerPop}.
+
 \paragraph{Sharding}
+Since Titan can be used with Cassandra as the data storage adapter, the architecture inherits every one of Cassandra's advantages. It is possible to set up a highly available Titan cluster with no single points of failure. This configuration also utilizes the Cassandra's partitioner (a hash-based, sophisticated partitioning system).
+
+Using multiple storage backend servers eliminates read (and sometimes write) bottlenecks as these servers can serve data for the same query in a coordinated manner utilizing that the architecture lacks the master/slave layout. A caching layer ensures the availability of the most used data parts from the memory cache speeding up the queries even more. Elastic scalability allows the introduction and removal of machines to the live cluster.
+
+
 \paragraph{Query Language}
+Titan natively supports the imperative graph traversal language Gremlin (by \emph{TinkerPop}).
 
 
 \subsubsection{Dragon (?)}
