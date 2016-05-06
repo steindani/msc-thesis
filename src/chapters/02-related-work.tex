@@ -1,3 +1,4 @@
+% !TEX root = ../main.tex
 \chapter{Background and Related Work}
 \label{chap:background-and-related-work}
 
@@ -228,7 +229,7 @@ Neo4j provides two methods for data query out-of-the-box: an object-oriented nat
 One of Cypher's best features is the readibility of its syntax. It provides an intuitive way to describe patterns of nodes and relations in the graph and also connections between subpatterns using bound identifiers for nodes and relations. Cypher also manages the indexes and constraints of the graph database. Negative application conditions (NAC) can be also expressed, describing the cases where the query should not return a match.
 
 Other interesting and useful features of Cypher includes:
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
   \item Repetition bound (or unbound) transitive closure over an edge. The label of the edge can be also set to one label or a set of labels. Given sequence of labeled edges (with or without bound labels of nodes) can not be set on its own, but temporary edges can be utilized to emulate this behavior.
   \item Stored procedures are a very welcome new feature of the latest (as of May, 2016) Cypher and Neo4j version (v3.0). Procedures written in Java can be stored in the server as a plugin and called from the queries abolishing the need for manual logic-based calls in case it was not possible to formalize a query for it (ranging from duplicating a node (with parameters and labels) to infering the metamodel (from the nodes and relations already in the database)).
   \item Parametrized queries may be utilized for faster evaluation.
@@ -242,7 +243,7 @@ Other interesting and useful features of Cypher includes:
 \textquote[\cite{neo4j-developer}]{Since October 2015 the openCypher project aims to provide an open grammar, language specification, technical compatibility kit and reference implementation of parser, planner and runtime for Cypher.}
 
 \paragraph{Other Advantages and Disadvantages}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
   \item[+] When Neo4j is deployed in server mode, besides the REST and Bolt interfaces, a web GUI is also available, where a read-evaluate-print loop (REPL) interface helps the user with interactive querying. The results are either shown in a table or an also interactive graph display, where the user can automatically add necessary nodes and relations from the database (without explicitly executing another query). It also supplies the user with information about the contents of the database, labels, indexes.
   \item[+] Graph Gists are interactive teaching tools allowing the visitor of the site to learn about various domains modeled in Neo4j and learn from the example queries.
 \end{itemize}
@@ -258,7 +259,7 @@ Titan was developed by \emph{Aurelius} until the company was aquired by \emph{Da
 Titan is based on one or more disk-based storage and indexing adapters. Titan comes out-of-the-box with 3 data storage adapters: \emph{Cassandra}, \emph{HBase}, and \emph{BerkeleyDB}; and also 2 indexing adapters: \emph{Elasticsearch} and \emph{Lucene}. These indexing adapters speed up and enable more complex queries.
 
 Like Neo4j, applications based on Titan can also interact with it in two ways~\cite{titan-arch}:
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
   \item Embedding Titan in the application allows direct querying against the graph within the same JVM. In this case query execution, caching, transaction handling all happens in the same JVM. The data retrieval from the storage adapters can be either local or remote.
   \item With a local or remote Titan instance one can interact by submitting Gremlin queries to the server.
 \end{itemize}
@@ -331,4 +332,35 @@ fulfill a pattern, or list all matches of the model.
 \label{sect:sparql}
 SPARQL (recursive acronym for SPARQL Protocol and RDF Query Language) is an RDF query language. (RDF is discussed in detain in~\ref{RDF}.) SPARQL can be used to express queries across diverse data sources, whether the data is stored natively as RDF or viewed as RDF via middleware. SPARQL contains capabilities for querying required and optional graph patterns along with their conjunctions and disjunctions. SPARQL also supports aggregation, subqueries, negation, creating values by expressions, extensible value testing, and constraining queries by source RDF graph. The results of SPARQL queries can be result sets or RDF graphs.~\cite{W3C-SPARQL,Harris:13:SQL}
 
-For an example SPARQL query, see \ref{sparql-query}.
+For an example SPARQL query, see~\ref{sparql-query}.
+
+\section{Visual Studio Code}
+Visual Studio Code~\cite{vscode} is Microsoft's take on a lightweight, yet powerful Integrated Developer Environment (IDE) for modern programming languages. It is available for free for Windows, OS X and Linux. It comes with built-in support for JavaScript, TypeScript and has a growing ecosystem of extensions for other languages, theming, and developer support~\cite{vscode-extensions}.
+
+Debugging is also made easy, as the editor can be attached to the running code and the developer can add break points, look at call stacks and evaluate statements with an interactive console. With the relatively small package, Git support comes built-in: reviewing changed lines, staging files, making commits can be made right in the IDE.
+
+\subsection{IntelliSense}
+Visual Studio Code's syntax highlighting and autocomplete system is called IntelliSense, that also provides better completition based on variable types, function definitions, and imported modules. IntelliSense provides syntactical features like \emph{format on type}, \emph{outlining}; and also language service features like \emph{peek}, \emph{go to definition}, \emph{find all references} and \emph{rename symbol}.
+
+To make these smarter functions possible, JavaScript service relies upon the TypeScript language service to handle JavaScript source code. It uses the same type inference system as TypeScript to determine the type of a value. (It recognises the \emph{''ES3-style''} class declaration.) Explicit JSDoc annotations can also be used, in case the type inference does not provide the desired type information. For major libraries it is also possible to download an import a type definition file.
+
+\subsection{Extensions}
+Visual Studio Code is built with extensions in mind. Extensions make it possible to add new languages, themes, debuggers, and to connect to additional services. The framework runs them in a separate process, ensuring they won't slow the editor down.
+
+Every extension has the same model describe its contribution (how it is registered in the framework), activation (when it is loaded) and the same way to access the VS Code extension API. There are two special type of extensions: language servers and debuggers, which have their own additional protocols.
+
+\paragraph{Extensions} Extensions are the building blocks of VS Code. When activated, every extension runs in a shared host process, separate from the IDE. This ensures that the IDE itself can remain responsive even if an extension is resource-heavy or not well-written.
+
+An extension is a package of source code, resources, and configuration files. They have support for:
+\begin{itemize}[topsep=0pt]
+  \item Activation -- it is possible to specify when an extension is loaded: when a specific file type exists in the workspace or is opened; or when a command (described in the configuration) is executed via the \emph{Command Palette} or the key combination.
+  \item Editor -- the extension can read and manipulate the editor's content.
+  \item Workspace -- the extension can access working files, modify the content of the status bar and show information messages (and more).
+  \item Eventing -- it is also possible to subscribe and react to the life-cycle events of the editor such as: open, close, change events of the editor (and more).
+  \item Evolved editing -- rich language support can be provided, including IntelliSense services, peek, hover and diagnostic (info, warning and error messages).
+\end{itemize}
+
+\paragraph{Language Servers} For high cost IO or CPU intensive tasks.
+Language server framework and sample implementation helps developers create a dedicated process for resource-heavy language server applications. It is the better design choice if the extension may slow down other extensions while working. Its possibilities are limited, as custom communication between the client extension and the language server needs modification in the underlying communication protocol handler.
+
+\paragraph{Debuggers} Connecting an external debugger written for any language to VS Code is also possible through the VS Code Debug protocol.
