@@ -9,7 +9,7 @@ In this chapter I introduce the conceptual foundations and used technologies of 
 \subsection{The Future of JavaScript}
 
 \section{Modeling}
-Modeling is a versatile concept, the word itself may refer to various topics. In the context of this thesis, by models I primarily mean data models. A data model ---or sometimes called domain model--- organizes the data elements, how they relate to each other and what actions one can perform on them.
+Modeling is a versatile concept, the word itself may refer to various topics. In the context of this thesis, by models I primarily mean data models. A data model---or sometimes called domain model---organizes the data elements, how they relate to each other and what actions one can perform on them.
 
 \subsection{Metamodels and Instance Models}
 Metamodeling is a methodology for the definition of modeling languages. A metamodel specifies the abstract syntax (structure) of a modeling language.~\cite{scm}
@@ -71,6 +71,148 @@ To reduce the number of false positive warnings, one usually introduces more pre
 %  > Static analysis is not perfect. It can falsely flag bugs in a program where the code behaves correctly. Because some code checks require more analysis precision than others, the frequency of false positives can vary widely between different checks. Our long-term goal is to have the analyzer have a low false positive rate for most code on all checks.
 %
 %  % http://clang-analyzer.llvm.org/
+
+\subsection{Source Code Processing and Analysis}
+Source code contains a much wider variety of data than the compiler needs in order to run the application: comments, function declaration order, indentation, line breaks all help the developer or reader of the code. What part of the data is considered useful information and what is surplus depends on the rules along the compiler processes them.
+
+Every programming language has a grammar. A set of rules both describing what a valid input for the compiler is (syntax---how the instructions shall be processed), and what a sequence of instructions mean (semantics). \Cref{fig:processing-the-source-code} shows the general process for processing source codes, how it is transformed from a stream of characters into a data structure with ''meaning''.
+
+\begin{figure}[!ht]
+	\centering
+	\adjustbox{max width=\textwidth} {
+		\begin{tikzpicture}[
+			node distance = 2cm,
+			auto,
+			]
+
+    \node[stdstage] (SC) {Source Code};
+    \node[stdstage, below=of SC] (TO) {Tokens};
+    \node[stdstage, below=of TO] (AST) {Abstract Syntax Tree};
+    \node[stdstage, below=of AST] (ASG) {Abstract Semantic Graph};
+
+    \path (SC) edge[textedge] node {\emph{tokenization}\\ breaking the stream of source code characters into tokens (words, symbols)} (TO);
+    \path (TO) edge[textedge] node {\emph{parsing}\\ ordering the tokens into a data structure based on grammar rules} (AST);
+    \path (AST) edge[textedge] node {\emph{scope analysis}\\ resolving the references in the AST and extends it with derived information into an ASG} (ASG);
+		\end{tikzpicture}
+	}
+	\caption{Processing the source code}
+	\label{fig:processing-the-source-code}
+\end{figure}
+
+\subsubsection{Tokenization}
+> A lexer forms the first phase of a compiler frontend in modern processing,[a] and is generally done in a single pass. Lexing itself can be divided into two stages: the scanning, which segments the input sequence into groups and categorizes these into token classes; and the evaluating, which converts the raw input characters into a processed value.
+> In computer science, lexical analysis is the process of converting a sequence of characters (such as in a computer program or web page) into a sequence of tokens (strings with an identified "meaning"). A program that performs lexical analysis may be called a lexer, tokenizer,[1] or scanner (though "scanner" is also used to refer to the first stage of a lexer). Such a lexer is generally combined with a parser, which together analyze the syntax of programming languages, web pages, and so forth.
+
+% https://en.wikipedia.org/wiki/Lexical_analysis
+
+\begin{figure}[!htb]
+\centering
+\code{The quick brown fox jumps over the lazy dog}\\[1em]
+
+\begin{minipage}{3cm}
+\begin{verbatim}
+(Sentence
+  (Word The)
+  (Word quick)
+  (Word fox)
+  (Word jumps)
+  (Word over)
+  (Word the)
+  (Word lazy)
+  (Word dog)
+)
+\end{verbatim}
+\end{minipage}
+  \caption{A sentence and its s-expression representation}
+  \label{fig:sentence-s-expression}
+\end{figure}
+\FloatBarrier
+
+\begin{figure}[!htb]
+  \centering
+  \code{foo = 1 / 0}\\[1em]
+
+  \begin{tabular}{c|l}
+    Token & Token type\\
+    \hline
+    \code{foo} & \code{IDENTIFIER (Ident)}\\
+    \code{=} & \code{ASSIGN (Punctuator)}\\
+    \code{1} & \code{NUMBER (NumericLiteral)}\\
+    \code{/} & \code{DIV (Punctuator)}\\
+    \code{0} & \code{NUMBER (NumericLiteral)}\\
+    \hline
+  \end{tabular}
+
+  \caption{Character stream and tokenization result with token type information}
+  \label{table:tokenization}
+\end{figure}
+
+
+\subsubsection{Parsing}
+\paragraph{Abstract Syntax Tree}
+
+\subsubsection{Scope Analysis}
+\paragraph{Abstract Semantic Graph}
+
+
+\subsection{JavaScript Parsers}
+In this section I showcase the most used, \emph{trendy} JavaScript parser technologies and justify why I've chosen the Shapesecurity Shift family as the parser and additional toolset for my approach.
+
+\subsubsection{Shift}
+\begin{itemize}
+	\item \url{http://shift-ast.org/}
+	\item \url{https://github.com/shapesecurity/shift-java}
+	\item \url{http://engineering.shapesecurity.com/2014/12/announcing-shift-javascript-ast.html}
+	\item \url{http://engineering.shapesecurity.com/2015/01/a-technical-comparison-of-shift-and.html}
+	\item \url{http://engineering.shapesecurity.com/2015/02/using-the-shift-reducer.html}
+	\item \url{http://engineering.shapesecurity.com/2015/04/two-phase-parsing.html}
+\end{itemize}
+
+\paragraph{Bandolier}
+\begin{itemize}
+	\item \url{http://engineering.shapesecurity.com/2016/03/announce-bandolier.html}
+	\item \url{https://github.com/shapesecurity/bandolier}
+\end{itemize}
+
+\subsubsection{Acorn}
+\begin{itemize}
+	\item \url{https://github.com/ternjs/acorn}
+\end{itemize}
+
+\subsubsection{ChakraCore}
+\begin{itemize}
+	\item \url{https://github.com/Microsoft/ChakraCore}
+\end{itemize}
+
+\subsubsection{Traceur}
+\begin{itemize}
+	\item \url{https://github.com/google/traceur-compiler}
+\end{itemize}
+
+\subsubsection{Comparison of Parser Technologies}
+\paragraph{Speed} Although speed is not the most important property of a system whose aim is to make sure no errors are present, it is wanted for a nearly real-time response system. \Cref{table:speed-comparison-of-parsers} shows the time difference parsers process different source codes. The benchmark~\footnote{\url{http://esprima.org/test/compare.html}} was run on a personal computer not set up for proper benchmarking. It's sole purpose is to get a rough comparison between the different technologies available.
+
+It is visible that Shift (with early error checking disabled (NEE -- No Early Errors)) is one of the fastest parsers available.
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{@{}lllllll@{}}
+\toprule
+\textbf{Source}                                               & \textbf{\begin{tabular}[c]{@{}l@{}}Esprima\\ 2.7.2\end{tabular}} & \textbf{UglifyJS2}                                      & \textbf{Traceur}                                        & \textbf{\begin{tabular}[c]{@{}l@{}}Acorn\\ 2.4.0\end{tabular}} & \textbf{Shift}                                          & \textbf{\begin{tabular}[c]{@{}l@{}}Shift\\ (NEE)\end{tabular}} \\ \midrule
+\begin{tabular}[c]{@{}l@{}}jQuery.Mobile\\ 1.4.2\end{tabular} & \begin{tabular}[c]{@{}l@{}}154.0\\ ±22.3\%\end{tabular}          & \begin{tabular}[c]{@{}l@{}}244.6\\ ±8.4\%\end{tabular}  & \begin{tabular}[c]{@{}l@{}}304.6\\ ±15.1\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}215.3\\ ±16.9\%\end{tabular}        & \begin{tabular}[c]{@{}l@{}}480.7\\ ±13.1\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}119.9\\ ±11.9\%\end{tabular}                    \\
+\begin{tabular}[c]{@{}l@{}}Angular\\ 1.2.5\end{tabular}       & \begin{tabular}[c]{@{}l@{}}125.5\\ ±16.3\%\end{tabular}          & \begin{tabular}[c]{@{}l@{}}212.2\\ ±11.2\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}254.1\\ ±20.7\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}146.3\\ ±18.6\%\end{tabular}        & \begin{tabular}[c]{@{}l@{}}452.7\\ ±12.5\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}94.6\\ ±18.2\%\end{tabular}                     \\
+\begin{tabular}[c]{@{}l@{}}React\\ 0.13.3\end{tabular}        & \begin{tabular}[c]{@{}l@{}}134.7\\ ±10.8\%\end{tabular}          & \begin{tabular}[c]{@{}l@{}}221.6\\ ±8.9\%\end{tabular}  & \begin{tabular}[c]{@{}l@{}}258.5\\ ±13.4\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}176.9\\ ±15.6\%\end{tabular}        & \begin{tabular}[c]{@{}l@{}}496.4\\ ±11.6\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}116.1\\ ±14.2\%\end{tabular}                    \\ \midrule
+
+\textbf{Total}                                                & \textbf{414.3 ms}                                                & \textbf{678.4 ms}                                       & \textbf{817.2 ms}                                       & \textbf{538.5 ms}                                              & \textbf{1429.8 ms}                                      & \textbf{330.6 ms}                                                          \\ \bottomrule
+\end{tabular}
+
+\caption{Speed comparison of JavaScript parsers}
+\label{table:speed-comparison-of-parsers}
+\end{table}
+
+\paragraph{Metamodel and Precision}
+\paragraph{Development Activity}
+\paragraph{Platforms Supported}
 
 \subsection{Typed JavaScript Derivations}
 
@@ -291,7 +433,7 @@ Titan natively supports the imperative graph traversal language Gremlin (by \emp
 \paragraph{Sharding}
 \paragraph{Query Language}
 
-
+\subsection{Viable Alternative: EMF Modeling and VIATRA Query}
 
 \subsection{Query Languages and Evaluation Strategies}
 There are numerous strategies to define and execute a query. Queries can be expressed in imperative programming languages over a data access interface such as the Eclipse Modeling Framework (EMF, see \ref{emf}), or with declarative languages, processed by a query framework, such as OCL~\cite{OCL} or EMF-IncQuery~\cite{IncQuery}.

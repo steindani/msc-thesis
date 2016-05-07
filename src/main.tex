@@ -7,7 +7,26 @@
 \usepackage{marginnote}
 \usepackage{epigraph}
 \usepackage[shortlabels]{enumitem}
+\usepackage{placeins}
+\usepackage{adjustbox}
+\usepackage{booktabs}
 \newcommand{\code}[1]{{\upshape\ttfamily\small\indent #1}}
+
+\usetikzlibrary{automata,arrows,positioning,trees}
+\tikzset{
+	>=stealth',
+	stdstage/.style={
+		rectangle,
+		rounded corners,
+		draw=black,
+		minimum height=2.5em,
+		text centered},
+	textedge/.style={
+		->,>=stealth',shorten >=1pt,
+		text width = 7.5cm,
+    inner sep = 0.5cm,
+		align=left,}
+}
 
 \bibliography{bibliography}
 
