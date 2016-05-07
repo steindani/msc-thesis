@@ -73,9 +73,10 @@ To reduce the number of false positive warnings, one usually introduces more pre
 %  % http://clang-analyzer.llvm.org/
 
 \subsection{Source Code Processing and Analysis}
+\label{sect:source-code-processing}
 Source code contains a much wider variety of data than the compiler needs in order to run the application: comments, function declaration order, indentation, line breaks all help the developer or reader of the code. What part of the data is considered useful information and what is surplus depends on the rules along the compiler processes them.
 
-Every programming language has a grammar. A set of rules both describing what a valid input for the compiler is (syntax---how the instructions shall be processed), and what a sequence of instructions mean (semantics). \Cref{fig:processing-the-source-code} shows the general process for processing source codes, how it is transformed from a stream of characters into a data structure with ''meaning''.
+Every programming language has a grammar. A set of rules both describing what a valid input for the compiler is (syntax---how the instructions shall be processed), and what a sequence of instructions mean (semantics). \Cref{fig:processing-the-source-code} shows the general process for processing source codes, how it is transformed from a stream of characters into a data structure with ``meaning''.
 
 \begin{figure}[!ht]
 	\centering
@@ -92,18 +93,40 @@ Every programming language has a grammar. A set of rules both describing what a 
 
     \path (SC) edge[textedge] node {\emph{tokenization}\\ breaking the stream of source code characters into tokens (words, symbols)} (TO);
     \path (TO) edge[textedge] node {\emph{parsing}\\ ordering the tokens into a data structure based on grammar rules} (AST);
-    \path (AST) edge[textedge] node {\emph{scope analysis}\\ resolving the references in the AST and extends it with derived information into an ASG} (ASG);
+    \path (AST) edge[textedge] node {\emph{scope analysis}\\ resolving the references in the AST and extending it with derived information into an ASG} (ASG);
 		\end{tikzpicture}
 	}
 	\caption{Processing the source code}
 	\label{fig:processing-the-source-code}
 \end{figure}
 
-\subsubsection{Tokenization}
-> A lexer forms the first phase of a compiler frontend in modern processing,[a] and is generally done in a single pass. Lexing itself can be divided into two stages: the scanning, which segments the input sequence into groups and categorizes these into token classes; and the evaluating, which converts the raw input characters into a processed value.
-> In computer science, lexical analysis is the process of converting a sequence of characters (such as in a computer program or web page) into a sequence of tokens (strings with an identified "meaning"). A program that performs lexical analysis may be called a lexer, tokenizer,[1] or scanner (though "scanner" is also used to refer to the first stage of a lexer). Such a lexer is generally combined with a parser, which together analyze the syntax of programming languages, web pages, and so forth.
+\subsubsection{Tokenizer}
+A \emph{lexer}, \emph{tokenizer}, or \emph{scanner} forms the first phase of a parsing process. It scans the input character stream and segments them into sequence of groups, tokens, \emph{strings with a ``meaning''}. It also categorizes these groups into various token classes, token types. Processing the raw input into a value (converting \code{"2"} into \code{2}) can also happen in this phase. \Cref{fig:tokenization} shows how an expression string can be tokenized.
 
-% https://en.wikipedia.org/wiki/Lexical_analysis
+\begin{figure}[!htb]
+  \centering
+  \code{foo = 1 / 0}\\[1em]
+
+  \begin{tabular}{c|l}
+    Token & Token type\\
+    \hline
+    \code{foo} & \code{IDENTIFIER (Ident)}\\
+    \code{=} & \code{ASSIGN (Punctuator)}\\
+    \code{1} & \code{NUMBER (NumericLiteral)}\\
+    \code{/} & \code{DIV (Punctuator)}\\
+    \code{0} & \code{NUMBER (NumericLiteral)}\\
+    \hline
+  \end{tabular}
+
+  \caption{Character stream and tokenization result with token type information}
+  \label{fig:tokenization}
+\end{figure}
+
+
+\subsubsection{Parser}
+A \emph{parser} forms the second phase of a parsing process, using the output token stream of the \emph{lexer}. It takes the input data and builds a hierarchical data structure (a \emph{parse tree} or an \emph{abstract syntax tree}) representing the input. If the input does not comply with the syntax rules, thus an tree can not be built, the source code is syntactically incorrect.
+
+\Cref{fig:sentence-s-expression} shows a sentence and its s-expression representation. S-expressions (for ``symbolic expression'') are a notation for tree-structured nested list, mainly used in Lisp.
 
 \begin{figure}[!htb]
 \centering
@@ -126,33 +149,23 @@ Every programming language has a grammar. A set of rules both describing what a 
   \caption{A sentence and its s-expression representation}
   \label{fig:sentence-s-expression}
 \end{figure}
-\FloatBarrier
 
-\begin{figure}[!htb]
-  \centering
-  \code{foo = 1 / 0}\\[1em]
-
-  \begin{tabular}{c|l}
-    Token & Token type\\
-    \hline
-    \code{foo} & \code{IDENTIFIER (Ident)}\\
-    \code{=} & \code{ASSIGN (Punctuator)}\\
-    \code{1} & \code{NUMBER (NumericLiteral)}\\
-    \code{/} & \code{DIV (Punctuator)}\\
-    \code{0} & \code{NUMBER (NumericLiteral)}\\
-    \hline
-  \end{tabular}
-
-  \caption{Character stream and tokenization result with token type information}
-  \label{table:tokenization}
-\end{figure}
-
-
-\subsubsection{Parsing}
 \paragraph{Abstract Syntax Tree}
+An \emph{Abstract Syntax Tree} (AST) is a tree representation of the syntactic structure of the result of a parsing along a grammar. The nodes of the tree denote a construct occuring in the input, while the edges represent the connection between these nodes based on the grammar rules.
 
-\subsubsection{Scope Analysis}
+As mentioned in~\cref{sect:source-code-processing}, source code contains much more detail (e.g., indentation, whitespace, comments) than is needed and restrained during the parsing process. Thus this representation is an \emph{abstract} syntax tree. It may be transformed based on transformation rules and source code can be generated from ASTs, however without the layout information it may look different than the initial source code.
+
+
+\subsubsection{Scope Analyzer}
+A \emph{scope analyzer} or \emph{context analyzer} produces a data structure that represents the scoping information of a program, probably extending the information available from an AST or an ASG. An element representing a scope in this data structure may contain, inter alia, metadata about the scope itself, the AST node related to the scope, available assets (variables, functions, etc.) in that scope.~\cite{shift-scope}
+
 \paragraph{Abstract Semantic Graph}
+As its name implies, an \emph{Abstract Semantic Graph} (ASG) differs from an AST in more than one way. (1) It is a graph and (2) it not only contains syntactic information. Roughly it is an AST with additional edges indicating semantic information. These edges can not exist in an AST, as they are non-tree edges, cross-edges. For example they may connect variable references to their declarations.~\cite{raghavan_dex:_2004}
+
+ASGs are a graph representation of a parse result, where its nodes are expression's subterms. These subterms may be shared, more than one node may connect to the same, common subterm. Compilers usually work on ASGs internally, since  not only the syntactical, but the behavioral information is also represented.
+
+% An abstract semantic graph is typically constructed from an abstract syntax tree by a process of enrichment and abstraction. The enrichment can for example be the addition of back-pointers, edges from an identifier node (where a variable is being used) to a node representing the declaration of that variable. The abstraction can entail the removal of details which are relevant only in parsing, not for semantics.
+% https://en.wikipedia.org/wiki/Abstract_semantic_graph
 
 
 \subsection{JavaScript Parsers}
@@ -491,7 +504,7 @@ Visual Studio Code is built with extensions in mind. Extensions make it possible
 
 Every extension has the same model describe its contribution (how it is registered in the framework), activation (when it is loaded) and the same way to access the VS Code extension API. There are two special type of extensions: language servers and debuggers, which have their own additional protocols.
 
-\paragraph{Extensions} Extensions are the building blocks of VS Code. When activated, every extension runs in a shared host process, separate from the IDE. This ensures that the IDE itself can remain responsive even if an extension is resource-heavy or not well-written.
+Extensions are the building blocks of VS Code. When activated, every extension runs in a shared host process, separate from the IDE. This ensures that the IDE itself can remain responsive even if an extension is resource-heavy or not well-written.
 
 An extension is a package of source code, resources, and configuration files. They have support for:
 \begin{itemize}[topsep=0pt]
