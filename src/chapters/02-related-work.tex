@@ -8,15 +8,6 @@ In this chapter I introduce the conceptual foundations and used technologies of 
 \subsection{Overview of the Last Few Years}
 \subsection{The Future of JavaScript}
 
-\section{Modeling}
-Modeling is a versatile concept, the word itself may refer to various topics. In the context of this thesis, by models I primarily mean data models. A data model---or sometimes called domain model---organizes the data elements, how they relate to each other and what actions one can perform on them.
-
-\subsection{Metamodels and Instance Models}
-Metamodeling is a methodology for the definition of modeling languages. A metamodel specifies the abstract syntax (structure) of a modeling language.~\cite{scm}
-
-The metamodel contains the main concepts and relations of the domain specific language (DSL) and defines the possible structure of the instance models. To enrich the expressive power of the language, attributes are added to the concepts. By doing this, the language can be extended with predefined domains of data types (like integers, strings) that are supported by the metamodeling language. Additionally, some structural constraints might be specified with the elements like multiplicity.
-
-Models describing a particular problem in the domain, called instance models, are defined using the elements of the metamodel.
 
 \section{Static Analysis}
 \textquote[\cite{wichmann_industrial_1995}]{The idea  that  computer  software  should be used to analyse source programs rather than compile them, has a history of at least 25 years.}
@@ -359,7 +350,7 @@ TAJS initially (in 2009) tried to warn programmers for the following problematic
 
 
 \section{Evaluating Queries on a Data Stucture}
-Numerous strategies exist for defining and executing queries over data structures. They can be defined in an imperative manner with programming languages like a navigation described in Gremlin over a graph database or using a data access interface such as the Eclipse Modeling Framework. Declarative solutions also exist, where the query plan is calculated from the query formalized in a declarative language (like frameworks SQL, OCL, SPARQL, Cypher) and execution is performed by a query framework (such as 4store, Neo4j). I base my approach on pattern matching, one of the declarative querying solutions, supplemented by imperative logic.
+Numerous strategies exist for defining and executing queries over data structures. They can be defined in an imperative manner with programming languages like a navigation described in \emph{Gremlin} over a graph database or using a data access interface such as the Eclipse Modeling Framework. Declarative solutions also exist, where the query plan is calculated from the query formalized in a declarative language (like frameworks \emph{SQL}, \emph{OCL}, \emph{SPARQL}, \emph{Cypher}) and execution is performed by a query framework (such as \emph{4store}, \emph{Neo4j}). I base my approach on pattern matching, one of the declarative querying solutions, supplemented by imperative logic.
 
 \textquote[\cite{csmr}]{Graph patterns are a declarative, graph-like formalism representing a condition (or constraint) to be matched against instance model graphs. The formalism is useful for various purposes in model-driven development, such as defining model transformation rules or defining general purpose model queries including model validation constraints. A graph pattern consists of structural constraints prescribing the interconnection between nodes and edges of a given type.
 
@@ -459,12 +450,21 @@ Titan natively supports the imperative graph traversal language Gremlin (by \emp
 \subsection{A Viable Alternative: EMF Modeling and VIATRA Query}
 Although EMF is not a graph database, with the help of VIATRA Query, the data stored in an EMF instance model can be queried like graph databases.
 
+\subsubsection{Modeling}
+Modeling is a versatile concept, the word itself may refer to various topics. In the context of this thesis, by models I primarily mean data models. A data model---or sometimes called domain model---organizes the data elements, how they relate to each other and what actions one can perform on them.
+
+\paragraph{Metamodels and Instance Models}
+\textquote[\cite{scm}]{Metamodeling is a methodology for the definition of modeling languages. A metamodel specifies the abstract syntax (structure) of a modeling language. Metamodels are expressed using a metamodeling language that itself is a modeling language. The metamodel can also be interpreted as the object-oriented data model of the language under design. Metamodeling can be viewed as the grammar for a \emph{typed property graph}, so the created models are both \emph{typed graph}s and \emph{property graph}s.}
+
+The metamodel contains the main concepts and relations of the domain specific language (DSL) and defines the possible structure of the instance models. To enrich the expressive power of the language, attributes are added to the concepts. By doing this, the language can be extended with predefined domains of data types (like integers, strings) that are supported by the metamodeling language. Additionally, some structural constraints might be specified with the elements like multiplicity.
+
+Models describing a particular problem in the domain, called instance models, are defined using the elements of the metamodel.
+
 \subsubsection{The Eclipse Modeling Framework}
 \label{sect:emf}
 Eclipse is a free, open-source software development environment and a platform with extensible plug-in system for customization. Eclipse comes with its own modeling tools, with the core framework called Eclipse Modeling Framework (EMF).
 
 \textquote[\cite{EMF}]{The EMF project is a modeling framework and code generation facility for building tools and other applications based on a structured data model. From a model specification described in XMI, EMF provides tools and runtime support to produce a set of Java classes for the model, along with a set of adapter classes that enable viewing and command-based editing of the model, and a basic editor. EMF (core) is a common standard for data models, many technologies and frameworks are based on.}
-
 
 \paragraph{Ecore}
 Ecore is the metamodeling language used by EMF. It has been developed in order to provide an approach for metamodel definition that supports the direct implementation of models using a programming language. Ecore is the de facto standard metamodeling environment of the industry, and several domain-specific languages are defined using this formalism.~\cite{scm}
