@@ -358,10 +358,20 @@ TAJS initially (in 2009) tried to warn programmers for the following problematic
 \end{itemize}
 
 
-\section{Graph Databases}
+\section{Evaluating Queries on a Data Stucture}
+Numerous strategies exist for defining and executing queries over data structures. They can be defined in an imperative manner with programming languages like a navigation described in Gremlin over a graph database or using a data access interface such as the Eclipse Modeling Framework. Declarative solutions also exist, where the query plan is calculated from the query formalized in a declarative language (like frameworks SQL, OCL, SPARQL, Cypher) and execution is performed by a query framework (such as 4store, Neo4j). I base my approach on pattern matching, one of the declarative querying solutions, supplemented by imperative logic.
+
+\textquote[\cite{csmr}]{Graph patterns are a declarative, graph-like formalism representing a condition (or constraint) to be matched against instance model graphs. The formalism is useful for various purposes in model-driven development, such as defining model transformation rules or defining general purpose model queries including model validation constraints. A graph pattern consists of structural constraints prescribing the interconnection between nodes and edges of a given type.
+
+A match of a pattern is a tuple of pattern parameters that fulfill all the following conditions:
+\begin{enumerate}[topsep=0pt]
+	\item have the same structure as the pattern,
+	\item satisfy all structural and attribute constraints,
+	\item and does not satisfy any negative application condition (NAC) describing cases when the original pattern does not hold.
+\end{enumerate}}
 
 
-\subsection{Adequate Database Solutions}
+\subsection{Graph Databases}
 Since my thesis work is based on graph-based data handling, it is essential to use a technique that is suitable. In this case suitable is better described as being fast, flexible, versatile, easy to use and deploy. In this section I go over some of the most promising candidates and justify why I've chosen Neo4j as the foundation of my approach.
 
 \subsubsection{Neo4j}
@@ -446,48 +456,46 @@ Titan natively supports the imperative graph traversal language Gremlin (by \emp
 \paragraph{Sharding}
 \paragraph{Query Language}
 
-\subsection{Viable Alternative: EMF Modeling and VIATRA Query}
+\subsection{A Viable Alternative: EMF Modeling and VIATRA Query}
+Although EMF is not a graph database, with the help of VIATRA Query, the data stored in an EMF instance model can be queried like graph databases.
 
-\subsection{Query Languages and Evaluation Strategies}
-There are numerous strategies to define and execute a query. Queries can be expressed in imperative programming languages over a data access interface such as the Eclipse Modeling Framework (EMF, see \ref{emf}), or with declarative languages, processed by a query framework, such as OCL~\cite{OCL} or EMF-IncQuery~\cite{IncQuery}.
+\subsubsection{The Eclipse Modeling Framework}
+\label{sect:emf}
+Eclipse is a free, open-source software development environment and a platform with extensible plug-in system for customization. Eclipse comes with its own modeling tools, with the core framework called Eclipse Modeling Framework (EMF).
 
-Pattern matching, one of the various methods to retrieve data from a model is what we base our approach on. Following~\cite{csmr}, we define graph patterns and discuss how they are used for querying.
+\textquote[\cite{EMF}]{The EMF project is a modeling framework and code generation facility for building tools and other applications based on a structured data model. From a model specification described in XMI, EMF provides tools and runtime support to produce a set of Java classes for the model, along with a set of adapter classes that enable viewing and command-based editing of the model, and a basic editor. EMF (core) is a common standard for data models, many technologies and frameworks are based on.}
 
-Graph patterns are a declarative, graph-like formalism representing a
-condition (or constraint) to be matched against instance model graphs. The
-formalism is useful for various purposes in model-driven development, such as
-defining model transformation rules or defining general purpose model queries
-including model validation constraints. A graph pattern consists of structural
-constraints prescribing the interconnection between nodes and edges of a given
-type.
 
-Graph patterns are extended with expressions to define attribute constraints and
-pattern composition to reuse existing patterns. The called pattern is used as
-an additional set of constraints to meet, except if it is formed as negative
-application condition (NAC) describing cases when the original pattern does not hold.
+\paragraph{Ecore}
+Ecore is the metamodeling language used by EMF. It has been developed in order to provide an approach for metamodel definition that supports the direct implementation of models using a programming language. Ecore is the de facto standard metamodeling environment of the industry, and several domain-specific languages are defined using this formalism.~\cite{scm}
 
-Pattern parameters are a subset of nodes and attributes interfacing the
-model elements interesting from the perspective of the pattern user.
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[height=10cm]{include/figures/Ecore}
+	\caption{An illustrative core part of Ecore, the metamodeling language of EMF}
+	\label{fig:Ecore}
+\end{figure}
 
-A match of a pattern is a tuple of pattern parameters that fulfill all the following conditions:
+\Cref{fig:Ecore} shows only a small fraction of the metamodel, as there is many more classes in the Ecore metamodel. The main classes are the following:
+\begin{itemize}[topsep=0pt]
+	\item \code{EAttribute} represents a named attribute literal, which also has a type.
+	\item \code{EClass} represents a class, with optional attributes and optional references. To support inheritance, a class can refer to a number of supertype classes.
+	\item \code{EDataType} is used to represent simple data types that are treated as atomic (their internal structure is not modeled). Data types are identified by their name.
+	\item \code{EReference} represents a unidirectional association between EClasses and is identified by a name. It is also possible to mark a reference as a containment that represents composition relation between elements. A bidirectional association should be modeled as two EReference instances mutually connected via their opposite references.
+\end{itemize}
 
-\begin{enumerate}
-	\item have the same structure as the pattern,
-	\item satisfy all structural and attribute constraints,
-	\item and does not satisfy any NAC.
-\end{enumerate}
+An Ecore model has a root object, representing the whole model. The children of this root object are packages, and the children of those are classes.
 
-When evaluating the results of a graph pattern, any subset of the parameters
-can be bound to model elements or attribute values that the pattern matcher
-will handle as additional constraints. This allows re-using the same pattern
-in different scenarios, such as checking whether a set of model elements
-fulfill a pattern, or list all matches of the model.
+More detailed illustrations of the metamodel can be found in the EMF Documentation~\cite{ecore}.
 
-\paragraph{SPARQL}
-\label{sect:sparql}
-SPARQL (recursive acronym for SPARQL Protocol and RDF Query Language) is an RDF query language. (RDF is discussed in detain in~\ref{RDF}.) SPARQL can be used to express queries across diverse data sources, whether the data is stored natively as RDF or viewed as RDF via middleware. SPARQL contains capabilities for querying required and optional graph patterns along with their conjunctions and disjunctions. SPARQL also supports aggregation, subqueries, negation, creating values by expressions, extensible value testing, and constraining queries by source RDF graph. The results of SPARQL queries can be result sets or RDF graphs.~\cite{W3C-SPARQL,Harris:13:SQL}
 
-For an example SPARQL query, see~\ref{sparql-query}.
+\subsubsection{VIATRA Query}
+VIATRA is an event-driven and reactive model transformation platform. \textquote[\cite{viatra}]{The VIATRA framework supports the development of model transformations with specific focus on event-driven, reactive transformations and offers a language to define transformations and a reactive transformation engine to execute certain transformations upon changes in the underlying model. Furthermore, the underlying incremental query engine, originating from the EMF-IncQuery project is reusable in different scenarios not related to model transformations.}
+
+VIATRA Query (formerly IncQuery) is an incremental query engine with its own graph pattern based query language to specify and execute model queries on EMF instance models or other data storage solutions.
+
+Since the data model of my approach may change over time, an unstructured or semi-structured data storage suits it better. EMF would require the metamodel to be transformed each time it is changed. It is also not possible to shard large EMF models in and take advantage of a clustered environment.
+
 
 \section{Visual Studio Code}
 Visual Studio Code~\cite{vscode} is Microsoft's take on a lightweight, yet powerful Integrated Developer Environment (IDE) for modern programming languages. It is available for free for Windows, OS X and Linux. It comes with built-in support for JavaScript, TypeScript and has a growing ecosystem of extensions for other languages, theming, and developer support~\cite{vscode-extensions}.
