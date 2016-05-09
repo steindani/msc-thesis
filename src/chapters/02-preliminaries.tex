@@ -5,29 +5,35 @@
 In this chapter I introduce the conceptual foundations and related technologies of my work. Here I discuss the building blocks required to create a static analyzer framework for JavaScript.
 
 \section{JavaScript}
-\subsection{Overview of the Last Few Years}
-\subsection{The Future of JavaScript}
+\subsection{ECMAScript 2015}
+\subsection{WebAssembly}
 
 
 \section{Static Analysis}
-\textquote[\cite{wichmann_industrial_1995} in 1995]{The idea  that  computer  software  should be used to analyse source programs rather than compile them, has a history of at least 25 years.}
+Even in 1995, the idea of static analysis was over 25 years old: \textquote[\cite{wichmann_industrial_1995}]{The idea  that  computer  software  should be used to analyse source programs rather than compile them, has a history of at least 25 years.}
 
-We use program analysis to discover facts about it. Two basic automated analysis methods exist for source code analysis. When the source code is read and analyzed without evaluating the statements or executing it, we talk about static analysis. Analysis with statement evaluation or execution is known as dynamic analysis.
+Source code analysis can be used to discover facts about a particular program. Two basic automated analysis methods exist for source code analysis:
+\begin{itemize}[topsep=0pt]
+  \item \emph{Static analysis} is performed by reading the source code and analyzing it without evaluating the statements or executing the program.
+  \item \emph{Dynamic analysis} is performed by executing the program and evaluating its output for given input sequences.
+\end{itemize}
 
 % > The term is usually applied to the analysis performed by an automated tool, with human analysis being called program understanding, program comprehension, or code review. Software inspections and Software walkthroughs are also used in the latter case.
 % https://en.wikipedia.org/wiki/Static_program_analysis
 
-While JavaScript may not be, high-level language source codes are at least audited by the compiler. Thus the aim of a specific analysis should be discovering unwanted traits of the source in ways a generic compiler could not do, resulting in better code quality. These treats, \emph{bugs} are usually perceptable while running the code. Another way to locate these bugs is to write and run tests, but it may not worth it, if there is a better solution.
+While JavaScript is usually not compiled, high-level language source codes are audited at least by the compiler. Thus a specific static analysis should aim to discover unwanted traits of the source in ways a generic compiler could not do, resulting in better code quality. These treats, \emph{bugs} are usually perceptable while running the code. Another way to locate these bugs is to write and run tests, dynamically testing the program.
 % \cite[][72]{wichmann_industrial_1995}
+
+The two analysis methods are complementing each other. They discover different subsets of problematic constructions. Information discovered during the static analysis may be used later in the dynamic testing.
 
 % > Static analysis bug-finding tools have evolved over the last several decades from basic syntactic checkers to those that find deep bugs by reasoning about the semantics of code. The goal of the Clang Static Analyzer is to provide a industrial-quality static analysis framework for analyzing C, C++, and Objective-C programs that is freely available, extensible, and has a high quality of implementation.
 % http://clang-analyzer.llvm.org/
 
 
 \subsection{Use Cases}
-The level of abstraction of the static analysis tools varies. Formatters make sure that the source code complies with the style guide. Linters check for stylistic and programming errors and warn at suspicious programming constructs. Formal verification, on the other hand, utilizes formal mathematical methods to prove or refute statements about the source code and its behavior.
+Static analysis tools employ diverse levels of abstraction. \emph{Formatters} make sure that the source code complies with the style guide. \emph{Linters} check for stylistic and programming errors and warn at suspicious programming constructs. \emph{Formal verification}, on the other hand, utilizes formal mathematical methods to prove or refute statements about the source code and its behavior.
 
-For dynamic languages, it can be used for even more\footnote{Non-exhaustive list}: finding previously undefined property reads, invoke of non-functional variables~\cite{jensen_type_2009} or dead code.
+For dynamic languages, it can be used for even more: finding previously undefined property reads, catching invokement of non-functional variables~\cite{jensen_type_2009}, detecting dead code, and so on.
 
 \subsection{Advantages and Disadvantages}
 
@@ -44,16 +50,16 @@ Since static analysis tools deliberately do not evaluate the source code, there 
 \end{itemize}
 
 \subsubsection{Disadvantages}
-\paragraph{Speed} Static analysis trades CPU time and memory for better code quality. By design it may be multiple magnitudes slower than compilation, but its speed depends not only on the underlying data structure and algorithms, but the level of analysis too.
+\paragraph{Speed} Static analysis trades CPU time and memory for better code quality. By design it may be multiple orders of magnitude slower than compilation, but its speed depends not only on the underlying data structure and algorithms, but also the level of analysis.
 %  > Slower than Compilation
 %
 %  > Operationally, using static analysis to automatically find deep program bugs is about trading CPU time for the hardening of code. Because of the deep analysis performed by state-of-the-art static analysis tools, static analysis can be much slower than compilation.
 %
 %  > While the Clang Static Analyzer is being designed to be as fast and light-weight as possible, please do not expect it to be as fast as compiling a program (even with optimizations enabled). Some of the algorithms needed to find bugs require in the worst case exponential time.
 
-Although, with a given limitation of granularity, in case of a source code modification, previous results can be reused. There is a possibility that only the modified ---and other affected--- parts need to be analyzed again. The incremental approach of static analysis may speed up the process by orders of magnitude~\cite{stein-daniel-bsc}.
+However, with a given limitation of granularity, in case of a source code modification, previous results can be reused. There is a possibility that only the modified---and other affected---parts need to be processed again. The incremental approach of static analysis may speed up the process by orders of magnitude~\cite{stein-daniel-bsc}.
 
-\paragraph{False Positives} Static analysis can not prove the soundness of a source code. It rather warn in case there is a possibility of a problem. Thus static analysis tools can introduce false positive warnings and flag code parts even if they behave correcly.
+\paragraph{False Positives} Static analysis can not prove the correctness of a source code. It rather warn in case there is a possibility of a problem. Thus static analysis tools can introduce false positive warnings and flag code parts even if they behave correcly.
 
 To reduce the number of false positive warnings, one usually introduces more precise, specified rules and more thorough analysis.
 
@@ -65,9 +71,88 @@ To reduce the number of false positive warnings, one usually introduces more pre
 
 \subsection{Source Code Processing and Analysis}
 \label{sect:source-code-processing}
-Source code contains a much wider variety of data than the compiler needs in order to run the application: comments, function declaration order, indentation, line breaks all help the developer or reader of the code. What part of the data is considered useful information and what is surplus depends on the rules along the compiler processes them.
+The source code of a program is a sequence of instructions formulated in a programming language as a text. Source codes contain a much wider variety of data than a source code processing entity (hereafter \emph{compiler}) needs in order to process (translate, compile, analyze) the application: comments, function declaration order, indentation, line breaks all help the developer or reader of the code, but contain no additional information.
 
-Every programming language has a grammar. A set of rules both describing what a valid input for the compiler is (syntax---how the instructions shall be processed), and what a sequence of instructions mean (semantics). \Cref{fig:processing-the-source-code} shows the general process for processing source codes, how it is transformed from a stream of characters into a data structure with ``meaning''.
+What input data the compiler considers useful information depends on the semantics of the language the compiler is built for. Grammars are a set of rules for formal languages describing what the compiler considers a valid input---how to create valid instructions or a set of instructions from the alphabet of the language \emph{(syntax)}. Understanding what an instruction means \emph{(semantics)} and transforming it is the task of the compiler.
+
+\Cref{fig:processing-the-source-code} shows the general process for processing source codes---how it is transformed from a stream of characters into a data structure with ``meaning''.
+
+\begin{figure}[!ht]
+	\centering
+	\adjustbox{max width=\textwidth} {
+		\begin{tikzpicture}[
+			node distance = 2cm,
+			auto,
+			]
+
+    \node[stdstage] (SC) {Source Code};
+    \node[stdstage, below=of SC] (TO) {Tokens};
+    \node[stdstage, below=of TO] (AST) {Abstract Syntax Tree};
+    \node[stdstage, below=of AST] (ASG) {Abstract Semantic Graph};
+
+    \path (SC) edge[textedge] node {\emph{tokenization}\\ breaking the stream of source code characters into tokens (words, symbols)} (TO);
+    \path (TO) edge[textedge] node {\emph{parsing}\\ ordering the tokens into a data structure based on grammar rules} (AST);
+    \path (AST) edge[textedge] node {\emph{scope analysis}\\ resolving the references in the AST and extending it with derived information into an ASG} (ASG);
+		\end{tikzpicture}
+	}
+	\caption{Processing the source code}
+	\label{fig:processing-the-source-code}
+\end{figure}
+
+\subsubsection{Lexical Analysis}
+A \emph{lexer}, \emph{tokenizer}, or \emph{scanner} forms the first phase of a parsing process. It scans the input character stream and segments them into sequence of groups, tokens, \emph{strings with a ``meaning''}. It also categorizes these groups into various token classes, token types. Processing the raw input into a value (converting the string \code{"2"} into the number $2$) can also happen in this phase. \Cref{fig:tokenization} shows how an expression string can be tokenized.
+
+\begin{figure}[!htb]
+  \centering
+  \code{foo = 1 / 0}\\[1em]
+
+  \begin{tabular}{c|l}
+    Token & Token type\\
+    \hline
+    \code{foo} & \code{IDENTIFIER (Ident)}\\
+    \code{=} & \code{ASSIGN (Punctuator)}\\
+    \code{1} & \code{NUMBER (NumericLiteral)}\\
+    \code{/} & \code{DIV (Punctuator)}\\
+    \code{0} & \code{NUMBER (NumericLiteral)}\\
+    \hline
+  \end{tabular}
+
+  \caption{Character stream and tokenization result with token type information}
+  \label{fig:tokenization}
+\end{figure}
+
+
+\subsubsection{Parser}
+A \emph{parser} forms the second phase of a parsing process, using the output token stream of the \emph{lexer}. It takes the input data and builds a hierarchical data structure (a \emph{parse tree} or an \emph{abstract syntax tree}) representing the input. If the input does not comply with the syntax rules, thus an tree can not be built, the source code is syntactically incorrect.
+
+\Cref{fig:sentence-s-expression} shows a sentence and its s-expression representation. S-expressions (for ``symbolic expression'') are a notation for tree-structured nested list, mainly used in Lisp.
+
+\begin{figure}[!htb]
+\centering
+\code{The quick brown fox jumps over the lazy dog}\\[1em]
+
+\begin{minipage}{3cm}
+\begin{verbatim}
+(Sentence
+  (Word The)
+  (Word quick)
+  (Word fox)
+  (Word jumps)
+  (Word over)
+  (Word the)
+  (Word lazy)
+  (Word dog)
+)
+\end{verbatim}
+\end{minipage}
+  \caption{A sentence and its s-expression representation}
+  \label{fig:sentence-s-expression}
+\end{figure}
+
+\paragraph{Abstract Syntax Tree}
+An \emph{Abstract Syntax Tree} (AST) is a tree representation of the syntactic structure of the result of a parsing along a grammar. The nodes of the tree denote a construct occuring in the input, while the edges represent the connection between these nodes based on the grammar rules.
+
+As mentioned in~\cref{sect:source-code-processing}, source code contains much more detail (e.g., indentation, whitespace, comments) than is needed and restrained during the parsing process. Thus this representation is an \emph{abstract} syntax tree. It may be transformed based on transformation rules and source code can be generated from ASTs, however without the layout information it may look different than the initial source code.
 
 \Cref{fig:ast-asg-example} shows an example AST (in black), where a one-statement JavaScript file is parsed. The content of the file was only \code{var foo = 1 / 0;}.
 
@@ -84,13 +169,14 @@ ASGs are a graph representation of a parse result, where its nodes are expressio
 
 \Cref{fig:ast-asg-example} shows the difference between an AST and an ASG (in turquoise).
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[height=\textheight, trim=1cm 1cm 1cm 1cm,clip]{include/figures/AST-ASG}
 	\caption{AST (in black) with additional edges (ASG, in turquoise) and derived helper edges (in gray).}
 	\label{fig:ast-asg-example}
 \end{figure}
 
+\FloatBarrier
 
 \section{Type Inference}
 
