@@ -69,83 +69,7 @@ Source code contains a much wider variety of data than the compiler needs in ord
 
 Every programming language has a grammar. A set of rules both describing what a valid input for the compiler is (syntax---how the instructions shall be processed), and what a sequence of instructions mean (semantics). \Cref{fig:processing-the-source-code} shows the general process for processing source codes, how it is transformed from a stream of characters into a data structure with ``meaning''.
 
-\begin{figure}[!ht]
-	\centering
-	\adjustbox{max width=\textwidth} {
-		\begin{tikzpicture}[
-			node distance = 2cm,
-			auto,
-			]
-
-    \node[stdstage] (SC) {Source Code};
-    \node[stdstage, below=of SC] (TO) {Tokens};
-    \node[stdstage, below=of TO] (AST) {Abstract Syntax Tree};
-    \node[stdstage, below=of AST] (ASG) {Abstract Semantic Graph};
-
-    \path (SC) edge[textedge] node {\emph{tokenization}\\ breaking the stream of source code characters into tokens (words, symbols)} (TO);
-    \path (TO) edge[textedge] node {\emph{parsing}\\ ordering the tokens into a data structure based on grammar rules} (AST);
-    \path (AST) edge[textedge] node {\emph{scope analysis}\\ resolving the references in the AST and extending it with derived information into an ASG} (ASG);
-		\end{tikzpicture}
-	}
-	\caption{Processing the source code}
-	\label{fig:processing-the-source-code}
-\end{figure}
-
-\subsubsection{Tokenizer}
-A \emph{lexer}, \emph{tokenizer}, or \emph{scanner} forms the first phase of a parsing process. It scans the input character stream and segments them into sequence of groups, tokens, \emph{strings with a ``meaning''}. It also categorizes these groups into various token classes, token types. Processing the raw input into a value (converting \code{"2"} into \code{2}) can also happen in this phase. \Cref{fig:tokenization} shows how an expression string can be tokenized.
-
-\begin{figure}[!htb]
-  \centering
-  \code{foo = 1 / 0}\\[1em]
-
-  \begin{tabular}{c|l}
-    Token & Token type\\
-    \hline
-    \code{foo} & \code{IDENTIFIER (Ident)}\\
-    \code{=} & \code{ASSIGN (Punctuator)}\\
-    \code{1} & \code{NUMBER (NumericLiteral)}\\
-    \code{/} & \code{DIV (Punctuator)}\\
-    \code{0} & \code{NUMBER (NumericLiteral)}\\
-    \hline
-  \end{tabular}
-
-  \caption{Character stream and tokenization result with token type information}
-  \label{fig:tokenization}
-\end{figure}
-
-
-\subsubsection{Parser}
-A \emph{parser} forms the second phase of a parsing process, using the output token stream of the \emph{lexer}. It takes the input data and builds a hierarchical data structure (a \emph{parse tree} or an \emph{abstract syntax tree}) representing the input. If the input does not comply with the syntax rules, thus an tree can not be built, the source code is syntactically incorrect.
-
-\Cref{fig:sentence-s-expression} shows a sentence and its s-expression representation. S-expressions (for ``symbolic expression'') are a notation for tree-structured nested list, mainly used in Lisp.
-
-\begin{figure}[!htb]
-\centering
-\code{The quick brown fox jumps over the lazy dog}\\[1em]
-
-\begin{minipage}{3cm}
-\begin{verbatim}
-(Sentence
-  (Word The)
-  (Word quick)
-  (Word fox)
-  (Word jumps)
-  (Word over)
-  (Word the)
-  (Word lazy)
-  (Word dog)
-)
-\end{verbatim}
-\end{minipage}
-  \caption{A sentence and its s-expression representation}
-  \label{fig:sentence-s-expression}
-\end{figure}
-
-\paragraph{Abstract Syntax Tree}
-An \emph{Abstract Syntax Tree} (AST) is a tree representation of the syntactic structure of the result of a parsing along a grammar. The nodes of the tree denote a construct occuring in the input, while the edges represent the connection between these nodes based on the grammar rules.
-
-As mentioned in~\cref{sect:source-code-processing}, source code contains much more detail (e.g., indentation, whitespace, comments) than is needed and restrained during the parsing process. Thus this representation is an \emph{abstract} syntax tree. It may be transformed based on transformation rules and source code can be generated from ASTs, however without the layout information it may look different than the initial source code.
-
+\Cref{fig:ast-asg-example} shows an example AST (in black), where a one-statement JavaScript file is parsed. The content of the file was only \code{var foo = 1 / 0;}.
 
 \subsubsection{Scope Analyzer}
 A \emph{scope analyzer} or \emph{context analyzer} produces a data structure that represents the scoping information of a program, probably extending the information available from an AST or an ASG. An element representing a scope in this data structure may contain, inter alia, metadata about the scope itself, the AST node related to the scope, available assets (variables, functions, etc.) in that scope.~\cite{shift-scope}
@@ -157,6 +81,15 @@ ASGs are a graph representation of a parse result, where its nodes are expressio
 
 % An abstract semantic graph is typically constructed from an abstract syntax tree by a process of enrichment and abstraction. The enrichment can for example be the addition of back-pointers, edges from an identifier node (where a variable is being used) to a node representing the declaration of that variable. The abstraction can entail the removal of details which are relevant only in parsing, not for semantics.
 % https://en.wikipedia.org/wiki/Abstract_semantic_graph
+
+\Cref{fig:ast-asg-example} shows the difference between an AST and an ASG (in turquoise).
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[height=\textheight]{include/figures/AST-ASG}
+	\caption{AST (in black) with additional edges (ASG, in turquoise) and derived helper edges (in gray).}
+	\label{fig:ast-asg-example}
+\end{figure}
 
 
 \section{Type Inference}

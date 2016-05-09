@@ -1,0 +1,198 @@
+digraph Neo {
+  node [
+    fontsize = "18"
+    shape = "Mrecord"
+    fontname = "Clear Sans Thin"
+  ]
+  edge [
+    fontname = "Clear Sans Thin"
+    fontsize = "18"
+  ]
+  N1 [
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    label = "{GlobalScope\n Scope|'type' = 'Global' : String\l'dynamic' = true : boolean\l}"
+  ]
+  N1 -> N6 [
+    color = "grey60",
+    fontcolor = "grey60",
+    label = "children"
+  ]
+  N1 -> N3 [
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    label = "children"
+  ]
+  N1 -> N2 [
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    label = "astNode"
+  ]
+  N2 [
+    label = "{Module}"
+  ]
+  N2 -> N9 [
+    color = "grey60",
+    fontcolor = "grey60",
+    label = "items"
+  ]
+  N2 -> N5 [
+    label = "items"
+  ]
+  N3 [
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    label = "{List}"
+  ]
+  N3 -> N6 [
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    label = "0"
+  ]
+  N5 [
+    label = "{List}"
+  ]
+  N5 -> N9 [
+    label = "0"
+  ]
+  N6 [
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    label = "{Scope|'type' = 'Module' : String\l'dynamic' = false : boolean\l}"
+  ]
+  N6 -> N10 [
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    label = "variables"
+  ]
+  N6 -> N2 [
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    label = "astNode"
+  ]
+  N9 [
+    label = "{VariableDeclarationStatement\n Statement}"
+  ]
+  N9 -> N12 [
+    label = "declaration"
+  ]
+  N10 [
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    label = "{Map}"
+  ]
+  N10 -> N13 [
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    label = "foo"
+  ]
+  N12 [
+    label = "{VariableDeclaration\n FunctionDeclarationClassDeclarationVariableDeclaration\n VariableDeclarationBinding\n VariableDeclarationExpression|'kind' = 'var' : String\l}"
+  ]
+  N12 -> N20 [
+    color = "grey60",
+    fontcolor = "grey60",
+    label = "declarators"
+  ]
+  N12 -> N16 [
+    label = "declarators"
+  ]
+  N13 [
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    label = "{Variable|'name' = 'foo' : String\l}"
+  ]
+  N13 -> N22 [
+    color = "grey60",
+    fontcolor = "grey60",
+    label = "declarations"
+  ]
+  N13 -> N21 [
+    color = "grey60",
+    fontcolor = "grey60",
+    label = "references"
+  ]
+  N13 -> N18 [
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    label = "declarations"
+  ]
+  N13 -> N17 [
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    label = "references"
+  ]
+  N16 [
+    label = "{List}"
+  ]
+  N16 -> N20 [
+    label = "0"
+  ]
+  N17 [
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    label = "{List}"
+  ]
+  N17 -> N21 [
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    label = "0"
+  ]
+  N18 [
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    label = "{List}"
+  ]
+  N18 -> N22 [
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    label = "0"
+  ]
+  N20 [
+    label = "{VariableDeclarator}"
+  ]
+  N20 -> N28 [
+    label = "init"
+  ]
+  N20 -> N24 [
+    label = "binding"
+  ]
+  N21 [
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    label = "{Reference|'accessibility' = 'Write' : String\l}"
+  ]
+  N21 -> N24 [
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    label = "node"
+  ]
+  N22 [
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    label = "{Declaration|'kind' = 'Var' : String\l}"
+  ]
+  N22 -> N24 [
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    label = "node"
+  ]
+  N24 [
+    label = "{BindingIdentifier\n BindingIdentifierMemberExpression\n Binding|'name' = 'foo' : String\l}"
+  ]
+  N28 [
+    label = "{BinaryExpression\n Expression|'operator' = 'Div' : String\l}"
+  ]
+  N28 -> N32 [
+    label = "right"
+  ]
+  N28 -> N31 [
+    label = "left"
+  ]
+  N31 [
+    label = "{Expression\n LiteralNumericExpression|'value' = 1.0 : double\l}"
+  ]
+  N32 [
+    label = "{Expression\n LiteralNumericExpression|'value' = 0.0 : double\l}"
+  ]
+}
