@@ -1,8 +1,8 @@
 % !TEX root = ../main.tex
-\chapter{Background and Related Work}
-\label{chap:background-and-related-work}
+\chapter{Preliminaries}
+\label{chap:preliminaries}
 
-In this chapter I introduce the conceptual foundations and used technologies of my work. Here I discuss the building blocks required to create a static analyzer framework for JavaScript. I also enumerate a subset of similar systems and discuss related work.
+In this chapter I introduce the conceptual foundations and related technologies of my work. Here I discuss the building blocks required to create a static analyzer framework for JavaScript.
 
 \section{JavaScript}
 \subsection{Overview of the Last Few Years}
@@ -159,68 +159,7 @@ ASGs are a graph representation of a parse result, where its nodes are expressio
 % https://en.wikipedia.org/wiki/Abstract_semantic_graph
 
 
-\subsection{JavaScript Parsers}
-In this section I showcase the most used, \emph{trendy} JavaScript parser technologies and justify why I've chosen the Shapesecurity Shift family as the parser and additional toolset for my approach.
-
-\subsubsection{Shift}
-\begin{itemize}
-	\item \url{http://shift-ast.org/}
-	\item \url{https://github.com/shapesecurity/shift-java}
-	\item \url{http://engineering.shapesecurity.com/2014/12/announcing-shift-javascript-ast.html}
-	\item \url{http://engineering.shapesecurity.com/2015/01/a-technical-comparison-of-shift-and.html}
-	\item \url{http://engineering.shapesecurity.com/2015/02/using-the-shift-reducer.html}
-	\item \url{http://engineering.shapesecurity.com/2015/04/two-phase-parsing.html}
-\end{itemize}
-
-\paragraph{Bandolier}
-\begin{itemize}
-	\item \url{http://engineering.shapesecurity.com/2016/03/announce-bandolier.html}
-	\item \url{https://github.com/shapesecurity/bandolier}
-\end{itemize}
-
-\subsubsection{Acorn}
-\begin{itemize}
-	\item \url{https://github.com/ternjs/acorn}
-\end{itemize}
-
-\subsubsection{ChakraCore}
-\begin{itemize}
-	\item \url{https://github.com/Microsoft/ChakraCore}
-\end{itemize}
-
-\subsubsection{Traceur}
-\begin{itemize}
-	\item \url{https://github.com/google/traceur-compiler}
-\end{itemize}
-
-\subsubsection{Comparison of Parser Technologies}
-\paragraph{Speed} Although speed is not the most important property of a system whose aim is to make sure no errors are present, it is wanted for a nearly real-time response system. \Cref{table:speed-comparison-of-parsers} shows the time difference parsers process different source codes. The benchmark~\footnote{\url{http://esprima.org/test/compare.html}} was run on a personal computer not set up for proper benchmarking. It's sole purpose is to get a rough comparison between the different technologies available.
-
-It is visible that Shift (with early error checking disabled (NEE -- No Early Errors)) is one of the fastest parsers available.
-
-\begin{table}[!htb]
-\centering
-\begin{tabular}{@{}lllllll@{}}
-\toprule
-\textbf{Source}                                               & \textbf{\begin{tabular}[c]{@{}l@{}}Esprima\\ 2.7.2\end{tabular}} & \textbf{UglifyJS2}                                      & \textbf{Traceur}                                        & \textbf{\begin{tabular}[c]{@{}l@{}}Acorn\\ 2.4.0\end{tabular}} & \textbf{Shift}                                          & \textbf{\begin{tabular}[c]{@{}l@{}}Shift\\ (NEE)\end{tabular}} \\ \midrule
-\begin{tabular}[c]{@{}l@{}}jQuery.Mobile\\ 1.4.2\end{tabular} & \begin{tabular}[c]{@{}l@{}}154.0\\ ±22.3\%\end{tabular}          & \begin{tabular}[c]{@{}l@{}}244.6\\ ±8.4\%\end{tabular}  & \begin{tabular}[c]{@{}l@{}}304.6\\ ±15.1\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}215.3\\ ±16.9\%\end{tabular}        & \begin{tabular}[c]{@{}l@{}}480.7\\ ±13.1\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}119.9\\ ±11.9\%\end{tabular}                    \\
-\begin{tabular}[c]{@{}l@{}}Angular\\ 1.2.5\end{tabular}       & \begin{tabular}[c]{@{}l@{}}125.5\\ ±16.3\%\end{tabular}          & \begin{tabular}[c]{@{}l@{}}212.2\\ ±11.2\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}254.1\\ ±20.7\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}146.3\\ ±18.6\%\end{tabular}        & \begin{tabular}[c]{@{}l@{}}452.7\\ ±12.5\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}94.6\\ ±18.2\%\end{tabular}                     \\
-\begin{tabular}[c]{@{}l@{}}React\\ 0.13.3\end{tabular}        & \begin{tabular}[c]{@{}l@{}}134.7\\ ±10.8\%\end{tabular}          & \begin{tabular}[c]{@{}l@{}}221.6\\ ±8.9\%\end{tabular}  & \begin{tabular}[c]{@{}l@{}}258.5\\ ±13.4\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}176.9\\ ±15.6\%\end{tabular}        & \begin{tabular}[c]{@{}l@{}}496.4\\ ±11.6\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}116.1\\ ±14.2\%\end{tabular}                    \\ \midrule
-
-\textbf{Total}                                                & \textbf{414.3 ms}                                                & \textbf{678.4 ms}                                       & \textbf{817.2 ms}                                       & \textbf{538.5 ms}                                              & \textbf{1429.8 ms}                                      & \textbf{330.6 ms}                                                          \\ \bottomrule
-\end{tabular}
-
-\caption{Speed comparison of JavaScript parsers}
-\label{table:speed-comparison-of-parsers}
-\end{table}
-
-\paragraph{Metamodel and Precision}
-\paragraph{Development Activity}
-\paragraph{Platforms Supported}
-
-\subsection{Typed JavaScript Derivations}
-
-\subsection{Type Inference}
+\section{Type Inference}
 
 Type inference refers to the deduction of the data types of expressions, statements during static analysis.
 
@@ -230,126 +169,12 @@ Type inference refers to the deduction of the data types of expressions, stateme
 
 % https://en.wikipedia.org/wiki/Type_inference
 
-\subsubsection{Flow}
-> Flow, a new open-source static type checker for JavaScript. Flow adds static typing to JavaScript to improve developer productivity and code quality. In particular, static typing offers benefits like early error checking, which helps you avoid certain kinds of runtime failures, and code intelligence, which aids code maintenance, navigation, transformation, and optimization.
+\subsection{Typed JavaScript Derivations}
 
-% https://code.facebook.com/posts/1505962329687926/flow-a-new-static-type-checker-for-javascript/
+\subsection{Analysis of JavaScript Source Codes}
+There are several static analysis frameworks and solutions available for JavaScript. I introduce and compare them in detail in \cref{sect:javascript-parsers} (JavaScript parsers) and \cref{sect:javascript-type-inferencers} (JavaScript type inferencing solutions).
 
-> Flow can infer the type of most things within a file, so you don't always have to annotate every function and variable to get typechecking to work. However, even if Flow can infer a type, you can still add annotations to be explicit. The only time that Flow strictly requires an annotation is when a variable/function/class is exported from a module (defined in one file and used in another).
->
-> In our final example, 05\_DynamicCode, we haven't annotated the function, but we are passing in two different types of arguments:
->
-> In this case, Flow detects that the second time the function is called (with a number), the length property will fail:
->
-> Flow is smart enough to detect that this conditional check is sufficient to avoid any potential failures at run time, and will give you a clean bill of health.
-
-% http://flowtype.org/docs/five-simple-examples.html#2-adding-type-annotations
-
-> Since types are not part of the JavaScript specification, we need to strip them out before sending the file to the user.
-
-% http://flowtype.org/docs/running.html#using-the-offline-transform-tool
-
-> Making previously-untyped code typecheck with Flow may take some time and work - and sometimes it may not be worth the effort in the short term. Flow supports interface files so you can use libraries in a typed way without having to run Flow on them at all. If your project just depends on third party libraries, check out our guide on using Flow with external dependencies and consider using an interface file for the libraries.
->
->Why is typechecking existing code so hard? Libraries not written with types in mind often contain complex, highly dynamic code that confuses analyzers such as Flow. The code may also have been written in a style that Flow deliberately chooses not to support in order to give the programmer more help. Some typical examples are:
->
->    Operations on primitive values: While JavaScript allows operations such as true + 3, Flow considers it a type error. This is by design, and is done to provide the programmer with more safety. While that's easily avoided for new code, it can sometimes be a lot of effort to eliminate such patterns from existing code.
->    Nullability: Flow protects you against accessing properties on null by tracking null or undefined values throughout the program. In large existing codebases, though, this can require inserting some extra null checks in places where a value appears like it may be null, but actually isn't at runtime.
->
-> It is typically a much larger effort, and requires much more programmer annotation, to get such code to typecheck. On the other hand, if you own a library and would like to benefit from Flow typechecking within the library itself, this guide is for you.
-
-% http://flowtype.org/docs/existing.html
-
-> When you start Flow, it performs an initial analysis of all the files in your codebase and stores the results in a persistent server. When you save a file, Flow incrementally rechecks the changes in the background.
->
-> Both the initial analysis and recheck are heavily optimized for performance, which preserves the fast feedback of developing plain JavaScript.
->
-> Flow uses control flow analysis to deeply understand your code to find errors that other type systems can't. Flow is designed to find errors and we take soundness seriously.
->
-> For example, Flow tracks null values which may propagate unintentionally through code and eventually cause a runtime error. Flow's path sensitive analysis can uncover bugs like this, even through layers of indirection in the program's control flow
-
-% http://flowtype.org/docs/about-flow.html#_
-
-> Facebook loves JavaScript; it’s fast, it’s expressive, and it runs everywhere, which makes it a great language for building products. At the same time, the lack of static typing often slows developers down. Bugs are hard to find (e.g., crashes are often far away from the root cause), and code maintenance is a nightmare (e.g., refactoring is risky without complete knowledge of dependencies). Flow improves speed and efficiency so developers can be more productive while using JavaScript.
-
-> But layering a static type system onto JavaScript is not trivial. JavaScript’s building blocks are extremely expressive, and simple type systems do not suffice to precisely model their semantics. To seamlessly work with several common JavaScript idioms, Flow employs the kind of data-flow and control-flow analysis that compilers typically perform to extract semantic information from code. It then uses this information for type inference, building on advanced techniques in type theory. Of course, designing a powerful static analysis is not sufficient — JavaScript codebases can be huge, so type checking has to be blazing fast as not to disrupt the developer’s edit-run cycle. Flow performs its analysis modularly, guided by types at module boundaries. This enables an aggressively parallel and incremental type checking architecture, similar to Hack. This allows type checking to appear instantaneous, even on millions of lines of code.
->
-> Flow’s type checking is opt-in — you do not need to type check all your code at once. However, underlying the design of Flow is the assumption that most JavaScript code is implicitly statically typed; even though types may not appear anywhere in the code, they are in the developer’s mind as a way to reason about the correctness of the code. Flow infers those types automatically wherever possible, which means that it can find type errors without needing any changes to the code at all. On the other hand, some JavaScript code, especially frameworks, make heavy use of reflection that is often hard to reason about statically. For such inherently dynamic code, type checking would be too imprecise, so Flow provides a simple way to explicitly trust such code and move on. This design is validated by our huge JavaScript codebase at Facebook: Most of our code falls in the implicitly statically typed category, where developers can check their code for type errors without having to explicitly annotate that code with types.
-
-% https://code.facebook.com/posts/1505962329687926/flow-a-new-static-type-checker-for-javascript/
-
-\begin{itemize}
-\item \url{http://flowtype.org/}
-\item \url{https://github.com/facebook/flow}
-\item \url{https://code.facebook.com/posts/1505962329687926/flow-a-new-static-type-checker-for-javascript/}
-\end{itemize}
-
-
-\subsubsection{TAJS}
-\textquote[\cite{tajs-git}]{TAJS is a dataflow analysis for JavaScript that infers type information and call graphs. The current version of the analysis contains a model of ECMAScript 3rd edition, including the standard library, and a partial model of the HTML DOM and browser API.}
-
-TAJS initially (in 2009) tried to warn programmers for the following problematic cases. This enumeration follows~\cite{jensen_type_2009}.
-
-\begin{enumerate}
-  \item invoking a non-function value as a function
-  \item reading an absent variable
-  \item accessing a property of \code{null} or \code{undefined}
-  \item reading an absent property of an object
-  \item writing to variables or object properties that are never read
-  \item implicitly converting a primitive value to an object
-  \item implicitly converting \code{undefined} to a number
-  \item calling a function object both as a function and as a constructor or passing function parameters with varying types
-  \item calling a built-in function with an invalid number of parameters orwith a parameter of an unexpected type
-\end{enumerate}
-
-\begin{itemize}
- \item \url{http://www.brics.dk/TAJS/}
- \item \url{https://github.com/cs-au-dk/TAJS}
- \item \url{http://www.srl.inf.ethz.ch/workshop2014/eth-moeller.pdf}
-\end{itemize}
-
-\subsubsection{Tern}
-\begin{itemize}
- \item \url{http://marijnhaverbeke.nl/blog/tern.html}
- \item \url{http://ternjs.net/doc/manual.html#infer}
- \item \url{http://ternjs.net/doc/manual.html#typedef}
- \item \url{https://github.com/angelozerr/tern.java}
- \item \url{https://github.com/ternjs/tern/blob/master/lib/infer.js}
-\end{itemize}
-
-\subsubsection{JSNice -- Programming Tools with Big Data and Conditional Random Fields (ETHZ)}
-\begin{itemize}
- \item \url{http://www.srl.inf.ethz.ch/jsnice.php}
- \item \url{http://www.srl.inf.ethz.ch/papers/jsnice15.pdf}
- \item \url{http://www.jsnice.org/}
- \item \url{https://github.com/eth-srl/Nice2Predict}
-\end{itemize}
-
-\subsubsection{Mozilla DoctorJS}
-\begin{itemize}
-\item \url{http://rfrn.org/~shu/drafts/ti.pdf} (2012)
-\item \url{https://wiki.mozilla.org/TypeInference}
-\item \url{https://github.com/dimvar/doctorjs}
-\item \url{https://github.com/mozilla/doctorjs}
-\end{itemize}
-
-\subsubsection{JS0 -- PhD (2006) @ University of London}
-\begin{itemize}
- \item \url{http://dev.pubs.doc.ic.ac.uk/chrisandersonphd/chrisandersonphd.pdf}
-\end{itemize}
-
-\subsubsection{Infernu}
-\begin{itemize}
- \item \url{https://github.com/sinelaw/infernu}
-\end{itemize}
-
-\subsubsection{University of California}
-\begin{itemize}
- \item \url{https://www.cs.ucsb.edu/~benh/research/papers/kashyap13type.pdf (2013)}
-\end{itemize}
-
-
-\section{Evaluating Queries on a Data Stucture}
+\section{Graph Pattern Matching}
 Numerous strategies exist for defining and executing queries over data structures. They can be defined in an imperative manner with programming languages like a navigation described in \emph{Gremlin} over a graph database or using a data access interface such as the Eclipse Modeling Framework. Declarative solutions also exist, where the query plan is calculated from the query formalized in a declarative language (like frameworks \emph{SQL}, \emph{OCL}, \emph{SPARQL}, \emph{Cypher}) and execution is performed by a query framework (such as \emph{4store}, \emph{Neo4j}). I base my approach on pattern matching, one of the declarative querying solutions, supplemented by imperative logic.
 
 \textquote[\cite{csmr}]{Graph patterns are a declarative, graph-like formalism representing a condition (or constraint) to be matched against instance model graphs. The formalism is useful for various purposes in model-driven development, such as defining model transformation rules or defining general purpose model queries including model validation constraints. A graph pattern consists of structural constraints prescribing the interconnection between nodes and edges of a given type.
@@ -363,10 +188,10 @@ A match of a pattern is a tuple of pattern parameters that fulfill all the follo
 
 
 \subsection{Graph Databases}
-Since my thesis work is based on graph-based data handling, it is essential to use a technique that is suitable. In this case suitable is better described as being fast, flexible, versatile, easy to use and deploy. In this section I go over some of the most promising candidates and justify why I've chosen Neo4j as the foundation of my approach.
+Since my thesis work is based on graph-based data handling, it is essential to use a technique that is suitable. In this case suitable is better described as being fast, flexible, versatile, easy to use and deploy. In this section I go over some of the most promising candidates and justify why I have chosen Neo4j as the foundation of my approach.
 
 \subsubsection{Neo4j}
-Neo4j is one of the most popular and most mature NoSQL graph databases developed by \emph{Neo Technology}. It's open-source, well-documented and steadily-developed. It's available in two editions: a free \emph{Community Edition} and a paid \emph{Enterprise Edition}.~\cite{neo4j}
+Neo4j is one of the most popular and most mature NoSQL graph databases developed by \emph{Neo Technology}. It is open-source, well-documented and steadily-developed. Neo4j is available in two editions: a free \emph{Community Edition} and a paid \emph{Enterprise Edition}.~\cite{neo4j}
 
 \paragraph{Architecture}
 Since Neo4j was written in Java (and Scala), it can be used to start a new project quick and easy. In respect of connection, it can be deployed two ways: in \emph{server mode} the database is started separately and listens for queries on its HTTP REST and Bolt interface; where in \emph{embedded mode} it runs in the same JVM as the only client application.
@@ -481,7 +306,7 @@ Ecore is the metamodeling language used by EMF. It has been developed in order t
 	\item \code{EAttribute} represents a named attribute literal, which also has a type.
 	\item \code{EClass} represents a class, with optional attributes and optional references. To support inheritance, a class can refer to a number of supertype classes.
 	\item \code{EDataType} is used to represent simple data types that are treated as atomic (their internal structure is not modeled). Data types are identified by their name.
-	\item \code{EReference} represents a unidirectional association between EClasses and is identified by a name. It is also possible to mark a reference as a containment that represents composition relation between elements. A bidirectional association should be modeled as two EReference instances mutually connected via their opposite references.
+	\item \code{EReference} represents a unidirectional association between \code{EClass}es and is identified by a name. It is also possible to mark a reference as a containment that represents composition relation between elements. A bidirectional association should be modeled as two \code{EReference} instances mutually connected via their opposite references.
 \end{itemize}
 
 An Ecore model has a root object, representing the whole model. The children of this root object are packages, and the children of those are classes.
@@ -505,10 +330,10 @@ Debugging is also made easy, as the editor can be attached to the running code a
 \subsection{IntelliSense}
 Visual Studio Code's syntax highlighting and autocomplete system is called IntelliSense, that also provides better completition based on variable types, function definitions, and imported modules. IntelliSense provides syntactical features like \emph{format on type}, \emph{outlining}; and also language service features like \emph{peek}, \emph{go to definition}, \emph{find all references} and \emph{rename symbol}.
 
-To make these smarter functions possible, JavaScript service relies upon the TypeScript language service to handle JavaScript source code. It uses the same type inference system as TypeScript to determine the type of a value. (It recognises the \emph{''ES3-style''} class declaration.) Explicit JSDoc annotations can also be used, in case the type inference does not provide the desired type information. For major libraries it is also possible to download an import a type definition file.
+To make these smarter functions possible, JavaScript service relies upon the TypeScript language service to handle JavaScript source code. It uses the same type inference system as TypeScript to determine the type of a value. (It recognises the \emph{``ES3-style''} class declaration.) Explicit JSDoc annotations can also be used, in case the type inference does not provide the desired type information. For major libraries it is also possible to download an import a type definition file.
 
 \subsection{Extensions}
-Visual Studio Code is built with extensions in mind. Extensions make it possible to add new languages, themes, debuggers, and to connect to additional services. The framework runs them in a separate process, ensuring they won't slow the editor down.
+Visual Studio Code is built with extensions in mind. Extensions make it possible to add new languages, themes, debuggers, and to connect to additional services. The framework runs them in a separate process, ensuring they will not slow the editor down.
 
 Every extension has the same model describe its contribution (how it is registered in the framework), activation (when it is loaded) and the same way to access the VS Code extension API. There are two special type of extensions: language servers and debuggers, which have their own additional protocols.
 
