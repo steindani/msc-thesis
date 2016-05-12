@@ -6,7 +6,7 @@ In this chapter I enumerate a subset of similar systems and discuss related work
 
 \section{JavaScript Parsers}
 \label{sect:javascript-parsers}
-In this section I showcase the most used, \emph{trendy} JavaScript parser technologies and justify why I have chosen the Shapesecurity Shift family as the parser and additional toolset for my approach.
+In this section I showcase the most used, \emph{trending} JavaScript parser technologies and justify why I have chosen the Shapesecurity Shift family as the parser and additional toolset for my approach.
 
 \subsection{Acorn}
 \begin{itemize}
@@ -49,9 +49,9 @@ In this section I showcase the most used, \emph{trendy} JavaScript parser techno
 \end{itemize}
 
 \subsection{Comparison of Parser Technologies}
-\subsubsection{Speed} Although speed is not the most important property of a system whose aim is to make sure no errors are present, it is wanted for a nearly real-time response system. \Cref{table:speed-comparison-of-parsers} shows the time difference parsers process different source codes. The benchmark~\footnote{\url{http://esprima.org/test/compare.html}} was run on a personal computer not set up for proper benchmarking. Its sole purpose is to get a rough comparison between the different technologies available.
+\subsubsection{Speed} Although speed is not the most important property of a system aiming to make sure no errors are present, quick response can boost the performance of the user. \Cref{table:speed-comparison-of-parsers} shows the time difference between parsers processing various source codes repositories. The benchmark~\footnote{\url{http://esprima.org/test/compare.html}} was run on a personal computer without specific considerations or fine-tuning for benchmarks. Its sole purpose is to get a rough comparison between the different technologies available.
 
-It is visible that Shift (with early error checking disabled (NEE -- No Early Errors)) is one of the fastest parsers available.
+It is visible that Shift NEE\footnote{Early error checking disabled. NEE -- No Early Errors} is one of the fastest parsers available.
 
 \begin{table}[!htb]
 \centering
@@ -132,9 +132,9 @@ It is visible that Shift (with early error checking disabled (NEE -- No Early Er
 
 
 \subsection{TAJS}
-\textquote[\cite{tajs-git}]{TAJS is a dataflow analysis for JavaScript that infers type information and call graphs. The current version of the analysis contains a model of ECMAScript 3rd edition, including the standard library, and a partial model of the HTML DOM and browser API.}
+Type Analyzer for JavaScript (TAJS) is a dataflow analysis tool infering type information and call graphs. The current version (in 2016) can model scripts of ECMAScript 3; it also contains model of the standard library and partial model of the HTML DOM and browser API.~\cite{tajs-git}
 
-TAJS initially (in 2009) tried to warn programmers for the following problematic cases. This enumeration follows~\cite{jensen_type_2009}.
+The initial aim of TAJS was to warn programmers for the following problematic cases. This enumeration follows~\cite{jensen_type_2009}.
 
 \begin{enumerate}
   \item invoking a non-function value as a function

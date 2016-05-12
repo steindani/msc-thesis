@@ -59,7 +59,7 @@ Since static analysis tools deliberately do not evaluate the source code, there 
 
 However, with a given limitation of granularity, in case of a source code modification, previous results can be reused. There is a possibility that only the modified---and other affected---parts need to be processed again. The incremental approach of static analysis may speed up the process by orders of magnitude~\cite{stein-daniel-bsc}.
 
-\paragraph{False Positives} Static analysis can not prove the correctness of a source code. It rather warn in case there is a possibility of a problem. Thus static analysis tools can introduce false positive warnings and flag code parts even if they behave correcly.
+\paragraph{False Positives} Static analysis can not prove the correctness of a source code. It rather warn in case there is a possibility of a problem. Thus static analysis tools can introduce false positive warnings and flag code parts as problematic even if they behave correcly.
 
 To reduce the number of false positive warnings, one usually introduces more precise, specified rules and more thorough analysis.
 
@@ -71,27 +71,49 @@ To reduce the number of false positive warnings, one usually introduces more pre
 
 \subsection{Source Code Processing and Analysis}
 \label{sect:source-code-processing}
-The source code of a program is a sequence of instructions formulated in a programming language as a text. Source codes contain a much wider variety of data than a source code processing entity (hereafter \emph{compiler}) needs in order to process (translate, compile, analyze) the application: comments, function declaration order, indentation, line breaks all help the developer or reader of the code, but contain no additional information.
+The source code of a program is a sequence of instructions formulated in a programming language as a text. Grammars of formal languages are a set of rules describing what the compiler considers a valid input---how to create valid instructions or a set of instructions from the alphabet of the language \emph{(syntax)}. A source code processing entity (transformer, or hereafter \emph{compiler}) assigns a meaning \emph{(semantics)} and transforms the instruction to another language (generally an intermediate language or bytecode).
 
-What input data the compiler considers useful information depends on the semantics of the language the compiler is built for. Grammars are a set of rules for formal languages describing what the compiler considers a valid input---how to create valid instructions or a set of instructions from the alphabet of the language \emph{(syntax)}. Understanding what an instruction means \emph{(semantics)} and transforming it is the task of the compiler.
+What input data the compiler considers useful information depends on the semantics of the language the compiler is built for. Source codes contain a much wider variety of data than a compiler requires for transforming, analyzing the application: comments, function declaration order, indentation, line breaks all help the reader (and writer) of the code, but carry no additional information.
 
-\Cref{fig:processing-the-source-code} shows the general process for processing source codes---how it is transformed from a stream of characters into a data structure with ``meaning''.
+\Cref{fig:processing-the-source-code} shows the general process for processing source code and transforming a stream of characters into a data structure with \emph{meaning}.
 
 \begin{figure}[!ht]
 	\centering
 	\adjustbox{max width=\textwidth} {
 		\begin{tikzpicture}[
-			node distance = 2cm,
+			node distance = 1cm,
+      label distance = 0.5cm,
 			auto,
 			]
 
     \node[stdstage] (SC) {Source Code};
-    \node[stdstage, below=of SC] (TO) {Tokens};
-    \node[stdstage, below=of TO] (AST) {Abstract Syntax Tree};
-    \node[stdstage, below=of AST] (ASG) {Abstract Semantic Graph};
+    \node[processor,
+          below=of SC,
+          label={left:tokenizer}
+          ] (TOK) {};
+    \node[stdstage, below=of TOK] (TO) {Tokens};
+    \node[processor,
+          below=of TO,
+          label={left:parser}
+          ] (PAR) {};
+    \node[stdstage, below=of PAR] (AST) {Abstract Syntax Tree};
+    \node[processor,
+          below=of AST,
+          label={left:scope analyzer}
+          ] (SA) {};
+    \node[stdstage, below=of SA] (ASG) {Abstract Semantic Graph};
 
+
+    \path (SC) edge[flowedge]  (TOK);
+    \path (TOK) edge[flowedge] (TO);
     \path (SC) edge[textedge] node {\emph{tokenization}\\ breaking the stream of source code characters into tokens (words, symbols)} (TO);
+
+    \path (TO) edge[flowedge]  (PAR);
+    \path (PAR) edge[flowedge] (AST);
     \path (TO) edge[textedge] node {\emph{parsing}\\ ordering the tokens into a data structure based on grammar rules} (AST);
+
+    \path (AST) edge[flowedge]  (SA);
+    \path (SA) edge[flowedge] (ASG);
     \path (AST) edge[textedge] node {\emph{scope analysis}\\ resolving the references in the AST and extending it with derived information into an ASG} (ASG);
 		\end{tikzpicture}
 	}
@@ -152,7 +174,7 @@ A \emph{parser} forms the second phase of a parsing process, using the output to
 \paragraph{Abstract Syntax Tree}
 An \emph{Abstract Syntax Tree} (AST) is a tree representation of the syntactic structure of the result of a parsing along a grammar. The nodes of the tree denote a construct occuring in the input, while the edges represent the connection between these nodes based on the grammar rules.
 
-As mentioned in~\cref{sect:source-code-processing}, source code contains much more detail (e.g., indentation, whitespace, comments) than is needed and restrained during the parsing process. Thus this representation is an \emph{abstract} syntax tree. It may be transformed based on transformation rules and source code can be generated from ASTs, however without the layout information it may look different than the initial source code.
+As mentioned in~\cref{sect:source-code-processing}, source code contains much more detail (e.g., indentation, whitespace, comments) than is required and restrained during the parsing process. Thus this representation is a digested, \emph{abstract} syntax tree. It may be transformed based on transformation rules and source code can be generated from ASTs. Without restraining the layout information and reusing it during the code generation, the resulting text can show differences in indents, whitespaces and expression formulation compared to the initial source code.
 
 \Cref{fig:ast-asg-example} shows an example AST (in black), where a one-statement JavaScript file is parsed. The content of the file was only \code{var foo = 1 / 0;}.
 
@@ -160,9 +182,9 @@ As mentioned in~\cref{sect:source-code-processing}, source code contains much mo
 A \emph{scope analyzer} or \emph{context analyzer} produces a data structure that represents the scoping information of a program, probably extending the information available from an AST or an ASG. An element representing a scope in this data structure may contain, inter alia, metadata about the scope itself, the AST node related to the scope, available assets (variables, functions, etc.) in that scope.~\cite{shift-scope}
 
 \paragraph{Abstract Semantic Graph}
-As its name implies, an \emph{Abstract Semantic Graph} (ASG) differs from an AST in more than one way. (1) It is a graph and (2) it not only contains syntactic information. Roughly it is an AST with additional edges indicating semantic information. These edges can not exist in an AST, as they are non-tree edges, cross-edges. For example they may connect variable references to their declarations.~\cite{raghavan_dex:_2004}
+As its name implies, an \emph{Abstract Semantic Graph} (ASG), although sounding alike, differs from an Abstract Syntax Tree. (1) ASGs are graphs, and (2) express more than the syntactic information; ASGs carry semantic information expressed with additional edges. These edges can not exist in an AST, as they are non-tree edges (cross-edges). For example they may connect variable references to their declarations.~\cite{raghavan_dex:_2004}
 
-ASGs are a graph representation of a parse result, where its nodes are expression's subterms. These subterms may be shared, more than one node may connect to the same, common subterm. Compilers usually work on ASGs internally, since  not only the syntactical, but the behavioral information is also represented.
+An ASG is a graph representation of a parse result; the nodes represent subterms of an expression. Shared subterms can occur, having more than one node linked to the same, common subterm. Compilers generally work on ASGs internally, since not only the syntactical, but the behavioral information are also represented in them.
 
 % An abstract semantic graph is typically constructed from an abstract syntax tree by a process of enrichment and abstraction. The enrichment can for example be the addition of back-pointers, edges from an identifier node (where a variable is being used) to a node representing the declaration of that variable. The abstraction can entail the removal of details which are relevant only in parsing, not for semantics.
 % https://en.wikipedia.org/wiki/Abstract_semantic_graph

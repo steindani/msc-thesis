@@ -12,7 +12,7 @@
 \usepackage{booktabs}
 \newcommand{\code}[1]{{\upshape\ttfamily\small\indent #1}}
 
-\usetikzlibrary{automata,arrows,positioning,trees}
+\usetikzlibrary{automata,arrows,positioning,trees,shapes.geometric}
 \tikzset{
 	>=stealth',
 	stdstage/.style={
@@ -21,11 +21,24 @@
 		draw=black,
 		minimum height=2.5em,
 		text centered},
+	processor/.style={
+		diamond,
+		minimum width=2em,
+		minimum height=2em,
+		aspect = 1,
+		draw = black
+		},
+	flowedge/.style = {
+		->,
+		>=stealth',
+		shorten >=1pt
+	},
 	textedge/.style={
-		->,>=stealth',shorten >=1pt,
+		draw=none,
 		text width = 7.5cm,
-    inner sep = 0.5cm,
-		align=left,}
+    inner sep = 1cm,
+		align = left
+	}
 }
 
 \bibliography{bibliography}
