@@ -215,9 +215,39 @@ Type inference refers to the deduction of the data types of expressions, stateme
 \subsection{Analysis of JavaScript Source Codes}
 There are several static analysis frameworks and solutions available for JavaScript. I introduce and compare them in detail in \cref{sect:javascript-parsers} (JavaScript parsers) and \cref{sect:javascript-type-inferencers} (JavaScript type inferencing solutions).
 
-\section{Graph Pattern Matching}
-Numerous strategies exist for defining and executing queries over data structures. They can be defined in an imperative manner with programming languages like a navigation described in \emph{Gremlin} over a graph database or using a data access interface such as the Eclipse Modeling Framework. Declarative solutions also exist, where the query plan is calculated from the query formalized in a declarative language (like frameworks \emph{SQL}, \emph{OCL}, \emph{SPARQL}, \emph{Cypher}) and execution is performed by a query framework (such as \emph{4store}, \emph{Neo4j}). I base my approach on pattern matching, one of the declarative querying solutions, supplemented by imperative logic.
 
+\section{Handling Large Interconnected Data}
+The progress of computer parts -- the ever increasing amount of processing power, and memory and storage speed and sizes -- and the alike growth of data to be stored and processed during the last more than fifty years yielded various solutions.
+
+Based on historic evolution, these solutions can be categorized in three main categories:
+\begin{itemize}[topsep=0pt]
+  \item \emph{Navigational} database management systems (DBMS) were mainly used in the era of magnetic tape based storages, in which the \emph{records} contained references to other records allowing the system to fast-forward, \emph{navigate} there and load additional data.
+
+  \item \emph{Relational} DBMSs organizes data in a \emph{relational model}~\cite{codd}, where one or more \emph{relations} contain unique entries (\emph{records} or \emph{tuples}).
+
+  Relational databases leverage precise mathematical background (see \emph{relational algebra} and \emph{relational calculus}), have diverse implementations, mature tooling, and data access security by authentication and authorization. There are also disadvantages; due to their data structure, relational databases may have scalability and performance issues. They are also typically optimized for transactional processing and not data analysis (there are exceptions, see \emph{data warehouses}).
+
+  \item \emph{Post-relational} databases is a vague collective name for every database system that abandons the strictness and burden of the relational data model and the Structured Query Language (SQL).
+
+  Since the turn of the millennium, the struggle with storing and processing huge amounts of data using relational technologies spawned a diverse palette of new database management systems using simpler, more scalable data models. These systems are consequently called \emph{non SQL}, NoSQL databases, and are increasingly used in real-time and big data applications.
+
+  NoSQL systems are a heterogeneous set of systems, with very different approaches. Categories of these systems include, but are not limited to: \emph{key-value stores}, \emph{wide column stores}, \emph{document stores}, \emph{graph DBMSs}, \emph{RDF stores}.
+\end{itemize}
+
+In this section I introduce the concept of graph databases, and graph pattern matching. I also introduce several graph database implementations and systematically compare them.
+
+\subsection{On Graph Computing}
+\subsubsection{Graph Computing Technologies}
+This section loosely follows~\cite{On_Graph_Computing}.
+
+\paragraph{In-Memory Graph Toolkits}
+\paragraph{Disk-Resilient, Real-Time Graph Databases}
+\paragraph{Batch-Processing Graph Frameworks}
+
+\subsection{Evaluating Queries on a Data Structure}
+Numerous strategies exist for defining and executing queries over data structures. They can be defined in an imperative manner with programming languages like a navigation described in \emph{Gremlin} over a graph database or using a data access interface such as the Eclipse Modeling Framework. Declarative solutions also exist, where the query plan is calculated from the query formalized in a declarative language (like frameworks \emph{SQL}, \emph{SPARQL}, \emph{Cypher}) and execution is performed by a query framework (such as \emph{4store}, \emph{Neo4j}). I base my approach on pattern matching, one of the declarative querying solutions, supplemented by imperative logic.
+
+\subsubsection{Graph Pattern Matching}
 \textquote[\cite{csmr}]{Graph patterns are a declarative, graph-like formalism representing a condition (or constraint) to be matched against instance model graphs. The formalism is useful for various purposes in model-driven development, such as defining model transformation rules or defining general purpose model queries including model validation constraints. A graph pattern consists of structural constraints prescribing the interconnection between nodes and edges of a given type.
 
 A match of a pattern is a tuple of pattern parameters that fulfill all the following conditions:
