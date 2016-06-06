@@ -238,12 +238,12 @@ Since my approach is based on graph databases, in this section I introduce the c
 
 
 \subsection{On Graph Computing}
-Graphs are well-known and in computer science widely used mathematical concept, which has been around for many decades. Numerous graph technologies have evolved, each with their advantages and disadvantages. From graphs themselves to physical and virtual worlds, many scenarios can be represented as graphs and stored in graph databases with their respective data model. This section loosely follows~\cite{On_Graph_Computing, scm}.
+Graphs are well-known and in computer science widely used mathematical concept, which has been around for many decades. Numerous graph technologies have evolved, each with their advantages and disadvantages. From graphs themselves to physical and virtual worlds, many scenarios can be represented as graphs and stored in graph databases with their respective data model. This section loosely follows~\cite{scm, On_Graph_Computing}.
 
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=0.8\textwidth]{include/figures/graph-classes}
-	\caption{Different graph data models~(based on~\cite{DBLP:journals/corr/abs-1006-2361}).}
+	\caption{Graph data models~(based on~\cite{DBLP:journals/corr/abs-1006-2361}).}
 	\label{fig:graph-classes}
 \end{figure}
 
@@ -256,8 +256,17 @@ Simple graphs can be extended in several different ways (see \cref{fig:graph-cla
 My approach utilizes typed (labeled) property graphs.
 
 \subsubsection{Graph Computing Technologies}
+The practice of data storage and processing is encumbered with space and time trade-off. This trade-off is also present in various graph computing technologies. This section discusses the categorization of these technologies and mentions a few technologies of which the most popular ones are detailed in~\cref{sect:graph-databases}.
+
+The landscape of graph storing and processing solutions is populated and diverse (see~\cite{zhang_-memory_2015}). The basic categorization is the following. Graph computing technologies can be divided into two groups: on-line, real-time; and global analyzing, batch-processing graph databases. The former can be divided into in-memory, and disk-resilient databases.
 
 \paragraph{In-Memory Graph Toolkits}
+The challenge of big data problems shed light on that the existing disk-based systems can not offer timely response due to the latency of hard disks. The role of storage shifted from the hard drive to the memory of the system. In-memory graph databases are constrained to graphs that fit into the main memory. Thus these systems are single-user systems that are oriented towards low-latency graph analysis.
+
+The locality of data allows the usage of rich algorithm libraries and the choice of the adequate graph representation with respective space-time trade-off. The constraint of space allows large graphs (with millions of edges) to be stored and processed, but this is not sufficient in all cases.
+
+Example in-memory graph toolkits: \emph{Apache Giraph}, \emph{Microsoft Graph Engine} (formerly \emph{Trinity}), \emph{Apache Spark GraphX}, \emph{WhiteDB}.
+
 \paragraph{Disk-Resilient, Real-Time Graph Databases}
 \paragraph{Batch-Processing Graph Frameworks}
 
@@ -276,6 +285,7 @@ A match of a pattern is a tuple of pattern parameters that fulfill all the follo
 
 
 \subsection{Graph Databases}
+\label{sect:graph-databases}
 Since my thesis work is based on graph-based data handling, it is essential to use a technique that is suitable. In this case suitable is better described as being fast, flexible, versatile, easy to use and deploy. In this section I go over some of the most promising candidates and justify why I have chosen Neo4j as the foundation of my approach.
 
 \subsubsection{Neo4j}
