@@ -231,14 +231,31 @@ Based on historic evolution, these solutions can be categorized in three main ca
 
   Since the turn of the millennium, the struggle with storing and processing huge amounts of data using relational technologies spawned a diverse palette of new database management systems using simpler, more scalable data models. These systems are consequently called \emph{non SQL}, NoSQL databases, and are increasingly used in real-time and big data applications.
 
-  NoSQL systems are a heterogeneous set of systems, with very different approaches. Categories of these systems include, but are not limited to: \emph{key-value stores}, \emph{wide column stores}, \emph{document stores}, \emph{graph DBMSs}, \emph{RDF stores}.
+  NoSQL systems are a heterogeneous set of systems, with very different approaches. Categories of these systems based on their data models include, but are not limited to: \emph{key-value stores}, \emph{wide column stores}, \emph{document stores}, \emph{graph DBMSs}, \emph{RDF stores}.
 \end{itemize}
 
-In this section I introduce the concept of graph databases, and graph pattern matching. I also introduce several graph database implementations and systematically compare them.
+Since my approach is based on graph databases, in this section I introduce the concept of graph databases, and graph pattern matching. I also introduce several graph database implementations and systematically compare them in order to select the appropriate technology for the approach.
+
 
 \subsection{On Graph Computing}
+Graphs are well-known and in computer science widely used mathematical concept, which has been around for many decades. Numerous graph technologies have evolved, each with their advantages and disadvantages. From graphs themselves to physical and virtual worlds, many scenarios can be represented as graphs and stored in graph databases with their respective data model. This section loosely follows~\cite{On_Graph_Computing, scm}.
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.8\textwidth]{include/figures/graph-classes}
+	\caption{Different graph data models~(based on~\cite{DBLP:journals/corr/abs-1006-2361}).}
+	\label{fig:graph-classes}
+\end{figure}
+
+The most basic graph model is the \emph{simple graph}, formally defined as $G = (V, E)$, where $V$ is the set of vertices and $E \subseteq V \times V$ is the set of edges. Simple graphs are sometimes referred as textbook-style graphs because they are an integral part of academic literature. Simple graphs are useful for modeling homogeneous systems and have plenty of algorithms for processing.
+
+Simple graphs can be extended in several different ways (see \cref{fig:graph-classes}). To describe the connections in more detail, one may add directionality to edges (\emph{directed graph}). To allow different connections, one may label the edges (\emph{labeled graph}).
+
+\emph{Typed graphs} introduce types for vertices. \emph{Property graphs} (sometimes called \emph{attributed graphs}) add even more possibilities by introducing properties. Each graph element, both vertices and edges can be described with a collection of properties. The properties are key--value pairs, e.g.\ \texttt{type = `Person'}, \texttt{name = `John'}, \texttt{age = 34}. \emph{Semantic graphs} use Uniform Resource Identifiers (URIs) instead of labels, otherwise they have similar expressive power as labeled graphs.
+
+My approach utilizes typed (labeled) property graphs.
+
 \subsubsection{Graph Computing Technologies}
-This section loosely follows~\cite{On_Graph_Computing}.
 
 \paragraph{In-Memory Graph Toolkits}
 \paragraph{Disk-Resilient, Real-Time Graph Databases}
