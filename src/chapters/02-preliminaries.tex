@@ -258,7 +258,7 @@ My approach utilizes typed (labeled) property graphs.
 \subsubsection{Graph Computing Technologies}
 The practice of data storage and processing is encumbered with space and time trade-off. This trade-off is also present in various graph computing technologies. This section discusses the categorization of these technologies and mentions a few technologies of which the most popular ones are detailed in~\cref{sect:graph-databases}.
 
-The landscape of graph storing and processing solutions is populated and diverse (see~\cite{zhang_-memory_2015}). The basic categorization is the following. Graph computing technologies can be divided into two groups: on-line, real-time; and global analyzing, batch-processing graph databases. The former can be divided into in-memory, and disk-resilient databases.
+The landscape of graph storing and processing solutions is populated and diverse (see~\cite{zhang_-memory_2015}). The basic categorization of software graph database solutions is the following. Graph computing technologies can be divided into two groups: on-line, real-time; and global analyzing, batch-processing graph databases. The former can be divided into in-memory, and persistent databases.
 
 \paragraph{In-Memory Graph Toolkits}
 The challenge of big data problems shed light on that the existing disk-based systems can not offer timely response due to the latency of hard disks. The role of storage shifted from the hard drive to the memory of the system. In-memory graph databases are constrained to graphs that fit into the main memory. Thus these systems are single-user systems that are oriented towards low-latency graph analysis.
@@ -267,11 +267,21 @@ The locality of data allows the usage of rich algorithm libraries and the choice
 
 Example in-memory graph toolkits: \emph{Apache Giraph}, \emph{Microsoft Graph Engine} (formerly \emph{Trinity}), \emph{Apache Spark GraphX}, \emph{WhiteDB}.
 
-\paragraph{Disk-Resilient, Real-Time Graph Databases}
+\paragraph{Persistent, Real-Time Graph Databases}
+Persistent graph databases are the prevalent group of graph computing technologies. Unlike in-memory graph tools, graph databases persist data on the hard drives, thus they can support billions of edges on a single machine and distributed systems can handle hundreds of billions of edges. These databases can provide multi-user concurrency, transactional semantics and eventual consistency.
+
+Since global graph algorithms are not feasible, these systems are optimized for local neighborhood analysis and concurrent access. Global graph analytics are inefficient due to the communication overhead and the computational overhead, e.g., transactional semantics.
+
+Example for persistend, real-time graph databases: \emph{InfiniteGraph}, \emph{Neo4j} (see \cref{sect:neo4j}), \emph{OrientDB} (see \cref{sect:orientdb}), and \emph{Titan} (see \cref{sect:titan}).
+
 \paragraph{Batch-Processing Graph Frameworks}
+In case there is no real-time requirement for the analysis touching the whole dataset, batch-processing graph frameworks can be used for global analytics. Since there is no burden of being real-time, the applied algorithm can even scan data multiple times and leverage sequential reads from the disk. These systems can be used to periodically process data and feed back the results into real-time graph databases. Most of these frameworks utilize Hadoop for storage (HDFS) and processing (MapReduce).
+
+Example batch-processing graph frameworks: \emph{Apache Hama}, \emph{Apache Giraph}, and \emph{DataStax Aurelius Faunus}.
+
 
 \subsection{Evaluating Queries on a Data Structure}
-Numerous strategies exist for defining and executing queries over data structures. They can be defined in an imperative manner with programming languages like a navigation described in \emph{Gremlin} over a graph database or using a data access interface such as the Eclipse Modeling Framework. Declarative solutions also exist, where the query plan is calculated from the query formalized in a declarative language (like frameworks \emph{SQL}, \emph{SPARQL}, \emph{Cypher}) and execution is performed by a query framework (such as \emph{4store}, \emph{Neo4j}). I base my approach on pattern matching, one of the declarative querying solutions, supplemented by imperative logic.
+Numerous strategies exist for defining and executing queries over data structures. They can be defined in an imperative manner with programming languages like a navigation described in \emph{Gremlin} over a graph database or using a data access interface such as the Eclipse Modeling Framework. Declarative solutions also exist, where the query plan is calculated from the query formalized in a declarative language (like \emph{SQL}, \emph{SPARQL}, \emph{Cypher}) and execution is performed by a query framework (such as \emph{4store}, \emph{Neo4j}). Graph pattern matching -- one of the declarative querying solutions, supplemented by imperative logic -- forms the foundation of my approach.
 
 \subsubsection{Graph Pattern Matching}
 \textquote[\cite{csmr}]{Graph patterns are a declarative, graph-like formalism representing a condition (or constraint) to be matched against instance model graphs. The formalism is useful for various purposes in model-driven development, such as defining model transformation rules or defining general purpose model queries including model validation constraints. A graph pattern consists of structural constraints prescribing the interconnection between nodes and edges of a given type.
@@ -289,6 +299,7 @@ A match of a pattern is a tuple of pattern parameters that fulfill all the follo
 Since my thesis work is based on graph-based data handling, it is essential to use a technique that is suitable. In this case suitable is better described as being fast, flexible, versatile, easy to use and deploy. In this section I go over some of the most promising candidates and justify why I have chosen Neo4j as the foundation of my approach.
 
 \subsubsection{Neo4j}
+\label{sect:neo4j}
 Neo4j is one of the most popular and most mature NoSQL graph databases developed by \emph{Neo Technology}. It is open-source, well-documented and steadily-developed. Neo4j is available in two editions: a free \emph{Community Edition} and a paid \emph{Enterprise Edition}.~\cite{neo4j}
 
 \paragraph{Architecture}
@@ -328,6 +339,7 @@ Other interesting and useful features of Cypher includes:
 \end{itemize}
 
 \subsubsection{Titan}
+\label{sect:titan}
 \textquote[\cite{titan}]{Titan is a scalable graph database optimized for storing and querying graphs containing hundreds of billions of vertices and edges distributed across a multi-machine cluster. Titan is a transactional database that can support thousands of concurrent users executing complex graph traversals in real time.}
 
 Titan was developed by \emph{Aurelius} until the company was aquired by \emph{DataStax} in 2015. DataStax has expressed its intentions to preserve the effort made by front-end users dependent on Titan and ensures the current users that the foreseeable merging procedure to DataStax Enterprise solutions will be as simple as possible~\cite{titan-datastax-acquirement}.
@@ -358,6 +370,7 @@ Titan natively supports the imperative graph traversal language Gremlin (by \emp
 
 
 \subsubsection{OrientDB}
+\label{sect:orientdb}
 \paragraph{Architecture}
 \paragraph{Data Model}
 \paragraph{Sharding}
