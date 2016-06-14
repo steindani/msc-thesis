@@ -281,7 +281,7 @@ Example batch-processing graph frameworks: \emph{Apache Hama}, \emph{Apache Gira
 
 
 \subsection{Evaluating Queries on a Data Structure}
-Numerous strategies exist for defining and executing queries over data structures. They can be defined in an imperative manner with programming languages like a navigation described in \emph{Gremlin} over a graph database or using a data access interface such as the Eclipse Modeling Framework. Declarative solutions also exist, where the query plan is calculated from the query formalized in a declarative language (like \emph{SQL}, \emph{SPARQL}, \emph{Cypher}) and execution is performed by a query framework (such as \emph{4store}, \emph{Neo4j}). Graph pattern matching -- one of the declarative querying solutions, supplemented by imperative logic -- forms the foundation of my approach.
+Numerous strategies exist for defining and executing queries over data structures. They can be defined in an imperative manner with programming languages like a navigation described in \emph{Gremlin} over a graph database or using a data access interface such as the Eclipse Modeling Framework. Declarative solutions also exist, where the query plan is calculated from the query formalized in a declarative language (like \emph{SQL}, \emph{SPARQL}, and \emph{Cypher}) and execution is performed by a query framework (such as \emph{4store}, and \emph{Neo4j}). Graph pattern matching -- one of the declarative querying solutions, supplemented by imperative logic -- forms the foundation of my approach.
 
 \subsubsection{Graph Pattern Matching}
 \textquote[\cite{csmr}]{Graph patterns are a declarative, graph-like formalism representing a condition (or constraint) to be matched against instance model graphs. The formalism is useful for various purposes in model-driven development, such as defining model transformation rules or defining general purpose model queries including model validation constraints. A graph pattern consists of structural constraints prescribing the interconnection between nodes and edges of a given type.
@@ -300,42 +300,41 @@ Since my thesis work is based on graph-based data handling, it is essential to u
 
 \subsubsection{Neo4j}
 \label{sect:neo4j}
-Neo4j is one of the most popular and most mature NoSQL graph databases developed by \emph{Neo Technology}. It is open-source, well-documented and steadily-developed. Neo4j is available in two editions: a free \emph{Community Edition} and a paid \emph{Enterprise Edition}.~\cite{neo4j}
+Neo4j is one of the most popular and most mature NoSQL graph databases developed by \emph{Neo Technology}. It is open-source, well-documented and continuously-developed. Neo4j is available in two editions: a free \emph{Community Edition} and a paid \emph{Enterprise Edition}.~\cite{neo4j}
 
 \paragraph{Architecture}
-Since Neo4j was written in Java (and Scala), it can be used to start a new project quick and easy. In respect of connection, it can be deployed two ways: in \emph{server mode} the database is started separately and listens for queries on its HTTP REST and Bolt interface; where in \emph{embedded mode} it runs in the same JVM as the only client application.
+Since Neo4j was written in Java (and Scala), it can be used to start a new project quick and easy. It can be deployed two ways: in \emph{server mode} the database is started separately and listens for queries on its HTTP REST and Bolt interface; where in \emph{embedded mode} it runs in the same JVM as the only client application.
 
 \paragraph{Data Model}
-The graph model in Neo4j, \code{Neo4jGraph} is an implementation of the \emph{TinkerPop} graph computing framework's \emph{Blueprints} property graph data model. More precisely it is a labeled property graph, since the relations are labeled and the nodes can also hold multiple labels; the nodes and relations can both hold properties.
-
-Unfortunately the relations are only binary, ternary (and n-ary $n>2$) relations can only be stored with an introduced indirection, a connection node connecting every node in the relation.
+The graph model in Neo4j, \code{Neo4jGraph} is very similar to the\emph{TinkerPop} graph computing framework's \emph{Blueprints} property graph data model. More precisely it is a labeled property graph, since the relations are labeled and the nodes can also hold multiple labels; the nodes and relations can both hold properties.
 
 \paragraph{Sharding}
-Although the \emph{Enterprise Edition} of Neo4j has a high availability solution and supports clustered replication and cache sharding, it does not support sharded data storage over a cluster of devices. This results in the advantage of low latency (clustering provides scale out capabilities for read), the ability to handle transactions and having ACID as the consistency model.~\cite{neo4j-product}
+Although the \emph{Enterprise Edition} of Neo4j has a high availability solution and supports clustered replication and cache sharding, it does not support sharded data storage over a cluster of devices. This results in the advantage of low latency (clustering provides scale out capabilities for read), the ability to handle transactions with ACID (Atomicity, Consistency, Isolation, and Durability) properties.~\cite{neo4j-product}
 
 \paragraph{Query Language}
 Neo4j provides two methods for data query out-of-the-box: an object-oriented native Java API for graph navigation and Cypher, a graph pattern description and query language with declarative and imperative traits. Additional interfaces may be loaded as a plugin, like the imperative Gremlin query interface~\cite{neo4j-gremlin-plugin}.
 
-One of Cypher's best features is the readibility of its syntax. It provides an intuitive way to describe patterns of nodes and relations in the graph and also connections between subpatterns using bound identifiers for nodes and relations. Cypher also manages the indexes and constraints of the graph database. Negative application conditions (NAC) can be also expressed, describing the cases where the query should not return a match.
+One of Cypher's best features is the readability of its syntax. It provides an intuitive way to describe patterns of nodes and relations in the graph and also connections between subpatterns using bound identifiers for nodes and relations. Cypher also manages the indexes and constraints of the graph database. Negative application conditions (NAC) can be also expressed, describing the cases where the query should not return a match.
 
-Other interesting and useful features of Cypher includes:
+Other interesting and useful features of Cypher include:
 \begin{itemize}[topsep=0pt]
-  \item Repetition bound (or unbound) transitive closure over an edge. The label of the edge can be also set to one label or a set of labels. Given sequence of labeled edges (with or without bound labels of nodes) can not be set on its own, but temporary edges can be utilized to emulate this behavior.
-  \item Stored procedures are a very welcome new feature of the latest (as of May, 2016) Cypher and Neo4j version (v3.0). Procedures written in Java can be stored in the server as a plugin and called from the queries abolishing the need for manual logic-based calls in case it was not possible to formalize a query for it (ranging from duplicating a node (with parameters and labels) to infering the metamodel (from the nodes and relations already in the database)).
-  \item Parametrized queries may be utilized for faster evaluation.
+  \item Transitive closure over a set of edge labels, with optional repetition binding.
+
+        It is worth noting that an arbitrary sequence of edge labels can not be set as a repeating subpattern on its own, but temporary edges can be utilized to emulate this behavior.
+  \item Java procedures can be stored in the server as a plug-in and called from the queries abolishing the need for manual logic-based calls in case it was not possible to formalize a query for it; ranging from duplicating a node (with parameters and labels) to inferring the metamodel (from the nodes and relations already in the database).
+  \item Parameterized queries may be utilized for faster evaluation.
   \item List predicates evaluating predicates for all/any/none or single one nodes of the path.
-  \item Iterating and unwinding a collection in the query
-  \item Finding the shortest path
-  \item Mathematical functions
-  \item Query profiling
+  \item Iterating and unwinding\footnote{transforming into rows} a collection in the query.
+  \item Finding the shortest path.
+  \item Mathematical functions.
+  \item Query profiling.
 \end{itemize}
 
 \textquote[\cite{neo4j-developer}]{Since October 2015 the openCypher project aims to provide an open grammar, language specification, technical compatibility kit and reference implementation of parser, planner and runtime for Cypher.}
 
 \paragraph{Other Advantages and Disadvantages}
 \begin{itemize}[topsep=0pt]
-  \item[+] When Neo4j is deployed in server mode, besides the REST and Bolt interfaces, a web GUI is also available, where a read-evaluate-print loop (REPL) interface helps the user with interactive querying. The results are either shown in a table or an also interactive graph display, where the user can automatically add necessary nodes and relations from the database (without explicitly executing another query). It also supplies the user with information about the contents of the database, labels, indexes.
-  \item[+] Graph Gists are interactive teaching tools allowing the visitor of the site to learn about various domains modeled in Neo4j and learn from the example queries.
+  \item[+] When Neo4j is deployed in server mode, besides the REST and Bolt interfaces, a web interface is also available, where a read-evaluate-print loop (REPL) interface helps the user with interactive querying. The results are either shown in a table or an interactive graph display, where the user can automatically add necessary nodes and relationships from the database (without explicitly executing another query). It also supplies the user with information about the contents of the database, labels, indexes.
 \end{itemize}
 
 \subsubsection{Titan}
@@ -347,97 +346,37 @@ Titan was developed by \emph{Aurelius} until the company was aquired by \emph{Da
 \paragraph{Architecture}
 \textquote[\cite{titan-arch,titan-benefits}]{Titan is designed to support the processing of graphs so large that they require storage and computational capacities beyond what a single machine can provide. Titan implements robust, modular interfaces for data persistence, data indexing, and client access. Titan’s modular architecture allows it to interoperate with a wide range of storage, index, and client technologies; it also eases the process of extending Titan to support new ones.}
 
-Titan is based on one or more disk-based storage and indexing adapters. Titan comes out-of-the-box with 3 data storage adapters: \emph{Cassandra}, \emph{HBase}, and \emph{BerkeleyDB}; and also 2 indexing adapters: \emph{Elasticsearch} and \emph{Lucene}. These indexing adapters speed up and enable more complex queries.
+Titan is based on one or more disk-based storage and indexing adapters. Titan comes out-of-the-box with 3 data storage adapters: \emph{Cassandra}, \emph{HBase}, and \emph{BerkeleyDB}; and also 2 indexing adapters: \emph{Elasticsearch} and \emph{Lucene}. These indexing adapters speed up the performanceof queries, and enable more complex queries.
 
 Like Neo4j, applications based on Titan can also interact with it in two ways~\cite{titan-arch}:
 \begin{itemize}[topsep=0pt]
-  \item Embedding Titan in the application allows direct querying against the graph within the same JVM. In this case query execution, caching, transaction handling all happens in the same JVM. The data retrieval from the storage adapters can be either local or remote.
+  \item Embedding Titan in the application allows direct querying against the graph within the same Java virtual machine (JVM). In this case query execution, caching, transaction handling all happens in the same JVM. The data retrieval from the storage adapters can be either local or remote.
   \item With a local or remote Titan instance one can interact by submitting Gremlin queries to the server.
 \end{itemize}
 
 
 \paragraph{Data Model}
-Titan natively supports the property graph data model exposed by \emph{TinkerPop}.
+Titan natively supports the property graph data model as defined by \emph{TinkerPop}.
 
 \paragraph{Sharding}
 Since Titan can be used with Cassandra as the data storage adapter, the architecture inherits every one of Cassandra's advantages. It is possible to set up a highly available Titan cluster with no single points of failure. This configuration also utilizes the Cassandra's partitioner (a hash-based, sophisticated partitioning system).
 
-Using multiple storage backend servers eliminates read (and sometimes write) bottlenecks as these servers can serve data for the same query in a coordinated manner utilizing that the architecture lacks the master/slave layout. A caching layer ensures the availability of the most used data parts from the memory cache speeding up the queries even more. Elastic scalability allows the introduction and removal of machines to the live cluster.
+Using multiple storage backend servers eliminates read (and depending on the consistency level, sometimes even write) bottlenecks as these servers can serve data for the same query in a coordinated manner utilizing that the architecture lacks the master/slave layout. A caching layer ensures the availability of the most used data parts from the memory cache speeding up the queries even more. Elastic scalability allows the introduction and removal of machines to the live cluster.
 
 
 \paragraph{Query Language}
 Titan natively supports the imperative graph traversal language Gremlin (by \emph{TinkerPop}).
 
 
-\subsubsection{OrientDB}
-\label{sect:orientdb}
-\paragraph{Architecture}
-\paragraph{Data Model}
-\paragraph{Sharding}
-\paragraph{Query Language}
+% \subsubsection{OrientDB}
+% \label{sect:orientdb}
+% \paragraph{Architecture}
+% \paragraph{Data Model}
+% \paragraph{Sharding}
+% \paragraph{Query Language}
 
-
-\subsubsection{4store}
-\paragraph{Architecture}
-\paragraph{Data Model}
-\paragraph{Sharding}
-\paragraph{Query Language}
-
-
-\subsubsection{Stardog}
-\paragraph{Architecture}
-\paragraph{Data Model}
-\paragraph{Sharding}
-\paragraph{Query Language}
-
-\subsection{A Viable Alternative: EMF Modeling and VIATRA Query}
-Although EMF is not a graph database, with the help of VIATRA Query, the data stored in an EMF instance model can be queried like graph databases.
-
-\subsubsection{Modeling}
-Modeling is a versatile concept, the word itself may refer to various topics. In the context of this thesis, by models I primarily mean data models. A data model---or sometimes called domain model---organizes the data elements, how they relate to each other and what actions one can perform on them.
-
-\paragraph{Metamodels and Instance Models}
-\textquote[\cite{scm}]{Metamodeling is a methodology for the definition of modeling languages. A metamodel specifies the abstract syntax (structure) of a modeling language. Metamodels are expressed using a metamodeling language that itself is a modeling language. The metamodel can also be interpreted as the object-oriented data model of the language under design. Metamodeling can be viewed as the grammar for a \emph{typed property graph}, so the created models are both \emph{typed graph}s and \emph{property graph}s.}
-
-The metamodel contains the main concepts and relations of the domain specific language (DSL) and defines the possible structure of the instance models. To enrich the expressive power of the language, attributes are added to the concepts. By doing this, the language can be extended with predefined domains of data types (like integers, strings) that are supported by the metamodeling language. Additionally, some structural constraints might be specified with the elements like multiplicity.
-
-Models describing a particular problem in the domain, called instance models, are defined using the elements of the metamodel.
-
-\subsubsection{The Eclipse Modeling Framework}
-\label{sect:emf}
-Eclipse is a free, open-source software development environment and a platform with extensible plug-in system for customization. Eclipse comes with its own modeling tools, with the core framework called Eclipse Modeling Framework (EMF).
-
-\textquote[\cite{EMF}]{The EMF project is a modeling framework and code generation facility for building tools and other applications based on a structured data model. From a model specification described in XMI, EMF provides tools and runtime support to produce a set of Java classes for the model, along with a set of adapter classes that enable viewing and command-based editing of the model, and a basic editor. EMF (core) is a common standard for data models, many technologies and frameworks are based on.}
-
-\paragraph{Ecore}
-Ecore is the metamodeling language used by EMF. It has been developed in order to provide an approach for metamodel definition that supports the direct implementation of models using a programming language. Ecore is the de facto standard metamodeling environment of the industry, and several domain-specific languages are defined using this formalism.~\cite{scm}
-
-\begin{figure}[!ht]
-	\centering
-	\includegraphics[height=10cm]{include/figures/Ecore}
-	\caption{An illustrative core part of Ecore, the metamodeling language of EMF}
-	\label{fig:Ecore}
-\end{figure}
-
-\Cref{fig:Ecore} shows only a small fraction of the metamodel, as there is many more classes in the Ecore metamodel. The main classes are the following:
-\begin{itemize}[topsep=0pt]
-	\item \code{EAttribute} represents a named attribute literal, which also has a type.
-	\item \code{EClass} represents a class, with optional attributes and optional references. To support inheritance, a class can refer to a number of supertype classes.
-	\item \code{EDataType} is used to represent simple data types that are treated as atomic (their internal structure is not modeled). Data types are identified by their name.
-	\item \code{EReference} represents a unidirectional association between \code{EClass}es and is identified by a name. It is also possible to mark a reference as a containment that represents composition relation between elements. A bidirectional association should be modeled as two \code{EReference} instances mutually connected via their opposite references.
-\end{itemize}
-
-An Ecore model has a root object, representing the whole model. The children of this root object are packages, and the children of those are classes.
-
-More detailed illustrations of the metamodel can be found in the EMF Documentation~\cite{ecore}.
-
-
-\subsubsection{VIATRA Query}
-VIATRA is an event-driven and reactive model transformation platform. \textquote[\cite{viatra}]{The VIATRA framework supports the development of model transformations with specific focus on event-driven, reactive transformations and offers a language to define transformations and a reactive transformation engine to execute certain transformations upon changes in the underlying model. Furthermore, the underlying incremental query engine, originating from the EMF-IncQuery project is reusable in different scenarios not related to model transformations.}
-
-VIATRA Query (formerly IncQuery) is an incremental query engine with its own graph pattern based query language to specify and execute model queries on EMF instance models or other data storage solutions.
-
-Since the data model of my approach may change over time, an unstructured or semi-structured data storage suits it better. EMF would require the metamodel to be transformed each time it is changed. It is also not possible to shard large EMF models in and take advantage of a clustered environment.
+\subsubsection{EMF Modeling and VIATRA Query}
+For rapidly changing, albeit smaller datasets, incremental querying using VIATRA Query over EMF models (see \cref{sect:emf-viatra}) can be a solution. My approach, however prepares for larger models, thus this technology is not detailed here.
 
 
 \section{Visual Studio Code}
