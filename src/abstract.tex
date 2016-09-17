@@ -20,4 +20,10 @@
 \addcontentsline{toc}{chapter}{Abstract}
 \thispagestyle{plain}
 
+We are surrounded by more and more complex software that operate in mission-critical systems. Even small errors in these software can lead to consequences ranging from unpleasant to fatal. A proven approach for detecting mistakes early in the development cycle is static analysis of the source code. Static analysis tools report whether the software conforms to the coding rules and requirements without executing the code itself.
+
+While multiple static analysis tools exist for general purpose programming languages and these are generally part of the continuous integration systems, this is not the case with JavaScript. Because of the untyped nature of this dynamic language there are only a few tools that perform static analysis on JavaScript code repositories on a global level.
+
+In this thesis I design, implement and evaluate a framework aiming to extend the continuous integration workflow of large JavaScript repositories with various static analysis tools and techniques.
+
 \clearpage
