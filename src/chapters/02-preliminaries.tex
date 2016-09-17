@@ -272,7 +272,7 @@ Persistent graph databases are the prevalent group of graph computing technologi
 
 Since global graph algorithms are not feasible, these systems are optimized for local neighborhood analysis and concurrent access. Global graph analytics are inefficient due to the communication overhead and the computational overhead, e.g., transactional semantics.
 
-Example for persistend, real-time graph databases: \emph{InfiniteGraph}, \emph{Neo4j} (see \cref{sect:neo4j}), \emph{OrientDB} (see \cref{sect:orientdb}), and \emph{Titan} (see \cref{sect:titan}).
+Example for persistent, real-time graph databases: \emph{InfiniteGraph}, \emph{Neo4j} (see \cref{sect:neo4j}), \emph{OrientDB}, and \emph{Titan} (see \cref{sect:titan}).
 
 \paragraph{Batch-Processing Graph Frameworks}
 In case there is no real-time requirement for the analysis touching the whole dataset, batch-processing graph frameworks can be used for global analytics. Since there is no burden of being real-time, the applied algorithm can even scan data multiple times and leverage sequential reads from the disk. These systems can be used to periodically process data and feed back the results into real-time graph databases. Most of these frameworks utilize Hadoop for storage (HDFS) and processing (MapReduce).
