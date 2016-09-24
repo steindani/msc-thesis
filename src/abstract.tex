@@ -7,7 +7,11 @@
   {
   \selecthungarian
 
+  Egyre több, egyre inkább komplex szoftver vesz körül minket, némely kritikus rendszerben. Még a legapróbb hibáik is komoly következményekkel járhatnak. Ezen hibák mihamarabbi megtalálására -- még a fejlesztési folyamat elején -- bizonyított megközelítés a forráskód statikus analízise. A statikus analízist végző eszközök képesek visszajelzést adni arról, a forráskód megfelel-e a kódolási szabályoknak és követelményeknek a forráskód fordítása és futtatása nélkül.
 
+  Bár több statikus analízis eszköz érhető el a generikus nyelvek elemzéséhez, és ezek rendszerint a folytonos integráció folyamatának részei, JavaScript esetén ez nem elmondható. A dinamikus nyelv sajátosságai miatt csak pár eszköz érhető el JavaScript forráskódok kódtárszintű statikus analíziséhez, és ezek sem gyakran kerülnek alkalmazásra a folytonos integráció során.
+
+  Dolgozatomban a folytonos integráció kiegészítésére képes keretrendszert tervezek, valósítok meg és értékelek, mely képes nagyméretű JavaScript forráskódtárak statikus analízisére.
 
   }
 
@@ -24,6 +28,6 @@ We are surrounded by more and more complex software that operate in mission-crit
 
 While multiple static analysis tools exist for general purpose programming languages and these are generally part of the continuous integration systems, this is not the case with JavaScript. Because of the untyped nature of this dynamic language there are only a few tools that perform static analysis on JavaScript code repositories on a global level.
 
-In this thesis I design, implement and evaluate a framework aiming to extend the continuous integration workflow of large JavaScript repositories with various static analysis tools and techniques.
+In this report I design, implement and evaluate a framework aiming to extend the continuous integration workflow of large JavaScript repositories with various static analysis tools and techniques.
 
 \clearpage
