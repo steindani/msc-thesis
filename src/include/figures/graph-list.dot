@@ -1,0 +1,38 @@
+digraph Neo {
+  node [
+    fontsize = "18"
+    shape = "Mrecord"
+    fontname = "Clear Sans Thin"
+  ]
+  edge [
+    fontname = "Clear Sans Thin"
+    fontsize = "18"
+  ]
+  N13 [
+    label = "{Variable}"
+  ]
+  N13 -> N21 [
+    label = "references"
+  ]
+  N13 -> N17 [
+    label = "references"
+  ]
+  N17 [
+    label = "{List}"
+  ]
+  N17 -> N21 [
+    label = "0"
+  ]
+  N17 -> N211 [
+    label = "1"
+  ]
+  N21 [
+    label = "{Reference|'accessibility' = 'Write' : String\l}"
+  ]
+  N211 [
+    label = "{Reference|'accessibility' = 'Read' : String\l}"
+  ]
+  N21 -> N211 [
+    label = "next"
+  ]
+}

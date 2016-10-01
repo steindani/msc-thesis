@@ -68,17 +68,75 @@ The whole process can be summarized in 4 concise sentences:
   \item In case a file is added/modified/deleted, the corresponding subgraph is also added/removed and reprocessed/removed from the graph.
 \end{enumerate}
 
-\subsubsection{Transforming the Instance Model}
+This process and the algorithm for graph maintenance is detailed in~\Cref{sect:maintaining-the-graph}.
 
+
+\section{Steps of Processing}
+The following enumeration presents the basic algorithm for processing, transforming, storing and analyzing the source code repository.
+
+\subsection{Initial State}
+The graph representation of the repository follows the development of the source code. Thus initially both the graph database and the repository are empty, only containing metadata.
+
+\subsection{Calculating the Changes to Propagate}
+Once there are modifications published in the repository or the IDE, it is the integrating tool's responsibility to notify the framework. The changes to a file at a given path may be the following:
+
+\begin{itemize}[topsep=0pt]
+
+  \item \emph{Addition.} In case a new file is added, it is processed, and the subgraph representation is stored in the database.
+
+  \item \emph{Modification.} Since the approach is incremental with a file-level granularity, the modification of a file's contents requires the removal of the whole old and addition of the new subgraph.
+
+  \item \emph{Removal.} The removal of a file causes the removal of the subgraph too.
+\end{itemize}
+
+\subsection{Maintaining the Graph}
+\label{sect:maintaining-the-graph}
+
+The file changes are processed one-by-one. The integrating tool notifies the framework, specifying the path and content of the file along with additional metadata. The content is then preprocessed using the parser resulting in a model representation.
+
+\subsubsection{Transforming the Instance Model}
+This representation of the parser conforms the metamodel based on the syntax and semantics of the source language. But the property graph database can not import the data in this form, thus it needs to be transformed.
+
+In order to acquire information from this model and transform it, one either knows its metamodel and iterates over every element or --- if the programming language of the parser allows --- uses reflection. In my approach I use the combination of the Shift parser written in Java --- thus using the reflective approach --- and the Neo4j labeled property graph database.
+
+The basic rules of the transformation are the following.
+
+\paragraph{Typed Nodes}
+Every AST or ASG node is a node in the graph. The graph node is typed with the class, superclasses and interfaces of the represented model node.
+
+% CFG end node is also created for every node
+
+\paragraph{Node Properties}
+Every property --- own or inherited --- of the nodes are also transferred to the graph node. These properties are also stored with their basic type: \emph{double}, \emph{string} or \emph{boolean}.
+
+\paragraph{Labeled Relations}
+References in the model are represented in the graph as relations, directed edges. The relations are labeled after the name of the references.
+
+\paragraph{Collections}
+The metamodel also contains several reference collections: maps, lists and tables. Maps and tables are represented in the graph as a new node, with appropriately labeled relations to the referred nodes.
+
+Lists are transformed similarly. In order not to lose ordinal information, the items are related to the referrer with two routes (see~\Cref{fig:graph-list}).
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.5\textwidth]{graph-list.pdf}
+  \caption{Graph Representation of a List}
+  \label{fig:graph-list}
+\end{figure}
+
+The first route is direct; the referrer has a relation to every item of the list (labeled with the name of the list). The second route has an additional \emph{List} node between the two, and its relations are labeled with the index of the item. The sequential items also have a direct relation.
+
+% last item of the list is marked
+%\paragraph{Functional Elements}
+
+\paragraph{Source Code Location}
+For more precise problem location reporting, the graph also contains line and character information for the beginning and the end of every model node.
 
 \subsubsection{Storing the Graph Representation}
 \subsubsection{Transforming the Graph}
 \subsubsection{Multilayered Graph}
+\subsubsection{Handling Branches in the Repository}
 
-\section{Steps of Processing}
-\subsection{Initial State}
-\subsection{Calculating the Change to Propagate}
-\subsection{Maintaining the Graph}
 \subsubsection{Determining and Executing the Changes}
 \subsubsection{Building Interconnections}
 \subsection{Executing Graph Queries}
