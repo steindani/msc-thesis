@@ -6,6 +6,9 @@ all:
 	latexmk -pdf -cd -outdir=../out -jobname=$(DOCUMENT) -interaction=nonstopmode -file-line-error ./src/main
 	cp out/$(DOCUMENT).pdf .
 
+travis:
+	latexmk -pdf -cd -jobname=$(DOCUMENT) -interaction=nonstopmode -file-line-error ./src/main
+
 clean:
 	rm -rf ./out
 	rm -f $(DOCUMENT).pdf
