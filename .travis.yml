@@ -1,17 +1,9 @@
 sudo: false
-addons:
-  apt:
-    packages:
-    - lmodern
-    - texlive-latex-recommended
-    - texlive-latex-extra
-    - texlive-fonts-extra
-    - texlive-fonts-recommended
-    - texlive-xetex
-    - texlive-science
-    - latexmk
+language: r
+before_install:
+  - tlmgr install lmodern texlive-latex-recommended texlive-latex-extra texlive-fonts-extra texlive-fonts-recommended texlive-xetex texlive-science latexmk
 script:
-- make travis
+  - make travis
 deploy:
   provider: releases
   api_key:
