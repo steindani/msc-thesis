@@ -11,4 +11,11 @@ addons:
     - texlive-science
     - latexmk
 script:
-  - make
+- make
+deploy:
+  provider: releases
+  api_key:
+    secure: rRI++r8Vy3kymfLDwL2Xtxy2ixcgpbs+nqR2xu0Hg3xDkKSqYBgap//Rg99VaznEvkOOkpNFvzw+grrE46WOCJnETI8WF/5Tf4xIgzCSs5Mc3P4oDthUPcILD5OCd2reQ0tKRWiE/NRHEIIHQFxAz9wRKtBLCqcwzE7dYZVKobcjP0Aq1e1Sskr3lSJRKjOTPGUTFJwnnZhf6FPmUdNRJQ1JI0OBDEy8SLFlZXwyp/HxK1zcRk9vD8kq8EFopzNi707AokG/4h4m/85z1vjrxfhX+NKf+BwedKME+CsKnTH3HU3arnXCmiyYiL9HJ5eEw/lSHhZ+HCd8LyFtmXS157FKpLjWK1bBLBGAOSgy2HDZKIkLN5A0RBSdhYaePFsj+dOJRlURyvqDWY2CiSG0hYDQbpYXIwfZ1gOtOM6m7AGPJddPiKyjuHy9yGfV4uXgv70k/a0m6wm8YMfCn1xkBDVFUmuBTPRnX+GJPPa1rWyD+yL6cs2DSgeoscpTWO8+ri0Ck1a2qYMUxec/tt5ihUjN7l7aJkuzt72c9JgFgDO57vvJNpKDyZxynbgcJnqFhSIZTL0ypgm1O2s7pfaCO7bSfD9UqXu0VRVmq+0VM1DBRpZsh5/jyl6GB/8BCTe1Aa9ywb5JMTEGfyO7NgY3gKjeYC+cmZU71BZ6PN+5MvI=
+  file: diploma.pdf
+  on:
+    repo: steindani/msc-thesis
