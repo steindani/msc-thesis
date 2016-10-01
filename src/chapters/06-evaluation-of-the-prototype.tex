@@ -1,2 +1,4 @@
 \chapter{Evaluation of the Prototype}
 \label{chap:evaluation-of-the-prototype}
+
+My approach comes with tradeoffs. Processing one file at a time makes the approach incremental with file-level granularity, potentially saving time on the whole, but takes a large amount of time integrating the parser into the system. My approach also requires less memory during the parsing phase, but takes more time once every file was processed and the connecting phase needs to take place.
