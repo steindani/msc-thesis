@@ -7,7 +7,7 @@ all:
 	cp out/$(DOCUMENT).pdf .
 
 travis:
-	latexmk -pdf -cd -jobname=$(DOCUMENT) -interaction=nonstopmode -file-line-error ./src/main
+	latexmk -pdf -cd -jobname=$(DOCUMENT) ./src/main
 
 clean:
 	rm -rf ./out
