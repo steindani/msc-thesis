@@ -33,8 +33,58 @@ The most known implementations are Git~\cite{git}, Subversion (SVN)~\cite{svn}, 
 \subsubsection{Integrated Development Environment (IDE)}
 An IDE is an application for (software) developers that integrate several tools making it easier to write, compile, and test the product. Integrated development environments are detailed in \Cref{sect:IDE}.
 
+In the architectural overview, the IDE also represents the working set of the software and its dependencies available on the developer's computer. This working set also contains the developer's modifications that are not yet transferred to the shared VCS.
 
-\subsection{Source Code Processor}
 
+\subsection{Transforming the Source Code}
+One of the most important third party components of the approach is the source code parser. This component is used to transform a given source file, a \emph{compilation unit} into a model representation of the syntax and semantics of the source code. The process itself is detailed in~\Cref{sect:source-code-processing}.
+
+A source code parsing toolkit with the following traits make it possible to integrate it into the framework with ease:
+
+\begin{itemize}[topsep=0pt]
+  \item Provide the Abstract Syntax Tree and Abstract Semantic Graph for the parsed source file.
+
+  \item Also provide scoping information
+  % TODO
+
+  \item Source code position
+  % TODO
+
+  \item Metamodel for the representation
+  The more detailed metamodel, the better.
+\end{itemize}
+
+Since the \emph{Shape Security Shift} toolkit (detailed in~\Cref{sect:shift}) suits these requirements well, I've used the Java implementation of the \emph{Shift Parser}, and \emph{Scope Analyzer}.
+
+
+\subsection{Graph Maintenance}
+The novelty of my approach is how it processes, stores and connects the source code representation in a graph database. In this section I'll discuss how the subgraphs of the source code files are prepared and then connected to each other constructing a connected graph representing the whole source code repository.
+
+The whole process can be summarized in 4 concise sentences:
+\begin{enumerate}[topsep=0pt]
+  \item The repository is transformed one file at a time.
+  \item The ASG \emph{model} is transformed into a \emph{property graph}.
+  \item After every file is processed, the ASG subgraphs are interconnected using graph transformations.
+  \item In case a file is added/modified/deleted, the corresponding subgraph is also added/removed and reprocessed/removed from the graph.
+\end{enumerate}
+
+\subsubsection{Transforming the Instance Model}
+
+
+\subsubsection{Storing the Graph Representation}
+\subsubsection{Transforming the Graph}
+\subsubsection{Multilayered Graph}
 
 \section{Steps of Processing}
+\subsection{Initial State}
+\subsection{Calculating the Change to Propagate}
+\subsection{Maintaining the Graph}
+\subsubsection{Determining and Executing the Changes}
+\subsubsection{Building Interconnections}
+\subsection{Executing Graph Queries}
+
+\section{Dead Code Search}
+
+\section{Control Flow Graph}
+
+\section{Language Limitations}
