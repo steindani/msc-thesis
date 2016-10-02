@@ -10,6 +10,7 @@ addons:
     - texlive-xetex
     - texlive-science
     - latexmk
+    - texlive-extra-utils
     - libfile-copy-recursive-perl
 before_script:
   - wget http://mirrors.ctan.org/install/fonts/paratype.tds.zip
