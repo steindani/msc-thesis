@@ -1,5 +1,4 @@
 sudo: false
-language: r
 addons:
   apt:
     packages:
