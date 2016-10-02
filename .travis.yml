@@ -13,6 +13,8 @@ addons:
 before_script:
   - wget http://mirrors.ctan.org/install/fonts/paratype.tds.zip
   - unzip -d ~/texmf/ paratype.tds.zip
+  - wget http://mirrors.ctan.org/install/fonts/clearsans.tds.zip
+  - unzip -d ~/texmf/ clearsans.tds.zip
   - texhash ~/texmf
 script:
   - make travis
