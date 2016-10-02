@@ -11,7 +11,7 @@ addons:
     - texlive-xetex
     - texlive-science
     - latexmk
-before_install:
+before_script:
   - wget http://mirrors.ctan.org/install/fonts/paratype.tds.zip
   - unzip -d ~/texmf/ paratype.tds.zip
   - texhash ~/texmf
