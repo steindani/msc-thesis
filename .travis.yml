@@ -10,11 +10,23 @@ addons:
     - texlive-xetex
     - texlive-science
     - latexmk
+    - libfile-copy-recursive-perl
 before_script:
   - wget http://mirrors.ctan.org/install/fonts/paratype.tds.zip
   - unzip -d ~/texmf/ paratype.tds.zip
+
   - wget http://mirrors.ctan.org/install/fonts/clearsans.tds.zip
   - unzip -d ~/texmf/ clearsans.tds.zip
+
+  - wget http://mirrors.ctan.org/macros/latex/contrib/fontaxes.zip
+  - unzip fontaxes.zip
+  - cd fontaxes
+  - tex fontaxes.ins
+  - ctanify *.ins *.dtx
+  - tar -xzf fontaxes.tar.gz
+  - unzip -d ~/texmf/ fontaxes.tds.zip
+  - cd ..
+
   - texhash ~/texmf
 script:
   - make travis
