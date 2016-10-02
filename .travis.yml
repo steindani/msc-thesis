@@ -1,7 +1,19 @@
 sudo: false
 language: r
+addons:
+  apt:
+    packages:
+    - lmodern
+    - texlive-latex-recommended
+    - texlive-latex-extra
+    - texlive-fonts-extra
+    - texlive-fonts-recommended
+    - texlive-xetex
+    - texlive-science
+    - latexmk
 before_install:
-  - tlmgr install lmodern texlive-latex-recommended texlive-latex-extra texlive-fonts-extra texlive-fonts-recommended texlive-xetex texlive-science latexmk
+  - tlmgr option repository http://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2015/tlnet-final
+  - tlmgr update --all
 script:
   - make travis
 deploy:
