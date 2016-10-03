@@ -124,7 +124,7 @@ Lists are transformed similarly. In order not to lose ordinal information, the i
   \label{fig:graph-list}
 \end{figure}
 
-The first route is direct; the referrer has a relation to every item of the list (labeled with the name of the list). The second route has an additional \emph{List} node between the two, and its relations are labeled with the index of the item. The sequential items also have a direct relation.
+The first route is direct; the referrer has a relation to every item of the list (labeled with the name of the list). The second route has an additional \emph{List} node between the two, and its relations are labeled with the index of the item. The sequential items also have a direct, chaining relation.
 
 % last item of the list is marked
 %\paragraph{Functional Elements}
@@ -132,17 +132,30 @@ The first route is direct; the referrer has a relation to every item of the list
 \paragraph{Source Code Location}
 For more precise problem location reporting, the graph also contains line and character information for the beginning and the end of every model node.
 
+
 \subsubsection{Storing the Graph Representation}
+If the parser successfully processes the source code, the resulting ASG is transformed with the forementioned rules. In a writing transaction, the transformed graph is serialized and stored in the database.
+
+\paragraph{Metadata}
+Besides the ASG, additional properties are stored. For example, for every source file, there is a graph node, connecting to every node that belongs to the particular ASG. This makes it easier to handle nodes of a file as a whole.
+
+\paragraph{Multilayered Graph}
+With more complex rules it is also feasible to store multiple versions of the same file in the database. This makes it possible to maintain multilayered versioning for multiple users.
+
+If the VCS supports branching the code development, the framework could also accomodate this behaviour. For example if two developers work on the \emph{master} development branch in their own IDE, there could be layers for each of them.
+
+One layer containing every ASG for the \emph{master} branch. One layer for each user containing only the ASGs of their modified files. In these layers the ASGs are connected (based on the import and export statements) in the same layer, if both are present in the same. If not, they are connected to the corresponding file in the \emph{master} branch. % TODO (See~\Cref{fig:multilayered-graph}).
+
 \subsubsection{Transforming the Graph}
-\subsubsection{Multilayered Graph}
-\subsubsection{Handling Branches in the Repository}
+After the data has been stored in the database, it can be freely transformed with framework- or user-defined rules. This step may be utilized for transforming the set of subgraphs into one connected graph based on the export and import rules of the language.
 
-\subsubsection{Determining and Executing the Changes}
-\subsubsection{Building Interconnections}
+Neo4j makes it possible to execute in-place transformations, where querying with pattern matching and manipulations may be declared in the same query. The possibilities of Neo4j are detailed in~\Cref{sect:neo4j}.
+
+% TODO Transformations example are presented and visualized in~\Cref{}.
+
 \subsection{Executing Graph Queries}
+By utilizing the built-in pattern-matching abilities of Neo4j, it is easier and more user-friendly to write pseudo-graphic, declarative patterns to find a structure in the graph --- compared to the generally used visitor patterns.
 
-\section{Dead Code Search}
+% TODO See example pattern in~\Cref{sect:example-query}.
 
-\section{Control Flow Graph}
-
-\section{Language Limitations}
+If Cypher, the query language of Neo4j is not powerful enough to describe a constraint, one may also use arbitrary Java code. This code may be used inside the query or even command multiple queries and aggregate the result.
