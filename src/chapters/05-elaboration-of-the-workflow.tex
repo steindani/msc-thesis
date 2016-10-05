@@ -1,6 +1,32 @@
 \chapter{Elaboration of the Workflow}
 \label{chap:elaboration-of-the-workflow}
 
+In this chapter I demonstrate the various steps of the workflow in detail. I introduce small working source code examples and show, how the given step transforms it.
+
+\section{Transforming the Source Code Into an AST}
+As mentioned in~\Cref{sect:overview-transforming-the-source-code}, this transformation is carried out by the Shape Security Shift toolkit. The parser is given the source code and the top-level non-terminal it should consider the root of the tree. Considering the new constructs introduced in ES6, I've chosen \emph{Module} as the type of the root.
+
+The only one line long source code in~\Cref{lst:oneliner} parsed and serialized as a tree can be seen in~\Cref{lst:oneliner-ast-json}.
+
+\begin{figure}[!ht]
+	\begin{minipage}{\textwidth}
+		\lstinputlisting[captionpos=b,caption={Basic example source code.},label={lst:oneliner},commentstyle=\color{black},language=JavaScript]{include/sources/oneliner.js}
+	\end{minipage}
+\end{figure}
+
+\begin{figure}[!ht]
+	\begin{minipage}{\textwidth}
+		\lstinputlisting[captionpos=b,caption={AST output of the parser serialized in JSON format.},label={lst:oneliner-ast-json},commentstyle=\color{black},language=JSON]{include/sources/oneliner-ast.json}
+	\end{minipage}
+\end{figure}
+
+\section{Storing the ASG in the Graph Database}
+
+\section{Division by Zero}
+As one of the most basic and easy-to-discover mistakes, division by zero should be reported to the developer. In the context of mathematics, division by zero is undefined for the real numbers. In JavaScript, it may result in \code{NaN} or \code{Infinity}.
+
+Without dynamic testing or symbolic execution it is rather hard to find this kind of expression, since the right side of the division may come from a variable. On the other hand, finding the cases where the right side is a literal is trivial.
+
 \section{Dead Code Search}
 
 \section{Control Flow Graph}

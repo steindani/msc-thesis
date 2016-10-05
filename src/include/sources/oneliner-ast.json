@@ -1,0 +1,34 @@
+{
+    "type": "Module",
+    "directives": [],
+    "items": [
+        {
+            "type": "VariableDeclarationStatement",
+            "declaration": {
+                "type": "VariableDeclaration",
+                "kind": "var",
+                "declarators": [
+                    {
+                        "type": "VariableDeclarator",
+                        "binding": {
+                            "type": "BindingIdentifier",
+                            "name": "foo"
+                        },
+                        "init": {
+                            "type": "BinaryExpression",
+                            "operator": "/",
+                            "left": {
+                                "type": "LiteralNumericExpression",
+                                "value": 1.0
+                            },
+                            "right": {
+                                "type": "LiteralNumericExpression",
+                                "value": 0.0
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
