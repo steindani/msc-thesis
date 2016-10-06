@@ -27,6 +27,30 @@ As one of the most basic and easy-to-discover mistakes, division by zero should 
 
 Without dynamic testing or symbolic execution it is rather hard to find this kind of expression, since the right side of the division may come from a variable. On the other hand, finding the cases where the right side is a literal is trivial.
 
+Taking a look at the graph representation of the previous example (in~\Cref{fig:AST-PPT}), it is relatively easy to find the problematic nodes. A natural language definition of the problem would sound like: ,,we are looking for binary expressions that have a literal zero on the right side''.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.5\textwidth]{AST-PPT.pdf}
+  \caption{Graph Representation of the One Line Long Source Code}
+  \label{fig:AST-PPT}
+\end{figure}
+
+One way to formalize this declarative definition in Cypher can be seen in~\Cref{lst:division-by-zero}. Executing this query would find matching nodes with the right type, bind them to the corresponding names and check, whether the required relations are present, resulting in a state like in~\Cref{fig:AST-query-PPT}. Finally the result is the \code{BinaryExpression} node that can be used to get the precise location of the expression in the source code and report it as problematic.
+
+\begin{figure}[!ht]
+	\begin{minipage}{\textwidth}
+		\lstinputlisting[captionpos=b,caption={Graph Pattern Matching Division by Zero.},label={lst:division-by-zero},language=Cypher]{include/sources/division-by-zero.cypher}
+	\end{minipage}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.5\textwidth]{AST-query-PPT.pdf}
+  \caption{Graph Representation of the Query Searching Division by Zero}
+  \label{fig:AST-query-PPT}
+\end{figure}
+
 \section{Dead Code Search}
 
 \section{Control Flow Graph}
