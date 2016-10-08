@@ -1,0 +1,140 @@
+digraph Neo {
+  node [
+    fontsize = "18"
+    shape = "Mrecord"
+    fontname = "Clear Sans Thin"
+  ]
+  edge [
+    fontname = "Clear Sans Thin"
+    fontsize = "18"
+  ]
+  N71 [
+    label = "{GlobalScope\nScope|'type' = 'Global' : String\l'dynamic' = true : boolean\l}"
+  ]
+  N71 -> N75 [
+    label = "children\n"
+  ]
+  N71 -> N72 [
+    label = "astNode\n"
+  ]
+  N71 -> N74 [
+    label = "children\n"
+  ]
+  N74 [
+    label = "{List|}"
+  ]
+  N74 -> N75 [
+    label = "0\n"
+  ]
+  N74 -> N75 [
+    label = "last\n"
+  ]
+  N75 [
+    label = "{Scope|'type' = 'Module' : String\l'dynamic' = false : boolean\l}"
+  ]
+  N75 -> N72 [
+    label = "astNode\n"
+  ]
+  N75 -> N90 [
+    label = "variables\n"
+  ]
+  N90 [
+    label = "{Map|}"
+  ]
+  N90 -> N97 [
+    label = "foo\n"
+  ]
+  N97 [
+    label = "{Variable|'name' = 'foo' : String\l}"
+  ]
+  N97 -> N114 [
+    label = "declarations\n"
+  ]
+  N97 -> N111 [
+    label = "references\n"
+  ]
+  N97 -> N115 [
+    label = "declarations\n"
+  ]
+  N97 -> N112 [
+    label = "references\n"
+  ]
+  N112 [
+    label = "{Reference|'accessibility' = 'Read' : String\l}"
+  ]
+  N112 -> N109 [
+    label = "node\n"
+  ]
+  N109 [
+    label = "{Expression\nIdentifierExpression|'name' = 'foo' : String\l}"
+  ]
+  N115 [
+    label = "{Declaration|'kind' = 'Import' : String\l}"
+  ]
+  N115 -> N101 [
+    label = "node\n"
+  ]
+  N101 [
+    label = "{BindingIdentifier\nBindingIdentifierMemberExpression\nBinding|'name' = 'foo' : String\l}"
+  ]
+  N111 [
+    label = "{List|}"
+  ]
+  N111 -> N112 [
+    label = "last\n"
+  ]
+  N111 -> N112 [
+    label = "0\n"
+  ]
+  N114 [
+    label = "{List|}"
+  ]
+  N114 -> N115 [
+    label = "last\n"
+  ]
+  N114 -> N115 [
+    label = "0\n"
+  ]
+  N72 [
+    label = "{Module|}"
+  ]
+  N72 -> N80 [
+    label = "items\n"
+  ]
+  N72 -> N87 [
+    label = "items\n"
+  ]
+  N72 -> N79 [
+    label = "items\n"
+  ]
+  N79 [
+    label = "{List|}"
+  ]
+  N79 -> N87 [
+    label = "0\n"
+  ]
+  N79 -> N80 [
+    label = "1\n"
+  ]
+  N79 -> N80 [
+    label = "last\n"
+  ]
+  N80 [
+    label = "{Statement\nExpressionStatement|}"
+  ]
+  N80 -> N95 [
+    label = "expression\n"
+  ]
+  N95 [
+    label = "{CallExpression\nExpression|}"
+  ]
+  N95 -> N109 [
+    label = "callee\n"
+  ]
+  N87 [
+    label = "{Import\nImportDeclaration|'moduleSpecifier' = 'export' : String\l}"
+  ]
+  N87 -> N101 [
+    label = "defaultBinding\n"
+  ]
+}

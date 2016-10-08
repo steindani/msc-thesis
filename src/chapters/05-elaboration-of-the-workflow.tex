@@ -8,15 +8,25 @@ As mentioned in~\Cref{sect:overview-transforming-the-source-code}, this transfor
 
 The only one line long source code in~\Cref{lst:oneliner} parsed and serialized as a tree can be seen in~\Cref{lst:oneliner-ast-json}.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
 	\begin{minipage}{\textwidth}
-		\lstinputlisting[captionpos=b,caption={Basic example source code.},label={lst:oneliner},commentstyle=\color{black},language=JavaScript]{include/sources/oneliner.js}
+		\lstinputlisting[
+			language=JavaScript,
+			captionpos=b,
+			caption={Basic example source code.},
+			label={lst:oneliner},
+		]{include/sources/oneliner.js}
 	\end{minipage}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
 	\begin{minipage}{\textwidth}
-		\lstinputlisting[captionpos=b,caption={AST output of the parser serialized in JSON format.},label={lst:oneliner-ast-json},commentstyle=\color{black},language=JSON]{include/sources/oneliner-ast.json}
+		\lstinputlisting[
+			language=JSON,
+			captionpos=b,
+			caption={AST output of the parser serialized in JSON format.},
+			label={lst:oneliner-ast-json},
+		]{include/sources/oneliner-ast.json}
 	\end{minipage}
 \end{figure}
 
@@ -31,25 +41,118 @@ Taking a look at the graph representation of the previous example (in~\Cref{fig:
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.5\textwidth]{AST-PPT.pdf}
+  \includegraphics[width=0.8\textwidth]{AST-PPT.pdf}
   \caption{Graph Representation of the One Line Long Source Code}
   \label{fig:AST-PPT}
 \end{figure}
 
 One way to formalize this declarative definition in Cypher can be seen in~\Cref{lst:division-by-zero}. Executing this query would find matching nodes with the right type, bind them to the corresponding names and check, whether the required relations are present, resulting in a state like in~\Cref{fig:AST-query-PPT}. Finally the result is the \code{BinaryExpression} node that can be used to get the precise location of the expression in the source code and report it as problematic.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
 	\begin{minipage}{\textwidth}
-		\lstinputlisting[captionpos=b,caption={Graph Pattern Matching Division by Zero.},label={lst:division-by-zero},language=Cypher]{include/sources/division-by-zero.cypher}
+		\lstinputlisting[
+			language=Cypher,
+			captionpos=b,
+			caption={Graph Pattern Matching Division by Zero.},
+			label={lst:division-by-zero}
+		]{include/sources/division-by-zero.cypher}
 	\end{minipage}
 \end{figure}
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.5\textwidth]{AST-query-PPT.pdf}
+  \includegraphics[width=0.8\textwidth]{AST-query-PPT.pdf}
   \caption{Graph Representation of the Query Searching Division by Zero}
   \label{fig:AST-query-PPT}
 \end{figure}
+
+\section{Handling Import and Export}
+Since the beginning, JavaScript projects have grown tremendously. With the size of the average project, the language has also matured for handling bigger, more complex code repositories. With ES6, a module syntax has been introduced to spread the codebase into files, even directories. (Even before ES6 there have been several module systems, but ES6 described a standard for it.)
+
+As I've mentioned before, I instruct the parser to process source files as modules. An ES6 \emph{module} differs in two ways from a \emph{script}: it is automatically interpreted as a \emph{strict-mode code}, and one can use \code{import} and \code{export} statements in them.
+
+This section follows
+% TODO https://hacks.mozilla.org/2015/08/es6-in-depth-modules/
+% TODO https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import
+% TODO https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export
+and collects the most important details about the specifications.
+
+
+\subsection{Export}
+Everything declared inside a module belongs to the scope of the module. In order to let other modules to access them, they need to be explicitly exported.
+
+\Cref{lst:es6-export} lists the various ways declaring a feature export. Just to list a few combinations; one may, for example, export expressions, variables, function and generator declaration statements either named, or using an alias. Or have default export expressions, even in an export statement.
+
+\begin{figure}[htbp]
+	\begin{minipage}{\textwidth}
+		\lstinputlisting[
+			language=JavaScript,
+			captionpos=b,
+			caption={ES6 Export Statement Examples from MDN.},
+			label={lst:es6-export},
+		]{include/sources/es6-export-mdn.js}
+	\end{minipage}
+\end{figure}
+
+Parsing these export statements result in different representation in the instance model and the resulting graph. \Cref{fig:es6-export-example} shows an example inline default export statement for a function named \code{foo}: \code{export default function foo() \{\}}. Note that the export statements are listed in the \code{Module}, but not in any of the \code{Scope}s.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{export-example}
+  \caption{ES6 Export Statement Example}
+  \label{fig:es6-export-example}
+\end{figure}
+
+
+\subsection{Import}
+Like there are many ways for exporting features in a module, there are also several ways for importing them. \Cref{lst:es6-import} lists these.
+
+\begin{figure}[htbp]
+	\begin{minipage}{\textwidth}
+		\lstinputlisting[
+			language=JavaScript,
+			captionpos=b,
+			caption={ES6 Import Statement Examples from MDN.},
+			label={lst:es6-import},
+		]{include/sources/es6-import-mdn.js}
+	\end{minipage}
+\end{figure}
+
+The imported features are placed in the module-level global scope as a \code{Variable} without their declaring node, and the import statements are also present in the AST. \Cref{fig:es6-import-example} shows the ASG of a module importing and then using a function declaration (exported in the previous module): \code{import foo from "export"; foo();}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{import-example}
+  \caption{ES6 Import Statement Example}
+  \label{fig:es6-import-example}
+\end{figure}
+
+
+\subsection{Connecting Imports to Exports}
+Since there are several ways to export and import features, there are even more combinations of these. This paper does not aim to cover all of these, but to show that it's possible to connect graph module representations based.
+
+Executing the following steps emulates the resolution made by the interpreter of the source codes and connects the usages of the imported feature to the declaration of the exported one:
+
+\begin{enumerate}[topsep=0pt]
+	\item Find the imported \code{IdentifierExporession} in the \code{items} list of the \code{GlobalScope} node.
+	\item Find the connected upstream \code{Variable} node.
+	\item Find the \code{Declaration} for the \code{Export} that has a \code{Node} with the same \code{BindingIdentifier} as the import.
+	\item Connect the \code{Variable} on the import side to the \code{Declaration} on the export side with a \code{declarations} relation.
+\end{enumerate}
+
+The Cypher query in~\Cref{lst:connect-import-export} manages to connect the exact type of imports and exports mentioned in the previous sections.
+
+\begin{figure}[!htb]
+	\begin{minipage}{\textwidth}
+		\lstinputlisting[
+			language=Cypher,
+			captionpos=b,
+			caption={Cypher Query for Connecting Import and Export Statements.},
+			label={lst:connect-import-export}
+		]{include/sources/connect-import-export.cypher}
+	\end{minipage}
+\end{figure}
+
 
 \section{Dead Code Search}
 

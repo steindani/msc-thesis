@@ -46,11 +46,10 @@
 
 \usepackage{listings}
 \lstset{
-	basicstyle=\scriptsize\ttfamily, % print whole listing small
+	basicstyle=\small\ttfamily, % print whole listing small
 	keywordstyle=\color{black}\bfseries, % bold black keywords
 	identifierstyle=, 					% nothing happens
 	commentstyle=\color{gray},
-	stringstyle=\scriptsize,
 	showstringspaces=false,     % no special string spaces
 	aboveskip=1em,
 	belowskip=3pt,
@@ -67,6 +66,9 @@
 \lstset{escapeinside={(*@}{@*)}}
 \def\lstlistingname{Source}
 
+\crefname{lstlisting}{source}{sources}
+\Crefname{lstlisting}{Source}{Sources}
+
 % source: http://tex.stackexchange.com/questions/83085/how-to-improve-listings-display-of-json-files
 \usepackage{xcolor}
 
@@ -75,7 +77,6 @@
 \colorlet{numb}{magenta!60!black}
 
 \lstdefinelanguage{json}{
-    basicstyle=\normalfont\ttfamily,
     showstringspaces=false,
     breaklines=true,
     frame=lines,
@@ -100,8 +101,7 @@
 
 % source: http://tex.stackexchange.com/questions/89574/language-option-supported-in-listings
 \lstdefinelanguage{JavaScript}{
-  basicstyle=\normalfont\ttfamily,
-  keywords={break, case, catch, continue, debugger, default, delete, do, else, finally, for, function, if, in, instanceof, new, return, switch, this, throw, try, typeof, var, void, while, with},
+  keywords={as, break, case, catch, continue, debugger, default, delete, do, else, export, finally, for, function, from, if, import, in, instanceof, let, new, return, switch, this, throw, try, typeof, var, void, while, with},
   morecomment=[l]{//},
   morecomment=[s]{/*}{*/},
   morestring=[b]',

@@ -1,0 +1,149 @@
+digraph Neo {
+  node [
+    fontsize = "18"
+    shape = "Mrecord"
+    fontname = "Clear Sans Thin"
+  ]
+  edge [
+    fontname = "Clear Sans Thin"
+    fontsize = "18"
+  ]
+  N2 [
+    label = "{GlobalScope\nScope|'type' = 'Global' : String\l'dynamic' = true : boolean\l}"
+  ]
+  N2 -> N6 [
+    label = "children\n"
+  ]
+  N2 -> N5 [
+    label = "children\n"
+  ]
+  N2 -> N3 [
+    label = "astNode\n"
+  ]
+  N3 [
+    label = "{Module\n|}"
+  ]
+  N3 -> N11 [
+    label = "items\n"
+  ]
+  N3 -> N10 [
+    label = "items\n"
+  ]
+  N10 [
+    label = "{List|}"
+  ]
+  N10 -> N11 [
+    label = "0\n"
+  ]
+  N10 -> N11 [
+    label = "last\n"
+  ]
+  N11 [
+    label = "{ExportDefault\nExportDeclaration|}"
+  ]
+  N11 -> N25 [
+    label = "body\n"
+  ]
+  N25 [
+    label = "{FunctionDeclaration\nFunctionDeclarationClassDeclarationVariableDeclaration\nFunctionDeclarationClassDeclarationExpression\nFunction\nStatement|'isGenerator' = false : boolean\l}"
+  ]
+  N25 -> N38 [
+    label = "body\n"
+  ]
+  N25 -> N34 [
+    label = "name\n"
+  ]
+  N25 -> N36 [
+    label = "params\n"
+  ]
+  N36 [
+    label = "{FormalParameters|}"
+  ]
+  N34 [
+    label = "{BindingIdentifier\nBindingIdentifierMemberExpression\nBinding|'name' = 'foo' : String\l}"
+  ]
+  N38 [
+    label = "{FunctionBody\nFunctionBodyExpression|}"
+  ]
+  N5 [
+    label = "{List|}"
+  ]
+  N5 -> N6 [
+    label = "0\n"
+  ]
+  N5 -> N6 [
+    label = "last\n"
+  ]
+  N6 [
+    label = "{Scope|'type' = 'Module' : String\l'dynamic' = false : boolean\l}"
+  ]
+  N6 -> N20 [
+    label = "children\n"
+  ]
+  N6 -> N22 [
+    label = "variables\n"
+  ]
+  N6 -> N19 [
+    label = "children\n"
+  ]
+  N6 -> N3 [
+    label = "astNode\n"
+  ]
+  N19 [
+    label = "{List|}"
+  ]
+  N19 -> N20 [
+    label = "0\n"
+  ]
+  N19 -> N20 [
+    label = "last\n"
+  ]
+  N20 [
+    label = "{Scope|'type' = 'Function' : String\l'dynamic' = false : boolean\l}"
+  ]
+  N20 -> N40 [
+    label = "variables\n"
+  ]
+  N20 -> N25 [
+    label = "astNode\n"
+  ]
+  N40 [
+    label = "{Map|}"
+  ]
+  N40 -> N54 [
+    label = "arguments\n"
+  ]
+  N54 [
+    label = "{Variable|'name' = 'arguments' : String\l}"
+  ]
+  N22 [
+    label = "{Map|}"
+  ]
+  N22 -> N28 [
+    label = "foo\n"
+  ]
+  N28 [
+    label = "{Variable|'name' = 'foo' : String\l}"
+  ]
+  N28 -> N42 [
+    label = "declarations\n"
+  ]
+  N28 -> N41 [
+    label = "declarations\n"
+  ]
+  N41 [
+    label = "{List|}"
+  ]
+  N41 -> N42 [
+    label = "0\n"
+  ]
+  N41 -> N42 [
+    label = "last\n"
+  ]
+  N42 [
+    label = "{Declaration|'kind' = 'FunctionDeclaration' : String\l}"
+  ]
+  N42 -> N34 [
+    label = "node\n"
+  ]
+}
