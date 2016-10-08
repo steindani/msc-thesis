@@ -140,7 +140,8 @@ Executing the following steps emulates the resolution made by the interpreter of
 	\item Connect the \code{Variable} on the import side to the \code{Declaration} on the export side with a \code{declarations} relation.
 \end{enumerate}
 
-The Cypher query in~\Cref{lst:connect-import-export} manages to connect the exact type of imports and exports mentioned in the previous sections.
+The Cypher query in~\Cref{lst:connect-import-export} manages to connect the exact type of imports and exports mentioned in the previous sections. Note that this query does not search for a file exporting the statement. For the correct match it should also check the metadata, whether the found node was declared in a file with matching absolute path.
+% TODO absolute path
 
 \begin{figure}[!htb]
 	\begin{minipage}{\textwidth}
