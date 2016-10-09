@@ -154,6 +154,15 @@ The Cypher query in~\Cref{lst:connect-import-export} manages to connect the exac
 	\end{minipage}
 \end{figure}
 
+After executing the query in~\Cref{lst:connect-import-export}, the two ASG subgraphs are connected with a new edge (see~\Cref{fig:import-export-example}). This makes it possible to execute global-level queries addressing multiple modules. These newly added relations are always removed when either the source or the destination is removed, in case a module is modified. Thus it is optimal to run this query only when all of the files are already processed and the chance of modification in the near future is low.
+
+\begin{sidewaysfigure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{import-export-example}
+  \caption{Merged ASG Subgraphs}
+  \label{fig:import-export-example}
+\end{sidewaysfigure}
+
 
 \section{Dead Code Search}
 

@@ -1,0 +1,285 @@
+digraph Neo {
+  node [
+    fontsize = "18"
+    shape = "Mrecord"
+    fontname = "Clear Sans Thin"
+  ]
+  edge [
+    fontname = "Clear Sans Thin"
+    fontsize = "18"
+  ]
+  N97 -> N42 [
+    label = "declarations",
+    penwidth = 6,
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    fontsize = 36
+  ]
+  N2 [
+    label = "{GlobalScope\nScope|'type' = 'Global' : String\l'dynamic' = true : boolean\l}"
+  ]
+  N2 -> N6 [
+    label = "children"
+  ]
+  N2 -> N5 [
+    label = "children"
+  ]
+  N2 -> N3 [
+    label = "astNode"
+  ]
+  N3 [
+    label = "{Module\n|}"
+  ]
+  N3 -> N11 [
+    label = "items"
+  ]
+  N3 -> N10 [
+    label = "items"
+  ]
+  N10 [
+    label = "{List|}"
+  ]
+  N10 -> N11 [
+    label = "0"
+  ]
+  N10 -> N11 [
+    label = "last"
+  ]
+  N11 [
+    label = "{ExportDefault\nExportDeclaration|}"
+  ]
+  N11 -> N25 [
+    label = "body"
+  ]
+  N25 [
+    label = "{FunctionDeclaration\nFunctionDeclarationClassDeclarationVariableDeclaration\nFunctionDeclarationClassDeclarationExpression\nFunction\nStatement|'isGenerator' = false : boolean\l}"
+  ]
+  N25 -> N38 [
+    label = "body"
+  ]
+  N25 -> N34 [
+    label = "name"
+  ]
+  N25 -> N36 [
+    label = "params"
+  ]
+  N36 [
+    label = "{FormalParameters|}"
+  ]
+  N34 [
+    label = "{BindingIdentifier\nBindingIdentifierMemberExpression\nBinding|'name' = 'foo' : String\l}"
+  ]
+  N38 [
+    label = "{FunctionBody\nFunctionBodyExpression|}"
+  ]
+  N5 [
+    label = "{List|}"
+  ]
+  N5 -> N6 [
+    label = "0"
+  ]
+  N5 -> N6 [
+    label = "last"
+  ]
+  N6 [
+    label = "{Scope|'type' = 'Module' : String\l'dynamic' = false : boolean\l}"
+  ]
+  N6 -> N20 [
+    label = "children"
+  ]
+  N6 -> N22 [
+    label = "variables"
+  ]
+  N6 -> N19 [
+    label = "children"
+  ]
+  N6 -> N3 [
+    label = "astNode"
+  ]
+  N19 [
+    label = "{List|}"
+  ]
+  N19 -> N20 [
+    label = "0"
+  ]
+  N19 -> N20 [
+    label = "last"
+  ]
+  N20 [
+    label = "{Scope|'type' = 'Function' : String\l'dynamic' = false : boolean\l}"
+  ]
+  N20 -> N40 [
+    label = "variables"
+  ]
+  N20 -> N25 [
+    label = "astNode"
+  ]
+  N40 [
+    label = "{Map|}"
+  ]
+  N40 -> N54 [
+    label = "arguments"
+  ]
+  N54 [
+    label = "{Variable|'name' = 'arguments' : String\l}"
+  ]
+  N22 [
+    label = "{Map|}"
+  ]
+  N22 -> N28 [
+    label = "foo"
+  ]
+  N28 [
+    label = "{Variable|'name' = 'foo' : String\l}"
+  ]
+  N28 -> N42 [
+    label = "declarations"
+  ]
+  N28 -> N41 [
+    label = "declarations"
+  ]
+  N41 [
+    label = "{List|}"
+  ]
+  N41 -> N42 [
+    label = "0"
+  ]
+  N41 -> N42 [
+    label = "last"
+  ]
+  N42 [
+    label = "{Declaration|'kind' = 'FunctionDeclaration' : String\l}"
+  ]
+  N42 -> N34 [
+    label = "node"
+  ]
+  N71 [
+    label = "{GlobalScope\nScope|'type' = 'Global' : String\l'dynamic' = true : boolean\l}"
+  ]
+  N71 -> N75 [
+    label = "children"
+  ]
+  N71 -> N72 [
+    label = "astNode"
+  ]
+  N71 -> N74 [
+    label = "children"
+  ]
+  N74 [
+    label = "{List|}"
+  ]
+  N74 -> N75 [
+    label = "0"
+  ]
+  N74 -> N75 [
+    label = "last"
+  ]
+  N75 [
+    label = "{Scope|'type' = 'Module' : String\l'dynamic' = false : boolean\l}"
+  ]
+  N75 -> N72 [
+    label = "astNode"
+  ]
+  N75 -> N90 [
+    label = "variables"
+  ]
+  N90 [
+    label = "{Map|}"
+  ]
+  N90 -> N97 [
+    label = "foo"
+  ]
+  N97 [
+    label = "{Variable|'name' = 'foo' : String\l}"
+  ]
+  N97 -> N114 [
+    label = "declarations"
+  ]
+  N97 -> N111 [
+    label = "references"
+  ]
+  N97 -> N115 [
+    label = "declarations"
+  ]
+  N97 -> N112 [
+    label = "references"
+  ]
+  N112 [
+    label = "{Reference|'accessibility' = 'Read' : String\l}"
+  ]
+  N112 -> N109 [
+    label = "node"
+  ]
+  N109 [
+    label = "{Expression\nIdentifierExpression|'name' = 'foo' : String\l}"
+  ]
+  N115 [
+    label = "{Declaration|'kind' = 'Import' : String\l}"
+  ]
+  N115 -> N101 [
+    label = "node"
+  ]
+  N101 [
+    label = "{BindingIdentifier\nBindingIdentifierMemberExpression\nBinding|'name' = 'foo' : String\l}"
+  ]
+  N111 [
+    label = "{List|}"
+  ]
+  N111 -> N112 [
+    label = "last"
+  ]
+  N111 -> N112 [
+    label = "0"
+  ]
+  N114 [
+    label = "{List|}"
+  ]
+  N114 -> N115 [
+    label = "last"
+  ]
+  N114 -> N115 [
+    label = "0"
+  ]
+  N72 [
+    label = "{Module|}"
+  ]
+  N72 -> N80 [
+    label = "items"
+  ]
+  N72 -> N87 [
+    label = "items"
+  ]
+  N72 -> N79 [
+    label = "items"
+  ]
+  N79 [
+    label = "{List|}"
+  ]
+  N79 -> N87 [
+    label = "0"
+  ]
+  N79 -> N80 [
+    label = "1"
+  ]
+  N79 -> N80 [
+    label = "last"
+  ]
+  N80 [
+    label = "{Statement\nExpressionStatement|}"
+  ]
+  N80 -> N95 [
+    label = "expression"
+  ]
+  N95 [
+    label = "{CallExpression\nExpression|}"
+  ]
+  N95 -> N109 [
+    label = "callee"
+  ]
+  N87 [
+    label = "{Import\nImportDeclaration|'moduleSpecifier' = 'export' : String\l}"
+  ]
+  N87 -> N101 [
+    label = "defaultBinding"
+  ]
+}
