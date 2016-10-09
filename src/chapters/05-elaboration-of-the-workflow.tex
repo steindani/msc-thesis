@@ -165,6 +165,43 @@ After executing the query in~\Cref{lst:connect-import-export}, the two ASG subgr
 
 
 \section{Dead Code Search}
+Code that is written, but not used in the whole codebase is often called \emph{dead code}. Without symbolic execution or dynamic analysis it is not possible to decide what part of the code is reachable, but (excluding dynamic evaluation --- eg., \code{eval} in JavaScript) it is feasible to find function declarations in a file that are possibly not referenced in the local scope.
+
+If a function declaration is not exported from the module and no exported declaration references it, it is highly likely that the declaration is unreachable and contains \emph{dead code}. With the following steps and the Cypher query described in~\Cref{lst:dead-code} it is possible to locate dead code in a file.
+
+\begin{enumerate}
+	\item Find the called \code{FunctionDeclaration}s target for every \code{CallExpression}.
+	\item Find every call from the body of a function.
+	\item Create a \code{calls} relationship between the caller and the callee \code{FunctionDeclaration}.
+	\item Find the exported \code{FunctionDeclaration}s that can be entrance points.
+	\item Find every \code{FunctionDeclaration} that should be available through the entrance points.
+	\item Return every \code{FunctionDeclaration} that are not in this list.
+\end{enumerate}
+
+\begin{figure}[!htb]
+	\begin{minipage}{\textwidth}
+		\lstinputlisting[
+			language=Cypher,
+			captionpos=b,
+			caption={Cypher Query for Finding Dead Code.},
+			label={lst:dead-code}
+		]{include/sources/dead-code-search.cypher}
+	\end{minipage}
+\end{figure}
+
+Note that this Cypher query is simplified and only prepared for one script in the database. Compared to other commercially available software even this simple query can return better results. It returns the clique of function declarations that are referencing each other, but none of them are referenced indirectly from the export statements.
+
+This query utilizes several possibilities only available in Neo4j. Since the query modifies the database, but the modifications are derived information, it should not be stored in the database. Database transactions that can be discarded, but still query the modified database are highly utilized here.
+
+This trick is only required because it is not possible to declare transitive closure\footnote{Transitive closure is marked with \code{*} in Cypher.} over arbitrary node type and edge label sequence in Cypher. One can match and replace every sequence with a new, dedicated labeled edge and declare a transitive closure over it, but this requires the database to be modified (see~\Cref{fig:transitive-closure}).
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{transitive-closure}
+  \caption{Transitive Closure over Arbitrary Node Type and Edge Label Sequence}
+  \label{fig:transitive-closure}
+\end{figure}
+
 
 \section{Control Flow Graph}
 
