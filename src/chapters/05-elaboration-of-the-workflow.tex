@@ -1,3 +1,4 @@
+% !TEX root = ../main.tex
 \chapter{Elaboration of the Workflow}
 \label{chap:elaboration-of-the-workflow}
 
@@ -189,7 +190,15 @@ If a function declaration is not exported from the module and no exported declar
 	\end{minipage}
 \end{figure}
 
-Note that this Cypher query is simplified and only prepared for one script in the database. Compared to other commercially available software even this simple query can return better results. It returns the clique of function declarations that are referencing each other, but none of them are referenced indirectly from the export statements.
+Note that this Cypher query is simplified and only prepared for one script in the database. Compared to other commercially available software even this simple query can return better results. For a test file it returns a clique of function declarations that are referencing each other, but none of them are referenced indirectly from the export statements (see~\Cref{fig:dead-code-result}. A commercially available tool reports these declarations in three rounds and requires user input.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{dead-code-result}
+  \caption{Call Graph with Self-Referencing Clique in Red}
+  \label{fig:dead-code-result}
+\end{figure}
+% TODO recolor and replace caption
 
 This query utilizes several possibilities only available in Neo4j. Since the query modifies the database, but the modifications are derived information, it should not be stored in the database. Database transactions that can be discarded, but still query the modified database are highly utilized here.
 
