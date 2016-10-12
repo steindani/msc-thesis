@@ -212,19 +212,50 @@ This trick is only required because it is not possible to declare transitive clo
 \end{figure}
 
 
-\section{Control Flow Graph}
+\section{Control Flow Graph (CFG)}
 % TODO definition before
-% figure CFG-PPT.pdf
+Control Flow Graphs (CFG) are graph representations of the computation and control flows in the program. In this graph the nodes represent statements that are not interrupted by control changes. Directed edges represent possible flow of control between the two nodes. Nodes can have multiple incoming and outgoing edges. % TODO cite http://www.cs.cornell.edu/courses/cs412/2008sp/lectures/lec24.pdf
+\Cref{fig:CFG-PPT} presents an example CFG.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.75\textwidth]{CFG-PPT}
+  \caption{Example Control Flow Graph}
+  \label{fig:CFG-PPT}
+\end{figure}
+% TODO fix the CFG (if before return)
+
+In this section I demonstrate how it is possible to transform the basic ASG structures into a CFG, and how it can be utilized for static analysis.
+
 \subsection{Theoretically Possible Paths}
+As previously mentioned, nodes can have multiple incoming and outgoing edges. At execution time when the state of the program is at a given CFG node --- based on the dynamic state of the execution --- it may continue with any statement of the corresponding subsequent nodes.
+
+Without running or interpreting the source code it is only possible to find and map every scenario in the ASG and transform them into nodes and edges in the CFG. A possible execution path is a path in the graph from one of the entry nodes to one of the exit nodes. The constraints on this path may be insatible, thus the dynamic execution of the source code may not iterate over this path. The CFG thus contains every feasible, and some infeasible execution paths.
 
 \subsection{Transforming by Node Type}
+There are more than one ways to transform the ASG into a CFG. Since my approach utilizes a graph database, the framework transforms the graph one smaller subgraph at a time based on typized pattern matching.
+
 \subsubsection{Self-Containing Transformations}
 % containing?
-% start and end nodes
+The key to this approach is widely used: every node has a \emph{start} and \emph{end} node that acts as a connection point for other nodes --- transformed at another time. These transformations will eventually connect the whole graph and represent the CFG.
+
+This approach makes it possible to parallelize and thus speed up the transformation and also generalize the transformation patterns. The following sections present how different ASG information may be transformed.
+
 \subsubsection{Sequencing}
+Knowing the order of the statement sequences is one of the most important information for CFG transformations. Although it can be derived from the indexes of the list nodes, it is a rather compute-heavy operation. The graph thus redundantly contains the sequence information by storing the list elements both chained and indexed.
+
 \subsubsection{Data Structures}
-% ListNoItem
-% ListWithItem
+Data structures, like uninterrupted list of statements (statement blocks, such as the body of a function) may contain zero or more elements. Like previously detailed, lists are chained and the last element is also marked.
+
+If the list contains one or more elements, the ASG structure is transformed as follows:
+\begin{enumerate}[topsep=0pt]
+	\item The \emph{start} node (the ASG node itself) is connected to the \emph{start} node of the first element.
+	\item The \emph{end} node of every element except the last is connected to the \emph{start} node of the next element.
+	\item The \emph{end} node of the \emph{end} node of the list itself.
+\end{enumerate}
+
+If the list does not contain any elements, its \emph{start} node is connected to its \emph{end} node.
+
 \subsubsection{Expressions}
 % LiteralX
 % CallExpressionNoParam
