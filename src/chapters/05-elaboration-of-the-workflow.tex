@@ -254,26 +254,63 @@ If the list contains one or more elements, the ASG structure is transformed as f
 	\item The \emph{end} node of the \emph{end} node of the list itself.
 \end{enumerate}
 
+% TODO transformation figure
+
 If the list does not contain any elements, its \emph{start} node is connected to its \emph{end} node.
+
+\subsubsection{Statements}
+As the main building blocks of a language, the various statement types represent different behaviors when interpreted. There are several statement types in the \emph{Shift} metamodel, and in this section I introduce a few of these that can be used to build a smaller example program.
+
+\paragraph{VariableDeclarationStatement}
+A variable declaring statement is parsed into a structure of multiple graph nodes. These are \code{VariableDeclarationStatement}, \code{VariableDeclaration}, and \code{VariableDeclarator}. On the right side of the variable declaration statement is one \code{Expression}.
+
+It is the framework's job to transform this ASG segment into a CFG. The transformation of any other element inside of the subtree of the root \code{VariableDeclarationStatement} node is executed at another time.
+
+The assigned behavior to this node type and structure is the following:
+\begin{enumerate}[topsep=0pt]
+	\item The \code{Expression} is evaluated.
+	\item The \code{VariableDeclaration} is executed.
+\end{enumerate}
+
+% TODO transformation figure
+
+\paragraph{IfStatement}
+This branching statement is parsed into one graph node. This node has two or three references. It must have one condition that decides the branching direction. A (positive) consequence is also required, but the alternate path reference is optional.
+
+In order to optimally transform these two scenarios, two transforming patterns are necessary.
+\begin{enumerate}[topsep=0pt]
+	\item Both scenarios evaluate the \code{Expression}.
+	\item The positive consequence is connected with the \code{true} path, and the end node of the consequence node is connected to the end of the \code{IfStatement}.
+	\item If there is an alternate branch, its start node is connected with the \code{false} path from the conditional \code{Expression} and its end node is also connected to the end node of the \code{IfStatement}.
+\end{enumerate}
+
+This transformation creates a diamond shape flow. If there are more than alternative branches, the ASG represents them in chained containment. Thus eventually every branching will be connected, one-by-one.
+
+\paragraph{FunctionDeclaration}
+Function declaration structures are rather simple. The node has references to its parameters and body. The parameters --- if necessary --- are evaluated at calling. The \code{FunctionBody} contains a list of directives and a list of statements.
+
+The transformation pattern ignores the directives and immediately connects the \code{Function\-Declaration} to the list of \code{Statement}s, both ways (as after the function should also end after the last statement has been executed).
+
+
+% BlockStatement
+% ExpressionStatement
 
 \subsubsection{Expressions}
 % LiteralX
 % CallExpressionNoParam
 % CallExpressionParam
-\subsubsection{Statements}
-% BlockStatement
-% ExpressionStatement
-% FunctionDeclaration
-% IfStatementAlternate
-% IfStatementNoAlternate
-% VariableDeclarationStatement
 
 \subsection{Transformation Challenges}
+% throw
+% return
+% sequence
 
 \subsection{Test Generation}
 
 
 \section{Language Limitations}
 % object as a parameter
+% default parameters
+% rest parameters (...)
 % no evaluation
 % only a small selection of language elements supported
