@@ -3,43 +3,43 @@
 
 \section{Context}
 
-Quality control plays an important role in large-scale software development. The number of coding errors are noticeably increasing with the number of contributors. The more developers work together on developing a software, the more versatile their coding styles and conventions are.
+Quality control plays an important role in large-scale software development. The number of coding errors are significantly increasing with the number of contributors. The more developers work together on developing a software, the more versatile their coding styles and conventions are.
 
 To ensure the quality of the source code, thus the software itself, and at the same time help developers with their tasks, the need arises for a solution continuously reviewing the code, searching for mistakes, and enforcing conventions.
 
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[height=6cm]{CI-workflow}
-	\caption{Continuous Integration workflow extended with Static Analysis.}
+	\caption{Continuous integration workflow extended with static analysis.}
 	\label{fig:CI-workflow}
 \end{figure}
 
-Version control systems (VCS) and continuous integration (CI)~\cite{CI} are widely used tools of the modern software developers. \Cref{fig:CI-workflow} shows an extended version of the generally used continuous integration workflow.
+Version control systems (VCS) and continuous integration (CI)~\cite{CI} solutions are widely used tools of the modern software developers. \Cref{fig:CI-workflow} shows an extended version of the generally used continuous integration workflow.
 The basic workflow consists of the following steps. The developer makes modifications to the codebase using their \textit{Development Environment}. The modifications are committed into a \textit{Version Control System}, and this commit triggers the \textit{Build Environment} to build the project. The \textit{Testing Environment} can then perform runtime tests on latest build of the project. After this process, the results --- build and test logs --- are presented to the developer.
 
-These logs help the developers discover bugs and failures before the software is released for manual testing or production purposes. Producing this information and making sure the software is working as intended often and early in the development workflow is vital for agile development.
+These logs help the developers discover bugs and failures before the software is released for manual testing or production purposes. Producing this information often and as early as possible --- thus making sure the software is working as intended --- is vital for agile development.
 
-A proven method of enhancing software quality is utilizing static program analysis techniques supplementing the basic CI workflow. During this method, the code is analyzed without executing the application. In practice, this method is able to reveal problems that are undetectable with testing and thus is able to aid the developer in creating higher quality software.
+A proven method of enhancing software quality is utilizing static program analysis techniques extending the basic CI workflow. During this process the code is analyzed without executing the application. In practice it is usually employed to reveal problems undetectable with testing and thus enabling the developer to create higher quality software.
 
 
 \section{Problem Statement}
 
 Static analysis methods verifying that the code is compliant with coding conventions are often time consuming and resource intensive in practice. The size of the codebase may require a scalable solution, especially for continuous integration purposes, since the entire verification process needs to be carried out on the whole codebase once it is (partially) modified.
 
-A temporary solution to tackle this problem is to process the changes in batches. To save resources, static analysis runs are carried out for a joined group of changes, rather than for every individual commit.
+A temporary solution to tackle this problem is to process the changes in batches. This way --- to save resources --- static analyses are carried out for a joined group of changes, rather than for every individual commit.
 
-In an ideal situation, even before committing the changes, the developers receive feedback about the problems their modifications would imply.
+In an ideal situation, even before committing the changes, the developers receive feedback about the problems their modifications could cause.
 
 
 \section{Objectives and Contributions}
 
-My main objective is to provide a solution for reducing the time required for global, codebase-level reevaluation of static analysis after a change occurs.
+My main objective is to provide a solution for reducing the time required for a global, codebase-level reevaluation of static analysis after a change occurs.
 
-I aim to create a framework that transforms the whole source code repository into a graph representation and maintains it subsequently. It should perform code convention compliance checks, execute built-in static analysis tests and be extended with arbitrary tests by the user.
+In this work I create a framework that transforms the whole source code repository into a graph representation and maintains it subsequently. The proposed approach is suitable for performing code convention compliance checks, for executing built-in static analysis tests and arbitrary transforming extensions written by the user.
 
-Incremental processing is one of the possible solutions for speeding up static analysis. Thus it should be able to process a subset of the repository, e.g. only the modifications introduced by the latest commit, then integrate the changes into the maintained representation. This way the system can process the modifications in a commit incrementally. After the initial query evaluation and report generation, consecutive runs can be executed significantly more efficiently.
+In order to speed up the static analysis, the presented framework uses incremental processing. Thus it is able to process a subset of the repository, e.g. only the modifications introduced by the latest commit, then integrate the changes into the maintained representation. This way the system can process the modifications in a commit incrementally. After the initial query evaluation and report generation, consecutive runs can be executed significantly more efficiently.
 
-The framework relies on two substantial technologies --- a source code parser and an adequate database solution --- and provides interfaces making integration possible with external tools, such as version control systems and integrated developer environments.
+The framework relies on two substantial technologies: 1)~a source code parser, and 2)~a database solution. Also, the framework provides interfaces making integration possible with external tools, such as version control systems and integrated developer environments.
 
 
 \section{Structure of the Thesis}
