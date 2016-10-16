@@ -43,6 +43,7 @@ In case the file has been modified, its metadata node is looked up and the conne
 
 
 \section{Division by Zero}
+\label{sect:division-by-zero}
 As one of the most basic and easy-to-discover mistakes, division by zero should be reported to the developer. In the context of mathematics, division by zero is undefined for the real numbers. In JavaScript, it may result in \code{NaN} or \code{Infinity}.
 
 Without dynamic testing or symbolic execution it is rather hard to find this kind of expression, since the right side of the division may come from a variable. On the other hand, finding the cases where the right side is a literal is trivial.
@@ -82,11 +83,7 @@ Since the beginning, JavaScript projects have grown tremendously. With the size 
 
 As I've mentioned before, I instruct the parser to process source files as modules. An ES6 \emph{module} differs in two ways from a \emph{script}: it is automatically interpreted as a \emph{strict-mode code}, and one can use \code{import} and \code{export} statements in them.
 
-This section follows
-% TODO https://hacks.mozilla.org/2015/08/es6-in-depth-modules/
-% TODO https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import
-% TODO https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export
-and collects the most important details about the specifications.
+This section follows~\cite{ES6InDepth,ES6import,ES6export} and collects the most important details about the specifications.
 
 
 \subsection{Export}
@@ -223,8 +220,7 @@ This trick is only required because it is not possible to declare transitive clo
 
 
 \section{Control Flow Graph (CFG)}
-% TODO definition before
-Control Flow Graphs (CFG) are graph representations of the computation and control flows in the program. In this graph the nodes represent statements that are not interrupted by control changes. Directed edges represent possible flow of control between the two nodes. Nodes can have multiple incoming and outgoing edges. % TODO cite http://www.cs.cornell.edu/courses/cs412/2008sp/lectures/lec24.pdf
+Control Flow Graphs (CFG) are graph representations of the computation and control flows in the program. In this graph the nodes represent statements that are not interrupted by control changes. Directed edges represent possible flow of control between the two nodes. Nodes can have multiple incoming and outgoing edges.~\cite{IntroductionToCompilers}
 \Cref{fig:CFG-PPT} presents an example CFG.
 
 \begin{figure}[htbp]

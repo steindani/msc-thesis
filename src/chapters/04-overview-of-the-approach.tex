@@ -150,13 +150,9 @@ One layer containing every ASG for the \emph{master} branch. One layer for each 
 \subsubsection{Transforming the Graph}
 After the data has been stored in the database, it can be freely transformed with framework- or user-defined rules. This step may be utilized for transforming the set of subgraphs into one connected graph based on the export and import rules of the language.
 
-Neo4j makes it possible to execute in-place transformations, where querying with pattern matching and manipulations may be declared in the same query. The possibilities of Neo4j are detailed in~\Cref{sect:neo4j}.
-
-% TODO Transformations example are presented and visualized in~\Cref{}.
+Neo4j makes it possible to execute in-place transformations, where querying with pattern matching and manipulations may be declared in the same query. The possibilities of Neo4j are detailed in~\Cref{sect:neo4j}. Transformation examples are presented and visualized in~\Cref{chap:elaboration-of-the-workflow}.
 
 \subsection{Executing Graph Queries}
-By utilizing the built-in pattern-matching abilities of Neo4j, it is easier and more user-friendly to write pseudo-graphic, declarative patterns to find a structure in the graph --- compared to the generally used visitor patterns.
-
-% TODO See example pattern in~\Cref{sect:example-query}.
+By utilizing the built-in pattern-matching abilities of Neo4j, it is easier and more user-friendly to write pseudo-graphic, declarative patterns to find a structure in the graph --- compared to the generally used visitor patterns. An example graph pattern query is detailed in~\Cref{sect:division-by-zero}.
 
 If Cypher, the query language of Neo4j is not powerful enough to describe a constraint, one may also use arbitrary Java code. This code may be used inside the query or even command multiple queries and aggregate the result.
