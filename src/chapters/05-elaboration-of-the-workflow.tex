@@ -166,6 +166,7 @@ After executing the query in~\Cref{lst:connect-import-export}, the two ASG subgr
 
 
 \section{Dead Code Search}
+\label{sect:dead-code-search}
 Code that is written, but not used in the whole codebase is often called \emph{dead code}. Without symbolic execution or dynamic analysis it is not possible to decide what part of the code is reachable, but (excluding dynamic evaluation --- eg., \code{eval} in JavaScript) it is feasible to find function declarations in a file that are possibly not referenced in the local scope.
 
 If a function declaration is not exported from the module and no exported declaration references it, it is highly likely that the declaration is unreachable and contains \emph{dead code}. With the following steps and the Cypher query described in~\Cref{lst:dead-code} it is possible to locate dead code in a file.
@@ -296,14 +297,22 @@ The transformation pattern ignores the directives and immediately connects the \
 % ExpressionStatement
 
 \subsubsection{Expressions}
-% LiteralX
-% CallExpressionNoParam
-% CallExpressionParam
+There are 28 expression implementations in the Shift metamodel. Such as literal expressions for strings, booleans, numerals, null, infinity, and regular expressions. There are also expressions representing class declarations, arrays, array functions. Unary and binary operators are also parsed into a corresponding unary or binary expressions.
+
+The prototype of the framework contains graph transformation patterns for literal and call expressions. Regarding the control flow graph, literals are immediately evaluated, so their end node is connected directly. Call expressions try to find the declaration of the called function and set it as the next block of the control flow.
+
+The end node of the function declaration is also connected to the end node of the call expression. If the function is called more than once, its end node will have multiple outgoing edges. Thus when writing graph pattern queries over the CFG, one has to declare constraints matching the ingoing and outgoing edges between the \code{CallExpression} and the \code{FunctionDeclaration}.
+
+In case the call expression provides parameters, they are also transformed into the CFG and evaluated in the given order.
+
 
 \subsection{Transformation Challenges}
-% throw
-% return
-% sequence
+Besides the thorough work required for writing the transformation rules for every class and structure in the metamodel, there are also other challenges. Helping graph structures introduced for easy querying may slow down or even make impossible to correctly query given patterns.
+
+Queries for dead code search (detailed in~\Cref{sect:dead-code-search}) for example require the list ordering and CFG end nodes to be removed, or the transitive closure slows down the query. This would make it not suitable for near real-time user feedback.
+
+Another challenge occurs, when a dynamic object or its member is passed as a parameter to a function call. When evaluated, the function declaration references it with alias; the static analysis, however, may only guess the current value or reference. Substituting all the possible uses for a given reference and collecting dynamically added members may be a partial solution, but this is a future work of the research.
+
 
 \subsection{Test Generation}
 
