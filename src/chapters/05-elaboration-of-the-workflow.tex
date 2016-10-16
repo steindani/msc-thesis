@@ -31,7 +31,16 @@ The only one line long source code in~\Cref{lst:oneliner} parsed and serialized 
 	\end{minipage}
 \end{figure}
 
+
 \section{Storing the ASG in the Graph Database}
+Once the source code is parsed and the ASG is returned, the framework updates the stored graph representation. Since \Cref{sect:maintaining-the-graph} details how the Java Object structure is transformed into a graph, this section only describes the queries used for the maintenance.
+
+When a new file is added to the repository, there is no need to prepare the database. A new metadata node is created with the name and path of the file, and optionally the session identifier of the IDE it has been created and sent in to the framework. The subgraph representing the ASG is then inserted in a database transaction.
+
+The newly created metadata node acts as a subgraph selector, since it is connected to every node belonging to the file (of the given session). This makes it easy to remove the file upon the removal of the file it represents.
+
+In case the file has been modified, its metadata node is looked up and the connected nodes are removed, then the new graph is inserted.
+
 
 \section{Division by Zero}
 As one of the most basic and easy-to-discover mistakes, division by zero should be reported to the developer. In the context of mathematics, division by zero is undefined for the real numbers. In JavaScript, it may result in \code{NaN} or \code{Infinity}.
@@ -66,6 +75,7 @@ One way to formalize this declarative definition in Cypher can be seen in~\Cref{
   \caption{Graph Representation of the Query Searching Division by Zero}
   \label{fig:AST-query-PPT}
 \end{figure}
+
 
 \section{Handling Import and Export}
 Since the beginning, JavaScript projects have grown tremendously. With the size of the average project, the language has also matured for handling bigger, more complex code repositories. With ES6, a module syntax has been introduced to spread the codebase into files, even directories. (Even before ES6 there have been several module systems, but ES6 described a standard for it.)
@@ -127,7 +137,6 @@ The imported features are placed in the module-level global scope as a \code{Var
   \caption{ES6 Import Statement Example}
   \label{fig:es6-import-example}
 \end{figure}
-
 
 \subsection{Connecting Imports to Exports}
 Since there are several ways to export and import features, there are even more combinations of these. This paper does not aim to cover all of these, but to show that it's possible to connect graph module representations based.
@@ -293,7 +302,6 @@ Function declaration structures are rather simple. The node has references to it
 
 The transformation pattern ignores the directives and immediately connects the \code{Function\-Declaration} to the list of \code{Statement}s, both ways (as after the function should also end after the last statement has been executed).
 
-
 % BlockStatement
 % ExpressionStatement
 
@@ -306,7 +314,6 @@ The end node of the function declaration is also connected to the end node of th
 
 In case the call expression provides parameters, they are also transformed into the CFG and evaluated in the given order.
 
-
 \subsection{Transformation Challenges}
 Besides the thorough work required for writing the transformation rules for every class and structure in the metamodel, there are also other challenges. Helping graph structures introduced for easy querying may slow down or even make impossible to correctly query given patterns.
 
@@ -314,13 +321,13 @@ Queries for dead code search (detailed in~\Cref{sect:dead-code-search}) for exam
 
 Another challenge occurs, when a dynamic object or its member is passed as a parameter to a function call. When evaluated, the function declaration references it with alias; the static analysis, however, may only guess the current value or reference. Substituting all the possible uses for a given reference and collecting dynamically added members may be a partial solution, but this is a future work of the research.
 
-
 \subsection{Test Generation}
-As previously mentioned in~\Cref{sect:cfg-paths}, the CFG contains every feasible, and some infeasible execution paths. In Cypher it is also possible to find every, or the shortest paths between two nodes. Knowing the entrance node of the CFG and selecting an arbitrary node in the CFG it is thus possible to list every path from the entry node to a selected one. This node can represent, e.g., a troublesome, unwanted state.
+As previously mentioned in~\Cref{sect:cfg-paths}, the CFG contains every feasible, and some infeasible execution paths. In Cypher it is also possible to find every, or the shortest paths between two nodes. Knowing the entrance node of the CFG and selecting an arbitrary node in the CFG it is thus possible to list every path from the entry node to the selected one. This node can represent, e.g., a troublesome, unwanted state.
 
-With the transformation of the statements and the conditions of if statements and other branching structures into a statisfactory problem it may be possible to decide whether there are program inputs that take the execution of the program to the selected node.
+With the transformation of the statements and the conditions of the if statements and other branching structures into a statisfactory problem it may be possible to decide whether there are program inputs that take the execution of the program to the selected node.
 
 This topic falls out of reach of the current research.
+
 
 \section{Language Limitations}
 % object as a parameter
