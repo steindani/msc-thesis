@@ -229,6 +229,7 @@ Control Flow Graphs (CFG) are graph representations of the computation and contr
 In this section I demonstrate how it is possible to transform the basic ASG structures into a CFG, and how it can be utilized for static analysis.
 
 \subsection{Theoretically Possible Paths}
+\label{sect:cfg-paths}
 As previously mentioned, nodes can have multiple incoming and outgoing edges. At execution time when the state of the program is at a given CFG node --- based on the dynamic state of the execution --- it may continue with any statement of the corresponding subsequent nodes.
 
 Without running or interpreting the source code it is only possible to find and map every scenario in the ASG and transform them into nodes and edges in the CFG. A possible execution path is a path in the graph from one of the entry nodes to one of the exit nodes. The constraints on this path may be insatible, thus the dynamic execution of the source code may not iterate over this path. The CFG thus contains every feasible, and some infeasible execution paths.
@@ -315,7 +316,11 @@ Another challenge occurs, when a dynamic object or its member is passed as a par
 
 
 \subsection{Test Generation}
+As previously mentioned in~\Cref{sect:cfg-paths}, the CFG contains every feasible, and some infeasible execution paths. In Cypher it is also possible to find every, or the shortest paths between two nodes. Knowing the entrance node of the CFG and selecting an arbitrary node in the CFG it is thus possible to list every path from the entry node to a selected one. This node can represent, e.g., a troublesome, unwanted state.
 
+With the transformation of the statements and the conditions of if statements and other branching structures into a statisfactory problem it may be possible to decide whether there are program inputs that take the execution of the program to the selected node.
+
+This topic falls out of reach of the current research.
 
 \section{Language Limitations}
 % object as a parameter
