@@ -2,11 +2,14 @@
 \chapter{Preliminaries}
 \label{chap:preliminaries}
 
-In this chapter I introduce the conceptual foundations and related technologies of my work. Here I discuss the building blocks required to create a static analyzer framework for JavaScript.
+In this chapter I propose the conceptual foundations and related technologies of my work. Here I discuss the building blocks required to design a static analyzer framework for JavaScript.
 
 \section{JavaScript}
+\subsection{From Simple Interaction to a Full-Fledged Language}
 \subsection{ECMAScript 2015}
-\subsection{WebAssembly}
+\subsection{Emerging Languages Translating to JavaScript}
+% \subsubsection{WebAssembly}
+% TODO write
 
 
 \section{Static Analysis}
@@ -14,34 +17,34 @@ Even in 1995, the idea of static analysis was over 25 years old: \textquote[\cit
 
 Source code analysis can be used to discover facts about a particular program. Two basic automated analysis methods exist for source code analysis:
 \begin{itemize}[topsep=0pt]
-  \item \emph{Static analysis} is performed by reading the source code and analyzing it without evaluating the statements or executing the program.
+  \item \emph{Static analysis} is performed by parsing the source code and analyzing it without evaluating the statements or executing the program.
   \item \emph{Dynamic analysis} is performed by executing the program and evaluating its output for given input sequences.
 \end{itemize}
 
 % > The term is usually applied to the analysis performed by an automated tool, with human analysis being called program understanding, program comprehension, or code review. Software inspections and Software walkthroughs are also used in the latter case.
 % https://en.wikipedia.org/wiki/Static_program_analysis
 
-While JavaScript is usually not compiled, high-level language source codes are audited at least by the compiler. Thus a specific static analysis should aim to discover unwanted traits of the source in ways a generic compiler could not do, resulting in better code quality. These treats, \emph{bugs} are usually perceptable while running the code. Another way to locate these bugs is to write and run tests, dynamically testing the program.
+While high-level language source codes are audited at least by the compiler, JavaScript is usually not compiled before is is published. Thus a specific static analysis tool for JavaScript should aim to discover unwanted traits of the source in ways a generic compiler could not do, resulting in better code quality. These traits, \emph{bugs} are usually perceptable while running the code. Another way to locate these bugs is to write and run tests, dynamically testing the program.
 % \cite[][72]{wichmann_industrial_1995}
 
-The two analysis methods are complementing each other. They discover different subsets of problematic constructions. Information discovered during the static analysis may be used later in the dynamic testing.
+The two analysis methods are complementing each other. They discover different subsets of problematic constructions. Information discovered during the static analysis may be used later in the dynamic testing, resulting in a hybrid technique.
 
 % > Static analysis bug-finding tools have evolved over the last several decades from basic syntactic checkers to those that find deep bugs by reasoning about the semantics of code. The goal of the Clang Static Analyzer is to provide a industrial-quality static analysis framework for analyzing C, C++, and Objective-C programs that is freely available, extensible, and has a high quality of implementation.
 % http://clang-analyzer.llvm.org/
 
 
 \subsection{Use Cases}
-Static analysis tools employ diverse levels of abstraction. \emph{Formatters} make sure that the source code complies with the style guide. \emph{Linters} check for stylistic and programming errors and warn at suspicious programming constructs. \emph{Formal verification}, on the other hand, utilizes formal mathematical methods to prove or refute statements about the source code and its behavior.
+Static analysis tools employ diverse levels of abstraction. \emph{Formatters} are able to ensure that the source code complies with a predefined style guide. \emph{Linters} check for stylistic and programming errors, thus indicating suspicious programming constructs. \emph{Formal verification}, on the other hand, utilizes formal mathematical methods to prove statements about the source code and its behavior.
 
-For dynamic languages, it can be used for even more: finding previously undefined property reads, catching invokement of non-functional variables~\cite{jensen_type_2009}, detecting dead code, and so on.
+For dynamic languages, it can be used for even more: finding previously undefined property reads, catching invokement of non-functional variables~\cite{jensen_type_2009}, detecting dead code.
 
 \subsection{Advantages and Disadvantages}
 
 Since static analysis tools deliberately do not evaluate the source code, there are fundamental limitations to what problems they can discover. I consider the following advantages and disadvantages important.
 
-
 \subsubsection{Advantages}
 \paragraph{Input Data Is a By-Product of Compilers}
+% TODO
 
 \paragraph{No Need for Execution}
 \begin{itemize}
@@ -50,12 +53,14 @@ Since static analysis tools deliberately do not evaluate the source code, there 
 \end{itemize}
 
 \subsubsection{Disadvantages}
-\paragraph{Speed} Static analysis trades CPU time and memory for better code quality. By design it may be multiple orders of magnitude slower than compilation, but its speed depends not only on the underlying data structure and algorithms, but also the level of analysis.
+\paragraph{Speed} Static analysis trades CPU time and memory for better code quality. By design it may be multiple orders of magnitude slower than compilation. Its speed depends not only on the underlying data structure and algorithms, but also the level of analysis.
 %  > Slower than Compilation
 %
 %  > Operationally, using static analysis to automatically find deep program bugs is about trading CPU time for the hardening of code. Because of the deep analysis performed by state-of-the-art static analysis tools, static analysis can be much slower than compilation.
 %
 %  > While the Clang Static Analyzer is being designed to be as fast and light-weight as possible, please do not expect it to be as fast as compiling a program (even with optimizations enabled). Some of the algorithms needed to find bugs require in the worst case exponential time.
+% TODO cite
+% TODO extend
 
 However, with a given limitation of granularity, in case of a source code modification, previous results can be reused. There is a possibility that only the modified---and other affected---parts need to be processed again. The incremental approach of static analysis may speed up the process by orders of magnitude~\cite{stein-daniel-bsc}.
 
@@ -179,10 +184,10 @@ As mentioned in~\cref{sect:source-code-processing}, source code contains much mo
 \Cref{fig:ast-asg-example} shows an example AST (in black), where a one-statement JavaScript file is parsed. The content of the file was only \code{var foo = 1 / 0;}.
 
 \subsubsection{Scope Analyzer}
-A \emph{scope analyzer} or \emph{context analyzer} produces a data structure that represents the scoping information of a program, probably extending the information available from an AST or an ASG. An element representing a scope in this data structure may contain, inter alia, metadata about the scope itself, the AST node related to the scope, available assets (variables, functions, etc.) in that scope.~\cite{shift-scope}
+A \emph{scope analyzer} or \emph{context analyzer} produces a data structure that represents the scoping information of a program, extending the information available from an AST or an ASG. An element representing a scope in this data structure may contain, inter alia, metadata about the scope itself, the AST node related to the scope, available assets (variables, functions, etc.) in that scope.~\cite{shift-scope}
 
 \paragraph{Abstract Semantic Graph}
-As its name implies, an \emph{Abstract Semantic Graph} (ASG), although sounding alike, differs from an Abstract Syntax Tree. (1) ASGs are graphs, and (2) express more than the syntactic information; ASGs carry semantic information expressed with additional edges. These edges can not exist in an AST, as they are non-tree edges (cross-edges). For example they may connect variable references to their declarations.~\cite{raghavan_dex:_2004}
+An \emph{Abstract Semantic Graph} (ASG) differs from an Abstract Syntax Tree. (1) ASGs are graphs, and (2) express more than the syntactic information; ASGs carry semantic information expressed with additional edges. These edges can not exist in an AST, as they are non-tree edges (cross-edges). For example they may connect variable references to their declarations.~\cite{raghavan_dex:_2004}
 
 An ASG is a graph representation of a parse result; the nodes represent subterms of an expression. Shared subterms can occur, having more than one node linked to the same, common subterm. Compilers generally work on ASGs internally, since not only the syntactical, but the behavioral information are also represented in them.
 
@@ -200,23 +205,25 @@ An ASG is a graph representation of a parse result; the nodes represent subterms
 
 \FloatBarrier
 
-\section{Type Inference}
-
-Type inference refers to the deduction of the data types of expressions, statements during static analysis.
-
-> Type inference refers to the automatic deduction of the data type of an expression in a programming language. If some, but not all, type annotations are already present it is referred to as type reconstruction[citation needed]. The reverse operation of type inference is called type erasure.
-
-> It is a feature present in some strongly statically typed languages. It is often characteristic of functional programming languages in general. Some languages that include type inference are Nim, ML, OCaml, F\#, Haskell, Scala, Go, D, Clean, Opa, Rust, Swift, Visual Basic (starting with version 9.0), C\# (starting with version 3.0) and C++11. The ability to infer types automatically makes many programming tasks easier, leaving the programmer free to omit type annotations while still permitting type checking.
-
-% https://en.wikipedia.org/wiki/Type_inference
-
-\subsection{Typed JavaScript Derivations}
-
-\subsection{Analysis of JavaScript Source Codes}
-There are several static analysis frameworks and solutions available for JavaScript. I introduce and compare them in detail in \cref{sect:javascript-parsers} (JavaScript parsers) and \cref{sect:javascript-type-inferencers} (JavaScript type inferencing solutions).
+%\section{Type Inference}
+%
+%Type inference refers to the deduction of the data types of expressions, statements during static analysis.
+%
+%> Type inference refers to the automatic deduction of the data type of an expression in a programming language. If some, but not all, type annotations are already present it is referred to as type reconstruction[citation needed]. The reverse operation of type inference is called type erasure.
+%
+%> It is a feature present in some strongly statically typed languages. It is often characteristic of functional programming languages in general. Some languages that include type inference are Nim, ML, OCaml, F\#, Haskell, Scala, Go, D, Clean, Opa, Rust, Swift, Visual Basic (starting with version 9.0), C\# (starting with version 3.0) and C++11. The ability to infer types automatically makes many programming tasks easier, leaving the programmer free to omit type annotations while still permitting type checking.
+%
+%% https://en.wikipedia.org/wiki/Type_inference
+%
+%\subsection{Typed JavaScript Derivations}
+%
+%\subsection{Analysis of JavaScript Source Codes}
+%There are several static analysis frameworks and solutions available for JavaScript. I introduce and compare them in detail in \cref{sect:javascript-parsers} (JavaScript parsers) and \cref{sect:javascript-type-inferencers} (JavaScript type inferencing solutions).
 
 
 \section{Handling Large Interconnected Data}
+Since my approach is based on graph databases, in this section I introduce the concept of graph databases, and graph pattern matching. I also introduce graph database implementations and compare them in order to select the appropriate technology for the approach.
+
 The progress of computer parts -- the ever increasing amount of processing power, and memory and storage speed and sizes -- and the alike growth of data to be stored and processed during the last more than fifty years yielded various solutions.
 
 Based on historic evolution, these solutions can be categorized in three main categories:
@@ -233,9 +240,6 @@ Based on historic evolution, these solutions can be categorized in three main ca
 
   NoSQL systems are a heterogeneous set of systems, with very different approaches. Categories of these systems based on their data models include, but are not limited to: \emph{key-value stores}, \emph{wide column stores}, \emph{document stores}, \emph{graph DBMSs}, \emph{RDF stores}.
 \end{itemize}
-
-Since my approach is based on graph databases, in this section I introduce the concept of graph databases, and graph pattern matching. I also introduce several graph database implementations and systematically compare them in order to select the appropriate technology for the approach.
-
 
 \subsection{On Graph Computing}
 Graphs are well-known and in computer science widely used mathematical concept, which has been around for many decades. Numerous graph technologies have evolved, each with their advantages and disadvantages. From graphs themselves to physical and virtual worlds, many scenarios can be represented as graphs and stored in graph databases with their respective data model. This section loosely follows~\cite{scm, On_Graph_Computing}.
@@ -258,7 +262,7 @@ My approach utilizes typed (labeled) property graphs.
 \subsubsection{Graph Computing Technologies}
 The practice of data storage and processing is encumbered with space and time trade-off. This trade-off is also present in various graph computing technologies. This section discusses the categorization of these technologies and mentions a few technologies of which the most popular ones are detailed in~\cref{sect:graph-databases}.
 
-The landscape of graph storing and processing solutions is populated and diverse (see~\cite{zhang_-memory_2015}). The basic categorization of software graph database solutions is the following. Graph computing technologies can be divided into two groups: on-line, real-time; and global analyzing, batch-processing graph databases. The former can be divided into in-memory, and persistent databases.
+The landscape of graph storing and processing solutions is populated and diverse (see~\cite{zhang_-memory_2015}). The basic categorization of software graph database solutions is the following. Graph computing technologies can be divided into two groups: 1) on-line, real-time, and 2) global analyzing, batch-processing graph databases. The former can be divided into in-memory, and persistent databases.
 
 \paragraph{In-Memory Graph Toolkits}
 The challenge of big data problems shed light on that the existing disk-based systems can not offer timely response due to the latency of hard disks. The role of storage shifted from the hard drive to the memory of the system. In-memory graph databases are constrained to graphs that fit into the main memory. Thus these systems are single-user systems that are oriented towards low-latency graph analysis.
@@ -266,6 +270,7 @@ The challenge of big data problems shed light on that the existing disk-based sy
 The locality of data allows the usage of rich algorithm libraries and the choice of the adequate graph representation with respective space-time trade-off. The constraint of space allows large graphs (with millions of edges) to be stored and processed, but this is not sufficient in all cases.
 
 Example in-memory graph toolkits: \emph{Apache Giraph}, \emph{Microsoft Graph Engine} (formerly \emph{Trinity}), \emph{Apache Spark GraphX}, \emph{WhiteDB}.
+% TODO cite
 
 \paragraph{Persistent, Real-Time Graph Databases}
 Persistent graph databases are the prevalent group of graph computing technologies. Unlike in-memory graph tools, graph databases persist data on the hard drives, thus they can support billions of edges on a single machine and distributed systems can handle hundreds of billions of edges. These databases can provide multi-user concurrency, transactional semantics and eventual consistency.
@@ -273,12 +278,13 @@ Persistent graph databases are the prevalent group of graph computing technologi
 Since global graph algorithms are not feasible, these systems are optimized for local neighborhood analysis and concurrent access. Global graph analytics are inefficient due to the communication overhead and the computational overhead, e.g., transactional semantics.
 
 Example for persistent, real-time graph databases: \emph{InfiniteGraph}, \emph{Neo4j} (see \cref{sect:neo4j}), \emph{OrientDB}, and \emph{Titan} (see \cref{sect:titan}).
+% TODO cite
 
 \paragraph{Batch-Processing Graph Frameworks}
 In case there is no real-time requirement for the analysis touching the whole dataset, batch-processing graph frameworks can be used for global analytics. Since there is no burden of being real-time, the applied algorithm can even scan data multiple times and leverage sequential reads from the disk. These systems can be used to periodically process data and feed back the results into real-time graph databases. Most of these frameworks utilize Hadoop for storage (HDFS) and processing (MapReduce).
 
 Example batch-processing graph frameworks: \emph{Apache Hama}, \emph{Apache Giraph}, and \emph{DataStax Aurelius Faunus}.
-
+% TODO cite
 
 \subsection{Evaluating Queries on a Data Structure}
 Numerous strategies exist for defining and executing queries over data structures. They can be defined in an imperative manner with programming languages like a navigation described in \emph{Gremlin} over a graph database or using a data access interface such as the Eclipse Modeling Framework. Declarative solutions also exist, where the query plan is calculated from the query formalized in a declarative language (like \emph{SQL}, \emph{SPARQL}, and \emph{Cypher}) and execution is performed by a query framework (such as \emph{4store}, and \emph{Neo4j}). Graph pattern matching -- one of the declarative querying solutions, supplemented by imperative logic -- forms the foundation of my approach.
@@ -296,7 +302,7 @@ A match of a pattern is a tuple of pattern parameters that fulfill all the follo
 
 \subsection{Graph Databases}
 \label{sect:graph-databases}
-Since my thesis work is based on graph-based data handling, it is essential to use a technique that is suitable. In this case suitable is better described as being fast, flexible, versatile, easy to use and deploy. In this section I go over some of the most promising candidates and justify why I have chosen Neo4j as the foundation of my approach.
+Since my thesis work is based on graph-based data handling, it is essential to employ the most suitable technique. In this case suitable refers to having the following traits: being fast, flexible, versatile, and easy to use and deploy. In this section I give an overview on the most promising candidates and justify why I have chosen Neo4j as the foundation of my approach.
 
 \subsubsection{Neo4j}
 \label{sect:neo4j}
@@ -332,7 +338,7 @@ Other interesting and useful features of Cypher include:
 
 \textquote[\cite{neo4j-developer}]{Since October 2015 the openCypher project aims to provide an open grammar, language specification, technical compatibility kit and reference implementation of parser, planner and runtime for Cypher.}
 
-\paragraph{Other Advantages and Disadvantages}
+\paragraph{Additional Notes}
 \begin{itemize}[topsep=0pt]
   \item[+] When Neo4j is deployed in server mode, besides the REST and Bolt interfaces, a web interface is also available, where a read-evaluate-print loop (REPL) interface helps the user with interactive querying. The results are either shown in a table or an interactive graph display, where the user can automatically add necessary nodes and relationships from the database (without explicitly executing another query). It also supplies the user with information about the contents of the database, labels, indexes.
 \end{itemize}
@@ -381,6 +387,10 @@ For rapidly changing, albeit smaller datasets, incremental querying using VIATRA
 
 \section{Integrated Development Environment (IDE)}
 \label{sect:IDE}
+
+% Static analysis tools are usually employed by developers within the integrated development environment they use.
+% TODO
+
 \subsection{Visual Studio Code}
 Visual Studio Code~\cite{vscode} is Microsoft's take on a lightweight, yet powerful Integrated Developer Environment for modern programming languages. It is available for free for Windows, OS X and Linux. It comes with built-in support for JavaScript, TypeScript and has a growing ecosystem of extensions for other languages, theming, and developer support~\cite{vscode-extensions}.
 

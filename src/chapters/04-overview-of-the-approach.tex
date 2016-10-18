@@ -2,7 +2,7 @@
 \chapter{Overview of the Approach}
 \label{chap:overview-of-the-approach}
 
-In this chapter I introduce the high level architecture overview of the proposed framework. Also look at the components one-by-one and discuss how they cooperate, in detail.
+In this chapter I introduce the high level architecture overview of the proposed framework. The chapter also discusses each component in detail including details on how they cooperate.
 
 \section{Architecture}
 \label{sect:architecture}
@@ -11,15 +11,18 @@ In this chapter I introduce the high level architecture overview of the proposed
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=\textwidth]{architecture-PPT.pdf}
-  \caption{Architecture Overview of the Approach}
+  \caption{Architecture overview of the approach.}
   \label{fig:architecture-overview}
 \end{figure}
+% TODO update
+% TODO add edge labels
 
 
 \section{Main Components}
+% TODO intro text (maybe the difference between this, steps of processing and the enumeration)
 
 \subsection{Workflow Integration Points}
-The framework is intented to be integrated with at least two types of workflow components. First, connecting to the \emph{Version Control System} makes it possible to extend the continuous integration workflow and provide the users of the system with current information about the codebase they are working on. Second, connecting to the \emph{Integrated Development Environment} of every user empowers them with proactive feedback on their modifications.
+The framework is intended to be integrated with at least two types of workflow components. First, connecting to the \emph{Version Control System} makes it possible to extend the continuous integration workflow and provide the users of the system with current information about the codebase they are working on. Second, connecting to the \emph{Integrated Development Environment} of every user empowers them with proactive feedback on their modifications.
 
 \subsubsection{Version Control System (VCS)}
 Version control systems are file change (e.g. documents, software code, etc.) management systems. They store revisions of the current set of files managed by the system. Each revision is differentiated with a timestamp, and a person performing the changes are also associated with a revision.
@@ -63,7 +66,7 @@ The novelty of my approach is how it processes, stores and connects the source c
 
 The whole process can be summarized in 4 concise sentences:
 \begin{enumerate}[topsep=0pt]
-  \item The repository is transformed one file at a time.
+  \item The repository is transformed one file-by-file.
   \item The ASG \emph{model} is transformed into a \emph{property graph}.
   \item After every file is processed, the ASG subgraphs are interconnected using graph transformations.
   \item In case a file is added/modified/deleted, the corresponding subgraph is also added/removed and reprocessed/removed from the graph.
@@ -138,7 +141,7 @@ For more precise problem location reporting, the graph also contains line and ch
 If the parser successfully processes the source code, the resulting ASG is transformed with the forementioned rules. In a writing transaction, the transformed graph is serialized and stored in the database.
 
 \paragraph{Metadata}
-Besides the ASG, additional properties are stored. For example, for every source file, there is a graph node, connecting to every node that belongs to the particular ASG. This makes it easier to handle nodes of a file as a whole.
+Besides the ASG, additional properties are stored. For example, for every source file, a node exists in the graph connected to nodes belonging to the particular ASG. This makes it easier to handle nodes of a file as a whole.
 
 \paragraph{Multilayered Graph}
 With more complex rules it is also feasible to store multiple versions of the same file in the database. This makes it possible to maintain multilayered versioning for multiple users.
