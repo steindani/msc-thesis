@@ -13,9 +13,9 @@ In this chapter I propose the conceptual foundations and related technologies of
 
 
 \section{Static Analysis}
-Even in 1995, the idea of static analysis was over 25 years old: \textquote[\cite{wichmann_industrial_1995}]{The idea  that  computer  software  should be used to analyse source programs rather than compile them, has a history of at least 25 years.}
+The idea of static analysis is almost half a century old. A paper from 1995 states that \textquote[\cite{wichmann_industrial_1995}]{The idea  that computer software should be used to analyse source programs rather than compile them, has a history of at least 25 years.}
 
-Source code analysis can be used to discover facts about a particular program. Two basic automated analysis methods exist for source code analysis:
+Source code analysis can be used to discover facts about a particular program. Two basic automated analysis methods exist for this purpose:
 \begin{itemize}[topsep=0pt]
   \item \emph{Static analysis} is performed by parsing the source code and analyzing it without evaluating the statements or executing the program.
   \item \emph{Dynamic analysis} is performed by executing the program and evaluating its output for given input sequences.
@@ -24,23 +24,23 @@ Source code analysis can be used to discover facts about a particular program. T
 % > The term is usually applied to the analysis performed by an automated tool, with human analysis being called program understanding, program comprehension, or code review. Software inspections and Software walkthroughs are also used in the latter case.
 % https://en.wikipedia.org/wiki/Static_program_analysis
 
-While high-level language source codes are audited at least by the compiler, JavaScript is usually not compiled before is is published. Thus a specific static analysis tool for JavaScript should aim to discover unwanted traits of the source in ways a generic compiler could not do, resulting in better code quality. These traits, \emph{bugs} are usually perceptable while running the code. Another way to locate these bugs is to write and run tests, dynamically testing the program.
+While high-level language (e.g., C$++$, Java) source codes are checked at least by the compiler, JavaScript is usually not compiled before is is published. Thus a specific static analysis tool for JavaScript should aim to discover unwanted traits of the source in ways a generic compiler would not be able to, resulting in better code quality. These traits, \emph{code smells} are usually perceptable while running the code. Another way to locate these bugs is to write and run tests, dynamically testing the program.
 % \cite[][72]{wichmann_industrial_1995}
 
-The two analysis methods are complementing each other. They discover different subsets of problematic constructions. Information discovered during the static analysis may be used later in the dynamic testing, resulting in a hybrid technique.
+The two analysis methods are complementing each other. They discover different subsets of problematic constructions. While static analysis can discover syntactical problems (like the lack of the default case in a switch), dynamic analysis may catch behavioral problems (such as error handling and timing errors). Information discovered using static analysis may be used later in dynamic testing, resulting in a hybrid technique.
 
 % > Static analysis bug-finding tools have evolved over the last several decades from basic syntactic checkers to those that find deep bugs by reasoning about the semantics of code. The goal of the Clang Static Analyzer is to provide a industrial-quality static analysis framework for analyzing C, C++, and Objective-C programs that is freely available, extensible, and has a high quality of implementation.
 % http://clang-analyzer.llvm.org/
 
 
 \subsection{Use Cases}
-Static analysis tools employ diverse levels of abstraction. \emph{Formatters} are able to ensure that the source code complies with a predefined style guide. \emph{Linters} check for stylistic and programming errors, thus indicating suspicious programming constructs. \emph{Formal verification}, on the other hand, utilizes formal mathematical methods to prove statements about the source code and its behavior.
+Static analysis tools employ diverse levels of abstraction. \emph{Formatters} are able to ensure that the source code complies with a predefined style guide. \emph{Linters} check for stylistic and programming errors, thus indicating suspicious programming constructs. \emph{Formal verification}, on the other hand, utilizes formal mathematical methods to prove statements about a piece of source code and its behavior.
 
-For dynamic languages, it can be used for even more: finding previously undefined property reads, catching invokement of non-functional variables~\cite{jensen_type_2009}, detecting dead code.
+For dynamic languages static analysis has even more use cases. It allows finding previously undefined property reads, catching invokement of non-functional variables~\cite{jensen_type_2009}, detecting dead code.
 
 \subsection{Advantages and Disadvantages}
 
-Since static analysis tools deliberately do not evaluate the source code, there are fundamental limitations to what problems they can discover. I consider the following advantages and disadvantages important.
+Since static analysis tools deliberately do not evaluate the source code, there are fundamental limitations to what problems they can discover. In the context of my work, static analysis has the following tradeoffs.
 
 \subsubsection{Advantages}
 \paragraph{Input Data Is a By-Product of Compilers}
@@ -62,7 +62,8 @@ Since static analysis tools deliberately do not evaluate the source code, there 
 % TODO cite
 % TODO extend
 
-However, with a given limitation of granularity, in case of a source code modification, previous results can be reused. There is a possibility that only the modified---and other affected---parts need to be processed again. The incremental approach of static analysis may speed up the process by orders of magnitude~\cite{stein-daniel-bsc}.
+However, with a given limitation of granularity (e.g., considering a single file as the unit of the processing), in case of a source code modification, previous results can be reused. There is a possibility that only the modified --- and other affected --- parts need to be processed again. The incremental approach of static analysis may speed up the process by orders of magnitude~\cite{stein-daniel-bsc}.
+% TODO clarify
 
 \paragraph{False Positives} Static analysis can not prove the correctness of a source code. It rather warn in case there is a possibility of a problem. Thus static analysis tools can introduce false positive warnings and flag code parts as problematic even if they behave correcly.
 
@@ -80,7 +81,9 @@ The source code of a program is a sequence of instructions formulated in a progr
 
 What input data the compiler considers useful information depends on the semantics of the language the compiler is built for. Source codes contain a much wider variety of data than a compiler requires for transforming, analyzing the application: comments, function declaration order, indentation, line breaks all help the reader (and writer) of the code, but carry no additional information.
 
-\Cref{fig:processing-the-source-code} shows the general process for processing source code and transforming a stream of characters into a data structure with \emph{meaning}.
+% TODO cite Compilers: Principles, Techniques, and Tools (2nd Edition) Hardcover – by Alfred V. Aho, Monica S. Lam, Ravi Sethi, Jeffrey D. Ullman
+
+\Cref{fig:processing-the-source-code} shows the general process for processing source code and transforming a stream of characters into a data structure with \emph{meaning} (semantic information).
 
 \begin{figure}[!ht]
 	\centering
@@ -150,7 +153,7 @@ A \emph{lexer}, \emph{tokenizer}, or \emph{scanner} forms the first phase of a p
 
 
 \subsubsection{Parser}
-A \emph{parser} forms the second phase of a parsing process, using the output token stream of the \emph{lexer}. It takes the input data and builds a hierarchical data structure (a \emph{parse tree} or an \emph{abstract syntax tree}) representing the input. If the input does not comply with the syntax rules, thus an tree can not be built, the source code is syntactically incorrect.
+A \emph{parser} forms the second phase of a parsing process, using the output token stream of the \emph{lexer}. It takes the input data and builds a hierarchical data structure (a \emph{parse tree} or an \emph{abstract syntax tree}) representing the input. If the input does not comply with the syntax rules, and a tree can not be built, the source code is syntactically incorrect.
 
 \Cref{fig:sentence-s-expression} shows a sentence and its s-expression representation. S-expressions (for ``symbolic expression'') are a notation for tree-structured nested list, mainly used in Lisp.
 
@@ -179,7 +182,7 @@ A \emph{parser} forms the second phase of a parsing process, using the output to
 \paragraph{Abstract Syntax Tree}
 An \emph{Abstract Syntax Tree} (AST) is a tree representation of the syntactic structure of the result of a parsing along a grammar. The nodes of the tree denote a construct occuring in the input, while the edges represent the connection between these nodes based on the grammar rules.
 
-As mentioned in~\cref{sect:source-code-processing}, source code contains much more detail (e.g., indentation, whitespace, comments) than is required and restrained during the parsing process. Thus this representation is a digested, \emph{abstract} syntax tree. It may be transformed based on transformation rules and source code can be generated from ASTs. Without restraining the layout information and reusing it during the code generation, the resulting text can show differences in indents, whitespaces and expression formulation compared to the initial source code.
+As mentioned in~\cref{sect:source-code-processing}, source code contains much more detail (e.g., indentation, whitespace, comments) than is required and restrained during the parsing process. Thus this representation is a more compact, \emph{abstract} syntax tree. It may be transformed based on transformation rules and source code can be generated from ASTs. Without restraining the layout information and reusing it during the code generation, the resulting text can show differences in indents, whitespaces and expression formulation compared to the initial source code.
 
 \Cref{fig:ast-asg-example} shows an example AST (in black), where a one-statement JavaScript file is parsed. The content of the file was only \code{var foo = 1 / 0;}.
 
@@ -187,9 +190,9 @@ As mentioned in~\cref{sect:source-code-processing}, source code contains much mo
 A \emph{scope analyzer} or \emph{context analyzer} produces a data structure that represents the scoping information of a program, extending the information available from an AST or an ASG. An element representing a scope in this data structure may contain, inter alia, metadata about the scope itself, the AST node related to the scope, available assets (variables, functions, etc.) in that scope.~\cite{shift-scope}
 
 \paragraph{Abstract Semantic Graph}
-An \emph{Abstract Semantic Graph} (ASG) differs from an Abstract Syntax Tree. (1) ASGs are graphs, and (2) express more than the syntactic information; ASGs carry semantic information expressed with additional edges. These edges can not exist in an AST, as they are non-tree edges (cross-edges). For example they may connect variable references to their declarations.~\cite{raghavan_dex:_2004}
+An \emph{Abstract Semantic Graph} (ASG) differs from an Abstract Syntax Tree. 1)~ASGs are graphs, and 2)~express more than the syntactic information; ASGs carry semantic information expressed with additional edges. These edges can not exist in an AST, as they are non-tree edges (cross-edges). For example they may connect variable references to their declarations.~\cite{raghavan_dex:_2004}
 
-An ASG is a graph representation of a parse result; the nodes represent subterms of an expression. Shared subterms can occur, having more than one node linked to the same, common subterm. Compilers generally work on ASGs internally, since not only the syntactical, but the behavioral information are also represented in them.
+An ASG is a graph representation of a parse result; the nodes represent subterms of an expression. Shared subterms can occur, having more than one node linked to the same, common subterm. Compilers generally work on ASGs internally, since not only the syntactical, but the behavioral information is also represented in them.
 
 % An abstract semantic graph is typically constructed from an abstract syntax tree by a process of enrichment and abstraction. The enrichment can for example be the addition of back-pointers, edges from an identifier node (where a variable is being used) to a node representing the declaration of that variable. The abstraction can entail the removal of details which are relevant only in parsing, not for semantics.
 % https://en.wikipedia.org/wiki/Abstract_semantic_graph
@@ -222,9 +225,9 @@ An ASG is a graph representation of a parse result; the nodes represent subterms
 
 
 \section{Handling Large Interconnected Data}
-Since my approach is based on graph databases, in this section I introduce the concept of graph databases, and graph pattern matching. I also introduce graph database implementations and compare them in order to select the appropriate technology for the approach.
+Once the source code is transformed into ASGs, they have to be persisted. Instead of storing them in-memory, my approach is based on graph databases. In this section I introduce the concept of graph databases, and graph pattern matching. I also present graph database implementations and select the appropriate technology for the approach.
 
-The progress of computer parts -- the ever increasing amount of processing power, and memory and storage speed and sizes -- and the alike growth of data to be stored and processed during the last more than fifty years yielded various solutions.
+The advancements in hardware components -- the ever increasing amount of processing power, and memory and storage speed and sizes -- and the analogous growth of data to be stored and processed during the last more than fifty years yielded various solutions.
 
 Based on historic evolution, these solutions can be categorized in three main categories:
 \begin{itemize}[topsep=0pt]
@@ -243,6 +246,7 @@ Based on historic evolution, these solutions can be categorized in three main ca
 
 \subsection{On Graph Computing}
 Graphs are well-known and in computer science widely used mathematical concept, which has been around for many decades. Numerous graph technologies have evolved, each with their advantages and disadvantages. From graphs themselves to physical and virtual worlds, many scenarios can be represented as graphs and stored in graph databases with their respective data model. This section loosely follows~\cite{scm, On_Graph_Computing}.
+% TODO cite http://link.springer.com/article/10.1007%2Fs10586-015-0472-6
 
 \begin{figure}[!ht]
 	\centering
@@ -262,7 +266,7 @@ My approach utilizes typed (labeled) property graphs.
 \subsubsection{Graph Computing Technologies}
 The practice of data storage and processing is encumbered with space and time trade-off. This trade-off is also present in various graph computing technologies. This section discusses the categorization of these technologies and mentions a few technologies of which the most popular ones are detailed in~\cref{sect:graph-databases}.
 
-The landscape of graph storing and processing solutions is populated and diverse (see~\cite{zhang_-memory_2015}). The basic categorization of software graph database solutions is the following. Graph computing technologies can be divided into two groups: 1) on-line, real-time, and 2) global analyzing, batch-processing graph databases. The former can be divided into in-memory, and persistent databases.
+The landscape of graph storing and processing solutions is populated and diverse (see~\cite{zhang_-memory_2015}). The basic categorization of software graph database solutions is the following. Graph computing technologies can be divided into two groups: 1)~on-line, real-time, and 2)~global analyzing, batch-processing graph databases. The former can be divided into in-memory, and persistent databases.
 
 \paragraph{In-Memory Graph Toolkits}
 The challenge of big data problems shed light on that the existing disk-based systems can not offer timely response due to the latency of hard disks. The role of storage shifted from the hard drive to the memory of the system. In-memory graph databases are constrained to graphs that fit into the main memory. Thus these systems are single-user systems that are oriented towards low-latency graph analysis.
@@ -273,21 +277,21 @@ Example in-memory graph toolkits: \emph{Apache Giraph}, \emph{Microsoft Graph En
 % TODO cite
 
 \paragraph{Persistent, Real-Time Graph Databases}
-Persistent graph databases are the prevalent group of graph computing technologies. Unlike in-memory graph tools, graph databases persist data on the hard drives, thus they can support billions of edges on a single machine and distributed systems can handle hundreds of billions of edges. These databases can provide multi-user concurrency, transactional semantics and eventual consistency.
+Persistent graph databases are the prevalent group of graph computing technologies. Unlike in-memory graph tools, graph databases persist data on hard drives, thus they can support billions of edges on a single machine and distributed systems can handle hundreds of billions of edges. These databases can provide multi-user concurrency, transactional semantics and eventual consistency.
 
-Since global graph algorithms are not feasible, these systems are optimized for local neighborhood analysis and concurrent access. Global graph analytics are inefficient due to the communication overhead and the computational overhead, e.g., transactional semantics.
+Since global graph algorithms are not feasible, these systems are optimized for local neighborhood analysis and concurrent access. Global graph analytics are inefficient due to the communication overhead and the computational overhead, e.g., ensuring ACID transactional semantics.
 
 Example for persistent, real-time graph databases: \emph{InfiniteGraph}, \emph{Neo4j} (see \cref{sect:neo4j}), \emph{OrientDB}, and \emph{Titan} (see \cref{sect:titan}).
 % TODO cite
 
 \paragraph{Batch-Processing Graph Frameworks}
-In case there is no real-time requirement for the analysis touching the whole dataset, batch-processing graph frameworks can be used for global analytics. Since there is no burden of being real-time, the applied algorithm can even scan data multiple times and leverage sequential reads from the disk. These systems can be used to periodically process data and feed back the results into real-time graph databases. Most of these frameworks utilize Hadoop for storage (HDFS) and processing (MapReduce).
+In case there is no real-time requirement for the analysis accessing the whole dataset, batch-processing graph frameworks can be used for global analytics. Since there is alsoo no requirement for quick response time, the applied algorithm can even scan data multiple times and leverage sequential reads from the disk. These systems can be used to periodically process data and feed back the results into real-time graph databases. Most of these frameworks utilize Hadoop for storage (HDFS) and processing algorithms implemented using the MapReduce paradigm.
 
 Example batch-processing graph frameworks: \emph{Apache Hama}, \emph{Apache Giraph}, and \emph{DataStax Aurelius Faunus}.
 % TODO cite
 
 \subsection{Evaluating Queries on a Data Structure}
-Numerous strategies exist for defining and executing queries over data structures. They can be defined in an imperative manner with programming languages like a navigation described in \emph{Gremlin} over a graph database or using a data access interface such as the Eclipse Modeling Framework. Declarative solutions also exist, where the query plan is calculated from the query formalized in a declarative language (like \emph{SQL}, \emph{SPARQL}, and \emph{Cypher}) and execution is performed by a query framework (such as \emph{4store}, and \emph{Neo4j}). Graph pattern matching -- one of the declarative querying solutions, supplemented by imperative logic -- forms the foundation of my approach.
+Numerous strategies exist for defining and executing queries over data structures. They can be defined in an imperative manner with programming languages like a navigation described in \emph{Gremlin} over a graph database. Declarative solutions also exist, where the query plan is calculated from the query formalized in a declarative language (like \emph{SQL}, \emph{SPARQL}, and \emph{Cypher}) and execution is performed by a query framework (such as \emph{4store} and \emph{Neo4j}). Graph pattern matching -- one of the declarative querying solutions, supplemented by imperative logic -- forms the foundation of my approach.
 
 \subsubsection{Graph Pattern Matching}
 \textquote[\cite{csmr}]{Graph patterns are a declarative, graph-like formalism representing a condition (or constraint) to be matched against instance model graphs. The formalism is useful for various purposes in model-driven development, such as defining model transformation rules or defining general purpose model queries including model validation constraints. A graph pattern consists of structural constraints prescribing the interconnection between nodes and edges of a given type.
@@ -299,6 +303,7 @@ A match of a pattern is a tuple of pattern parameters that fulfill all the follo
 	\item and does not satisfy any negative application condition (NAC) describing cases when the original pattern does not hold.
 \end{enumerate}}
 
+% TODO figure
 
 \subsection{Graph Databases}
 \label{sect:graph-databases}
@@ -309,38 +314,39 @@ Since my thesis work is based on graph-based data handling, it is essential to e
 Neo4j is one of the most popular and most mature NoSQL graph databases developed by \emph{Neo Technology}. It is open-source, well-documented and continuously-developed. Neo4j is available in two editions: a free \emph{Community Edition} and a paid \emph{Enterprise Edition}.~\cite{neo4j}
 
 \paragraph{Architecture}
-Since Neo4j was written in Java (and Scala), it can be used to start a new project quick and easy. It can be deployed two ways: in \emph{server mode} the database is started separately and listens for queries on its HTTP REST and Bolt interface; where in \emph{embedded mode} it runs in the same JVM as the only client application.
+It can be deployed two ways: in \emph{server mode} the database is started separately and listens for queries on its HTTP REST and Bolt interface; where in \emph{embedded mode} it runs in the same JVM as the only client application.
 
 \paragraph{Data Model}
-The graph model in Neo4j, \code{Neo4jGraph} is very similar to the\emph{TinkerPop} graph computing framework's \emph{Blueprints} property graph data model. More precisely it is a labeled property graph, since the relations are labeled and the nodes can also hold multiple labels; the nodes and relations can both hold properties.
+The graph model in Neo4j, \code{Neo4jGraph} is very similar to the \emph{TinkerPop} graph computing framework's property graph data model. More precisely it is a labeled property graph, since the relations are labeled and the nodes can also hold multiple labels; the nodes and relations can both hold properties.
 
 \paragraph{Sharding}
-Although the \emph{Enterprise Edition} of Neo4j has a high availability solution and supports clustered replication and cache sharding, it does not support sharded data storage over a cluster of devices. This results in the advantage of low latency (clustering provides scale out capabilities for read), the ability to handle transactions with ACID (Atomicity, Consistency, Isolation, and Durability) properties.~\cite{neo4j-product}
+Although the \emph{Enterprise Edition} of Neo4j has a high availability solution and supports clustered replication and cache sharding, it does not support sharded data storage over a cluster of devices. This results in the advantage of low latency (clustering provides scale out capabilities for read), the ability to handle transactions with ACID (Atomicity, Consistency, Isolation, and Durability) semantics.~\cite{neo4j-product}
 
 \paragraph{Query Language}
-Neo4j provides two methods for data query out-of-the-box: an object-oriented native Java API for graph navigation and Cypher, a graph pattern description and query language with declarative and imperative traits. Additional interfaces may be loaded as a plugin, like the imperative Gremlin query interface~\cite{neo4j-gremlin-plugin}.
+Neo4j provides two methods for data queries out-of-the-box: an object-oriented native Java API for graph navigation and Cypher, a graph pattern description and query language with declarative and imperative traits. Additional interfaces may be loaded as a plugin, like the imperative Gremlin query interface~\cite{neo4j-gremlin-plugin}.
 
-One of Cypher's best features is the readability of its syntax. It provides an intuitive way to describe patterns of nodes and relations in the graph and also connections between subpatterns using bound identifiers for nodes and relations. Cypher also manages the indexes and constraints of the graph database. Negative application conditions (NAC) can be also expressed, describing the cases where the query should not return a match.
+One of Cypher's best features is the readability of its syntax (see~\Cref{sect:division-by-zero} for examples). It provides an intuitive way to describe patterns of nodes and relations in the graph and also connections between subpatterns using bound identifiers for nodes and relations. Cypher also manages the indexes and constraints of the graph database. Negative application conditions (NAC) can be also expressed, describing constraints that should not hold for the matches.
 
 Other interesting and useful features of Cypher include:
 \begin{itemize}[topsep=0pt]
   \item Transitive closure over a set of edge labels, with optional repetition binding.
 
-        It is worth noting that an arbitrary sequence of edge labels can not be set as a repeating subpattern on its own, but temporary edges can be utilized to emulate this behavior.
-  \item Java procedures can be stored in the server as a plug-in and called from the queries abolishing the need for manual logic-based calls in case it was not possible to formalize a query for it; ranging from duplicating a node (with parameters and labels) to inferring the metamodel (from the nodes and relations already in the database).
+%        It is worth noting that an arbitrary sequence of edge labels can not be set as a repeating subpattern on its own, but temporary edges can be utilized to emulate this behavior.
+  \item Java procedures can be stored in the server as a plug-in and called from inside the queries. This way an arbitrary logic with multiple queries can be stored on the Neo4j server and executed with a Cypher query. This can solve cases where it is not possible to express the query in Cypher; ranging from duplicating a node (with parameters and labels) to inferring the metamodel (from the nodes and relations already in the database).
   \item Parameterized queries may be utilized for faster evaluation.
-  \item List predicates evaluating predicates for all/any/none or single one nodes of the path.
-  \item Iterating and unwinding\footnote{transforming into rows} a collection in the query.
-  \item Finding the shortest path.
-  \item Mathematical functions.
-  \item Query profiling.
+%  \item List predicates evaluating predicates for all/any/none or single one nodes of the path.
+%  \item Iterating and unwinding\footnote{transforming into rows} a collection in the query.
+%  \item Finding the shortest path.
+%  \item Mathematical functions.
+%  \item Query profiling.
 \end{itemize}
 
-\textquote[\cite{neo4j-developer}]{Since October 2015 the openCypher project aims to provide an open grammar, language specification, technical compatibility kit and reference implementation of parser, planner and runtime for Cypher.}
+%\textquote[\cite{neo4j-developer}]{Since October 2015 the openCypher project aims to provide an open grammar, language specification, technical compatibility kit and reference implementation of parser, planner and runtime for Cypher.}
 
 \paragraph{Additional Notes}
 \begin{itemize}[topsep=0pt]
   \item[+] When Neo4j is deployed in server mode, besides the REST and Bolt interfaces, a web interface is also available, where a read-evaluate-print loop (REPL) interface helps the user with interactive querying. The results are either shown in a table or an interactive graph display, where the user can automatically add necessary nodes and relationships from the database (without explicitly executing another query). It also supplies the user with information about the contents of the database, labels, indexes.
+  \item[+] Since Neo4j was written in Java (and Scala) and also published as a Maven package, it is easy to integrate and start using in a new project. There is no need for installation or configuration.
 \end{itemize}
 
 \subsubsection{Titan}
@@ -382,7 +388,7 @@ Titan natively supports the imperative graph traversal language Gremlin (by \emp
 % \paragraph{Query Language}
 
 \subsubsection{EMF Modeling and VIATRA Query}
-For rapidly changing, albeit smaller datasets, incremental querying using VIATRA Query over EMF models (see \cref{sect:emf-viatra}) can be a solution. My approach, however prepares for larger models, thus this technology is not detailed here.
+For rapidly changing, albeit smaller datasets, incremental querying using VIATRA Query over EMF models (see \cref{sect:emf-viatra}) can be a solution. Since VIATRA stores the database in-memory, is is not suitable for my approach.
 
 
 \section{Integrated Development Environment (IDE)}
