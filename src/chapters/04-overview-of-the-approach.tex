@@ -155,7 +155,14 @@ With more complex rules it is also feasible to store multiple versions of the sa
 
 If the VCS supports branching the code development, the framework could also accomodate this behaviour. For example if two developers work on the \emph{master} development branch in their own IDE, there could be layers for each of them.
 
-One layer containing every ASG for the \emph{master} branch. One layer for each user containing only the ASGs of their modified files. In these layers the ASGs are connected (based on the import and export statements) in the same layer, if both are present in the same. If not, they are connected to the corresponding file in the \emph{master} branch. % TODO (See~\Cref{fig:multilayered-graph}).
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{multilayer.pdf}
+  \caption{Multilayered graph.}
+  \label{fig:multilayered-graph}
+\end{figure}
+
+One layer containing every ASG for the \emph{master} branch. One layer for each user containing only the ASGs of their modified files. In these layers the ASGs are connected (based on the import and export statements) in the same layer, if both are present in the same. If not, they are connected to the corresponding file in the \emph{master} branch (see~\Cref{fig:multilayered-graph}).
 
 \subsubsection{Transforming the Graph}
 After the data has been stored in the database, it can be freely transformed with framework- or user-defined rules. This step may be utilized for transforming the set of subgraphs into one connected graph based on the export and import rules of the language.
