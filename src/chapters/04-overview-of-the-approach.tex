@@ -103,7 +103,14 @@ This representation of the parser conforms the metamodel based on the syntax and
 
 In order to acquire information from this model and transform it, one either knows its metamodel and iterates over every element or --- if the programming language of the parser allows --- uses reflection. In my approach I use the combination of the Shift parser written in Java --- thus using the reflective approach --- and the Neo4j labeled property graph database.
 
-The basic rules of the transformation are the following.
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{object-to-graph.pdf}
+  \caption{Transformation of an object structure into a graph.}
+  \label{fig:object-to-graph}
+\end{figure}
+
+\Cref{fig:object-to-graph} presents the transformation of an object structure into a graph based on the basic rules detailed in this section.
 
 \paragraph{Typed Nodes}
 Every AST or ASG node is a node in the graph. The graph node is typed with the class, superclasses and interfaces of the represented model node.
