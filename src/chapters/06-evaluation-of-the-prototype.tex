@@ -64,7 +64,7 @@ In order to present an accurate and wide-range measurement, I have selected the 
 
 Since the source code contains language elements not yet standardized, I transpiled the files before they are parsed by the Shift parser. This step is not calculated in the benchmark. The resulting files are then imported into the database one-by-one, sequentially, thus the parallel optimizations are not present in this measurement.
 
-Based on \Cref{fig:import-steps} the time requirement of the parsing and scope analysis steps are negligible compared to the third step. Iterating and storing the elements of the ASG in the graph database is linear. It is also visible that most of the files are parsed under one second, which makes this approach useable in real-life usage.
+Based on~\Cref{fig:import-steps} the time requirement of the parsing and scope analysis steps are negligible compared to the third step. Iterating and storing the elements of the ASG in the graph database shows linear correlation with the size of the graph. It is also visible that most of the files are parsed under one second, which makes this approach useable in real-life usage.
 
 These results are based on two separate, sequential, full import of the source code repository.
 
@@ -75,6 +75,28 @@ These results are based on two separate, sequential, full import of the source c
 
 
 \subsection{ASG to CFG Transformation}
+In order to measure the characteristics of the CFG transformation, I have imported the source files of the Tresorit web client one-by-one and executed the CFG transformation queries for that one file.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{build-cfg.pdf}
+  \caption{The characteristics of building the CFG.}
+  \label{fig:build-cfg}
+\end{figure}
+
+\Cref{fig:build-cfg} shows that the measurements are clustered into three parts. There are at least two explanations for this:
+
+\begin{itemize}[topsep=0pt]
+  \item The number of CFG transformations implemented in the prototype framework is low. Since there are measurements in every cluster for a great amount of model sizes, it is possible that the composition of the files are different in each cluster.
+
+  This would mean that the top cluster --- implementing business logic --- contains more nodes to transform, while the files in the bottom cluster --- mostly describing interfaces and proxies --- contain less.
+
+  \item The transformation is executed in a parallel manner. If two transformations cause a deadlock in the database, they are canceled and tried again later. It is also possible that subgraphs containing more transformable nodes by the framework are processed slower. The slower the transformations are, the more deadlocks may happen, resulting in slower overall performance.
+\end{itemize}
+
+It is also unexpected to have the top two clusters show no correlation with the size of the resulting graph size. This phenomenon can be explained with the reasons above or with the way Neo4j executes the declarative transformations.
+
+Since the CFG transformation in the framework is far from finished, deeper examination of the results is subject to future work.
 
 
 \section{Threats to Validity}
