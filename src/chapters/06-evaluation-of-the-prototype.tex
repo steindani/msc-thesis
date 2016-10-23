@@ -73,6 +73,12 @@ These results are based on two separate, sequential, full import of the source c
 
 \subsection{Dead Code Search}
 
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{deadcode-search.pdf}
+  \caption{The characteristics of dead code search.}
+  \label{fig:deadcode-search}
+\end{figure}
 
 \subsection{ASG to CFG Transformation}
 In order to measure the characteristics of the CFG transformation, I have imported the source files of the Tresorit web client one-by-one and executed the CFG transformation queries for that one file.
@@ -101,7 +107,7 @@ Since the CFG transformation in the framework is far from finished, deeper exami
 
 \section{Threats to Validity}
 \label{sect:evaluation-threats}
-Although we made everything to make our measurements valid, there may be factors beyond our control that affect the measurement results. In this section, we try to list the possible mistakes and also discuss the steps taken to mitigate their effects.
+Although I made everything to make my measurements valid, there may be factors beyond my control that affect the measurement results. In this section, I try to list the possible mistakes and also discuss the steps taken to mitigate their effects.
 
 \subsection{Benchmarking in the Cloud} As a multiple access system, the virtual servers in the cloud can be easily affected by neighboring virtual machines using the same resources. The virtual machine manager can also limit the usage of these resources, if the machines disturb other ones. One can neither control the resources assigned to the machines, nor influence their precise geolocation and connections.
 
