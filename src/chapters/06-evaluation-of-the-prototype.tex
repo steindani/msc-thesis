@@ -39,12 +39,34 @@ Neo4j was freezed at the first released 3.0 version: 3.0.0. At the time of writi
 
 
 \section{Benchmark Cases}
+In this section I iterate over the various benchmark cases, present them in detail, introduce the results of the measurements and evaluate the results.
 
 \subsection{Graph Database Initialization}
-% the Neo4j server is started with the framework (embedded, instead of standalone)
+The framework uses the Neo4j server in embedded mode (instead of a standalone configuration). This means that the server is started with the framework and at the first usage it needs initialization.
+
+While the following benchmarks are prepared with initialized databases, I have measured the time required to prepare an empty database. This is measured by deleting the database folder, restarting the application and executing a simple query counting the nodes.
+
+The database requires 1 second to initialize (936, 945, 1010, 1019, 1022, and 1042 milliseconds in the 6 runs, respectively).
 
 \subsection{Source to Graph Transformation}
+After the database has been initialized, it can receive content. This transformation process is one of the most time-consuming workflows. Here the source code of the file is read from the disk or the memory, transferred to the server. It is then parsed using the Shift parser, extended with the scope analyzer and stored in the database while iterating over every node in it.
 
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{import-steps.pdf}
+  \caption{The characteristics of the import steps.}
+  \label{fig:import-steps}
+\end{figure}
+
+\Cref{fig:import-steps} shows the characteristics of these three steps. Since even the longest source codes can be written in one line, instead of the source lines of code I have chosen the number of nodes in the transformed subgraph as the horizontal axis. The vertical axis represents the time (in milliseconds) required to perform the given transformation step. Note that both axes are logarithmic.
+
+In order to present an accurate and wide-range measurement, I have selected the repository of the Tresorit web client~\cite{tresorit-webclient}. The current version of this repository contains 780 JavaScript files, with 75\,907 lines of actual code in total. This results in 8\,437\,838 graph nodes.
+
+Since the source code contains language elements not yet standardized, I transpiled the files before they are parsed by the Shift parser. This step is not calculated in the benchmark. The resulting files are then imported into the database one-by-one, sequentially, thus the parallel optimizations are not present in this measurement.
+
+Based on \Cref{fig:import-steps} the time requirement of the parsing and scope analysis steps are negligible compared to the third step. Iterating and storing the elements of the ASG in the graph database is linear. It is also visible that most of the files are parsed under one second, which makes this approach useable in real-life usage.
+
+These results are based on two separate, sequential, full import of the source code repository.
 
 \subsection{Connecting the Subgraphs}
 
