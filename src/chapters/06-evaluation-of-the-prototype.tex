@@ -1,4 +1,70 @@
 \chapter{Evaluation of the Prototype}
 \label{chap:evaluation-of-the-prototype}
 
-My approach comes with tradeoffs. Processing one file at a time makes the approach incremental with file-level granularity, potentially saving time on the whole, but takes a large amount of time integrating the parser into the system. My approach also requires less memory during the parsing phase, but takes more time once every file was processed and the connecting phase needs to take place.
+My approach comes with tradeoffs. Processing one file at a time makes the approach incremental with file-level granularity, potentially saving time on the whole, but takes a large amount of time integrating the parser into the system. The approach also requires less memory during the parsing phase, but takes more time once every file was processed and the connecting phase takes place.
+
+In this chapter I present the measurements of various system functions and the runtime characteristics of the prototype framework.
+
+\section{Benchmarking Environment}
+In order to make sure that the measurements are reproduceable, and are not affected by user input or other environmental events, the measurements were carried out in the cloud. In this section I detail the hardware and software configurations for the benchmarks.
+
+\subsection{Virtual Machine Configuration}
+The benchmarks were carried out in a Microsoft Azure virtual machine~\cite{azure-vm}. Since the approach utilizes a persisted graph database with in-memory caching, I have chosen a configuration with moderate amount of memory for a server and high IO performance.
+
+The \emph{Standard DS3\_v2} configuration consists of the following:
+\begin{itemize}[topsep=0pt]
+  \item 4 CPU cores (Intel(R) Xeon(R) CPU E5-2673 v3 @ 2.40GHz --- \emph{reported})
+  \item 14 GB memory
+  \item 8 data disks
+  \item 12800 maximum IOPS
+  \item 28 GB local SSD
+\end{itemize}
+
+The D-series virtual machines were designed with data-intensive use-cases in mind, like Big Data and Analytics.~\cite{d-series} The virtual machine instance was located in the West Europe region.
+
+\subsection{Software Configuration}
+The results of the benchmarks can also be affected by the software configuration. I have selected the preconfigured \emph{Ubuntu Server} virtual machine with the following properties and modifications:
+
+\begin{itemize}[topsep=0pt]
+  \item Ubuntu 16.04.1 LTS (GNU/Linux 4.4.0-42-generic x86\_64)
+  \item Oracle Java(TM) SE Runtime Environment (build 1.8.0\_111-b14)
+  \item Java Virtual Machine with 2 GB minimum and 12 GB maximum heap space
+  \item bash benchmarking script with curl
+\end{itemize}
+
+\subsection{Framework Dependencies}
+The prototype of the framework was based on changing and rapidly developed dependencies. Both Neo4j and Shift had version and API changes, so I chose to freeze the versions at a working state and use them for the measurements.
+
+Neo4j was freezed at the first released 3.0 version: 3.0.0. At the time of writing this paper it is at version 3.0.6, with 3.1 being available as a beta. Shift was freezed at 2.2.0 with custom modifications --- accepted and merged into later versions.
+
+
+\section{Benchmark Cases}
+
+\subsection{Graph Database Initialization}
+% the Neo4j server is started with the framework (embedded, instead of standalone)
+
+\subsection{Source to Graph Transformation}
+
+
+\subsection{Connecting the Subgraphs}
+
+
+\subsection{Dead Code Search}
+
+
+\subsection{ASG to CFG Transformation}
+
+
+\section{Threats to Validity}
+\label{sect:evaluation-threats}
+Although we made everything to make our measurements valid, there may be factors beyond our control that affect the measurement results. In this section, we try to list the possible mistakes and also discuss the steps taken to mitigate their effects.
+
+\subsection{Benchmarking in the Cloud} As a multiple access system, the virtual servers in the cloud can be easily affected by neighboring virtual machines using the same resources. The virtual machine manager can also limit the usage of these resources, if the machines disturb other ones. One can neither control the resources assigned to the machines, nor influence their precise geolocation and connections.
+
+My mitigation strategy is to run the benchmarks multiple times and treat their median as the correct value.
+
+\subsection{Methodological Mistakes} It is possible that I made mistakes while implementing the approach. It may not adhere to the specification correctly, perform the transformations correctly or measure correctly.
+
+To check the validity of the results, I checked the results manually and with others tools.
+
+\paragraph{Measurement Mistakes} I may have committed mistakes in the measurements or was led to the wrong conclusions evaluating these mistakes.
