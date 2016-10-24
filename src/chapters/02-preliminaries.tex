@@ -52,27 +52,20 @@ Static analysis tools employ diverse levels of abstraction. \emph{Formatters} ar
 For dynamic languages static analysis has even more use cases. It allows finding previously undefined property reads, catching invokement of non-functional variables~\cite{jensen_type_2009}, detecting dead code.
 
 \subsection{Advantages and Disadvantages}
-
 Since static analysis tools deliberately do not evaluate the source code, there are fundamental limitations to what problems they can discover. In the context of my work, static analysis has the following tradeoffs.
 
 \subsubsection{Advantages}
-\paragraph{Input Data Is a By-Product of Compilers}
-% TODO
-
 \paragraph{No Need for Execution}
-\begin{itemize}
-  \item no need for run environment
-  \item no need for mocking, emulating
-\end{itemize}
+Since there are no need for execution, the hardware and software requirements of the analysis software does not need to match the requrements of the application. There is also no need to emulate or mock its dependencies, making the analysis more portable and cost efficient.
+
+\paragraph{Early Detection of Possible Errors}
+Static analysis may catch problems even before the whole software is complete or even runnable, potentially making fixing the problems easier and cheaper.~\cite{xie}
+
+\paragraph{Thorough}
+While dynamic testing executes the manually written or automatically generated test cases covering a portion of the source code, static analysis systematically explores every possible execution scenarios. Thus it may achieve higher coverage and detect more problems in the code.~\cite{xie}
 
 \subsubsection{Disadvantages}
-\paragraph{Speed} Static analysis trades CPU time and memory for better code quality. By design it may be multiple orders of magnitude slower than compilation. Its speed depends not only on the underlying data structure and algorithms, but also the level of analysis.
-%  > Slower than Compilation
-%
-%  > Operationally, using static analysis to automatically find deep program bugs is about trading CPU time for the hardening of code. Because of the deep analysis performed by state-of-the-art static analysis tools, static analysis can be much slower than compilation.
-%
-%  > While the Clang Static Analyzer is being designed to be as fast and light-weight as possible, please do not expect it to be as fast as compiling a program (even with optimizations enabled). Some of the algorithms needed to find bugs require in the worst case exponential time.
-% TODO cite
+\paragraph{Speed} Static analysis trades CPU time and memory for better code quality. By design it may be multiple orders of magnitude slower than compilation. Its speed depends not only on the underlying data structure and algorithms, but also the level of analysis.~\cite{clang}
 % TODO extend
 
 However, with a given limitation of granularity (e.g., considering a single file as the unit of the processing), in case of a source code modification, previous results can be reused. There is a possibility that only the modified --- and other affected --- parts need to be processed again. The incremental approach of static analysis may speed up the process by orders of magnitude~\cite{stein-daniel-bsc}.
@@ -80,13 +73,7 @@ However, with a given limitation of granularity (e.g., considering a single file
 
 \paragraph{False Positives} Static analysis can not prove the correctness of a source code. It rather warn in case there is a possibility of a problem. Thus static analysis tools can introduce false positive warnings and flag code parts as problematic even if they behave correcly.
 
-To reduce the number of false positive warnings, one usually introduces more precise, specified rules and more thorough analysis.
-
-%  > False Positives
-%
-%  > Static analysis is not perfect. It can falsely flag bugs in a program where the code behaves correctly. Because some code checks require more analysis precision than others, the frequency of false positives can vary widely between different checks. Our long-term goal is to have the analyzer have a low false positive rate for most code on all checks.
-%
-%  % http://clang-analyzer.llvm.org/
+To reduce the number of false positive warnings, one usually introduces more precise, specified rules and more thorough analysis.~\cite{clang}
 
 \subsection{Source Code Processing and Analysis}
 \label{sect:source-code-processing}
