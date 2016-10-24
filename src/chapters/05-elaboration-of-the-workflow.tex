@@ -81,7 +81,7 @@ One way to formalize this declarative definition in Cypher can be seen in~\Cref{
 \section{Handling Import and Export}
 Since the beginning, JavaScript projects have grown tremendously. With the size of the average project, the language has also matured for handling bigger, more complex code repositories. With ES6, a module syntax has been introduced to spread the codebase into files, even directories. (Even before ES6 there have been several module systems, but ES6 described a standard for it.)
 
-As I've mentioned before, I instruct the parser to process source files as modules. An ES6 \emph{module} differs in two ways from a \emph{script}: it is automatically interpreted as a \emph{strict-mode code}, and one can use \code{import} and \code{export} statements in them.
+As described previously, I instruct the parser to process source files as modules. An ES6 \emph{module} differs in two ways from a \emph{script}: it is automatically interpreted as a \emph{strict-mode code}, and one can use \code{import} and \code{export} statements in them.
 
 This section follows~\cite{ES6InDepth,ES6import,ES6export} and collects the most important details about the specifications.
 
@@ -96,7 +96,7 @@ Everything declared inside a module belongs to the scope of the module. In order
 		\lstinputlisting[
 			language=JavaScript,
 			captionpos=b,
-			caption={ES6 Export Statement Examples from MDN.},
+			caption={ES6 export statement examples from MDN.},
 			label={lst:es6-export},
 		]{include/sources/es6-export-mdn.js}
 	\end{minipage}
@@ -106,8 +106,8 @@ Parsing these export statements result in different representation in the instan
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.8\textwidth]{export-example}
-  \caption{ES6 Export Statement Example}
+  \includegraphics[width=\textwidth]{export-example}
+  \caption{ES6 export statement example.}
   \label{fig:es6-export-example}
 \end{figure}
 
@@ -120,7 +120,7 @@ Like there are many ways for exporting features in a module, there are also seve
 		\lstinputlisting[
 			language=JavaScript,
 			captionpos=b,
-			caption={ES6 Import Statement Examples from MDN.},
+			caption={ES6 import statement examples from MDN.},
 			label={lst:es6-import},
 		]{include/sources/es6-import-mdn.js}
 	\end{minipage}
@@ -130,8 +130,8 @@ The imported features are placed in the module-level global scope as a \code{Var
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.8\textwidth]{import-example}
-  \caption{ES6 Import Statement Example}
+  \includegraphics[width=\textwidth]{import-example}
+  \caption{ES6 import statement example}
   \label{fig:es6-import-example}
 \end{figure}
 
@@ -141,7 +141,7 @@ Since there are several ways to export and import features, there are even more 
 Executing the following steps emulates the resolution made by the interpreter of the source codes and connects the usages of the imported feature to the declaration of the exported one:
 
 \begin{enumerate}[topsep=0pt]
-	\item Find the imported \code{IdentifierExporession} in the \code{items} list of the \code{GlobalScope} node.
+	\item Find the imported \code{IdentifierExpression} in the \code{items} list of the \code{GlobalScope} node.
 	\item Find the connected upstream \code{Variable} node.
 	\item Find the \code{Declaration} for the \code{Export} that has a \code{Node} with the same \code{BindingIdentifier} as the import.
 	\item Connect the \code{Variable} on the import side to the \code{Declaration} on the export side with a \code{declarations} relation.
@@ -155,25 +155,26 @@ The Cypher query in~\Cref{lst:connect-import-export} manages to connect the exac
 		\lstinputlisting[
 			language=Cypher,
 			captionpos=b,
-			caption={Cypher Query for Connecting Import and Export Statements.},
+			caption={Cypher query for connecting import and export statements.},
 			label={lst:connect-import-export}
 		]{include/sources/connect-import-export.cypher}
 	\end{minipage}
 \end{figure}
 
-After executing the query in~\Cref{lst:connect-import-export}, the two ASG subgraphs are connected with a new edge (see~\Cref{fig:import-export-example}). This makes it possible to execute global-level queries addressing multiple modules. These newly added relations are always removed when either the source or the destination is removed, in case a module is modified. Thus it is optimal to run this query only when all of the files are already processed and the chance of modification in the near future is low.
+After executing the query in~\Cref{lst:connect-import-export}, the two ASG subgraphs are connected with a new edge (see~\Cref{fig:import-export-example}). This enables executing global-level queries addressing multiple modules. These newly added relations are always removed when either the source or the destination is removed, in case a module is modified. Thus it is optimal to run this query only when all of the files are already processed and the chance of modification in the near future is low.
 
 \begin{sidewaysfigure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{import-export-example}
-  \caption{Merged ASG Subgraphs}
+  \caption{Merged ASG subgraphs.}
   \label{fig:import-export-example}
 \end{sidewaysfigure}
 
 
 \section{Dead Code Search}
 \label{sect:dead-code-search}
-Code that is written, but not used in the whole codebase is often called \emph{dead code}. Without symbolic execution or dynamic analysis it is not possible to decide what part of the code is reachable, but (excluding dynamic evaluation --- eg., \code{eval} in JavaScript) it is feasible to find function declarations in a file that are possibly not referenced in the local scope.
+Code that is written, but not used in the whole codebase is often called \emph{dead code}. Without symbolic execution it is a complex problem to decide what part of the code is reachable, but (excluding dynamic evaluation --- eg., \code{eval} in JavaScript) it is feasible to find function declarations in a file that are possibly not referenced in the local scope.
+% TODO cite
 
 If a function declaration is not exported from the module and no exported declaration references it, it is highly likely that the declaration is unreachable and contains \emph{dead code}. With the following steps and the Cypher query described in~\Cref{lst:dead-code} it is possible to locate dead code in a file.
 
@@ -214,7 +215,7 @@ This trick is only required because it is not possible to declare transitive clo
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{transitive-closure}
-  \caption{Transitive Closure over Arbitrary Node Type and Edge Label Sequence}
+  \caption{Transitive closure over arbitrary node type and edge label sequence.}
   \label{fig:transitive-closure}
 \end{figure}
 
@@ -226,21 +227,21 @@ Control Flow Graphs (CFG) are graph representations of the computation and contr
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.75\textwidth]{CFG-PPT}
-  \caption{Example Control Flow Graph}
+  \caption{Example control flow graph.}
   \label{fig:CFG-PPT}
 \end{figure}
 % TODO fix the CFG (if before return)
 
-In this section I demonstrate how it is possible to transform the basic ASG structures into a CFG, and how it can be utilized for static analysis.
+In this section I demonstrate how to transform the basic ASG structures into a CFG, and to utilize the result for static analysis.
 
 \subsection{Theoretically Possible Paths}
 \label{sect:cfg-paths}
 As previously mentioned, nodes can have multiple incoming and outgoing edges. At execution time when the state of the program is at a given CFG node --- based on the dynamic state of the execution --- it may continue with any statement of the corresponding subsequent nodes.
 
-Without running or interpreting the source code it is only possible to find and map every scenario in the ASG and transform them into nodes and edges in the CFG. A possible execution path is a path in the graph from one of the entry nodes to one of the exit nodes. The constraints on this path may be insatible, thus the dynamic execution of the source code may not iterate over this path. The CFG thus contains every feasible, and some infeasible execution paths.
+Without running or interpreting the source code it is only possible to find and map every scenario in the ASG and transform them into nodes and edges in the CFG. A possible execution path is a path in the graph from one of the entry nodes to one of the exit nodes. The constraints on this path may be insatiable, thus an execution of the source code may not iterate over this path. The CFG thus contains every feasible, and some infeasible execution paths.
 
 \subsection{Transforming by Node Type}
-There are more than one ways to transform the ASG into a CFG. Since my approach utilizes a graph database, the framework transforms the graph one smaller subgraph at a time based on typized pattern matching.
+There are several ways to transform the ASG into a CFG. Since my approach utilizes a graph database, the framework transforms the graph one smaller subgraph at a time based on typized pattern matching.
 
 \subsubsection{Self-Containing Transformations}
 % containing?
@@ -291,7 +292,7 @@ In order to optimally transform these two scenarios, two transforming patterns a
 	\item If there is an alternate branch, its start node is connected with the \code{false} path from the conditional \code{Expression} and its end node is also connected to the end node of the \code{IfStatement}.
 \end{enumerate}
 
-This transformation creates a diamond shape flow. If there are more than alternative branches, the ASG represents them in chained containment. Thus eventually every branching will be connected, one-by-one.
+This transformation creates a diamond shape flow. If there are more alternative branches, the ASG represents them in chained containment. Thus eventually every branching will be connected, one-by-one.
 
 \paragraph{FunctionDeclaration}
 Function declaration structures are rather simple. The node has references to its parameters and body. The parameters --- if necessary --- are evaluated at calling. The \code{FunctionBody} contains a list of directives and a list of statements.
@@ -313,12 +314,12 @@ In case the call expression provides parameters, they are also transformed into 
 \subsection{Transformation Challenges}
 Besides the thorough work required for writing the transformation rules for every class and structure in the metamodel, there are also other challenges. Helping graph structures introduced for easy querying may slow down or even make impossible to correctly query given patterns.
 
-Queries for dead code search (detailed in~\Cref{sect:dead-code-search}) for example require the list ordering and CFG end nodes to be removed, or the transitive closure slows down the query. This would make it not suitable for near real-time user feedback.
+Queries for dead code search (detailed in~\Cref{sect:dead-code-search}) for example require the list ordering and CFG end nodes to be removed, or the transitive closure slows down the query. This would make it unsuitable for near real-time user feedback.
 
 Another challenge occurs, when a dynamic object or its member is passed as a parameter to a function call. When evaluated, the function declaration references it with alias; the static analysis, however, may only guess the current value or reference. Substituting all the possible uses for a given reference and collecting dynamically added members may be a partial solution, but this is a future work of the research.
 
 \subsection{Test Generation}
-As previously mentioned in~\Cref{sect:cfg-paths}, the CFG contains every feasible, and some infeasible execution paths. In Cypher it is also possible to find every, or the shortest paths between two nodes. Knowing the entrance node of the CFG and selecting an arbitrary node in the CFG it is thus possible to list every path from the entry node to the selected one. This node can represent, e.g., a troublesome, unwanted state.
+As previously mentioned in~\Cref{sect:cfg-paths}, the CFG contains every feasible, and some infeasible execution paths. In Cypher it is also possible to find the shortest paths or every path between two nodes. Knowing the entrance node of the CFG and selecting an arbitrary node in the CFG it is thus possible to list every path from the entry node to the selected one. This node can represent, e.g., a troublesome, unwanted or unexpected state.
 
 With the transformation of the statements and the conditions of the if statements and other branching structures into a statisfactory problem it may be possible to decide whether there are program inputs that take the execution of the program to the selected node.
 
@@ -331,3 +332,4 @@ This topic falls out of reach of the current research.
 % rest parameters (...)
 % no evaluation
 % only a small selection of language elements supported
+% TODO write
