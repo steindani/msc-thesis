@@ -2,12 +2,13 @@
 \chapter{Elaboration of the Workflow}
 \label{chap:elaboration-of-the-workflow}
 
-In this chapter I demonstrate the various steps of the workflow in detail. I introduce small working source code examples and show, how the given step transforms it.
+In this chapter I demonstrate the various steps of the workflow in detail. I introduce small working source code examples and use them to demonstrate the transformation steps.
 
 \section{Transforming the Source Code Into an AST}
-As mentioned in~\Cref{sect:overview-transforming-the-source-code}, this transformation is carried out by the Shape Security Shift toolkit. The parser is given the source code and the top-level non-terminal it should consider the root of the tree. Considering the new constructs introduced in ES6, I've chosen \emph{Module} as the type of the root.
+As mentioned in~\Cref{sect:overview-transforming-the-source-code}, this transformation is carried out by the Shape Security Shift toolkit. The source code is fed into the parser along with the parameters for the parsing algorithm. Considering the new constructs introduced in ES6 (\Cref{sect:ecmascript}), I've chosen to parse every file as a \emph{Module}. This affects the grammar used in the parser and the resulting data model.
+% TODO href Shift
 
-The only one line long source code in~\Cref{lst:oneliner} parsed and serialized as a tree can be seen in~\Cref{lst:oneliner-ast-json}.
+The parse result of the one-line code snippet in~\Cref{lst:oneliner} is shown in~\Cref{lst:oneliner-ast-json} formalized as a JSON tree model. % TODO remove JSON tree
 
 \begin{figure}[!htb]
 	\begin{minipage}{\textwidth}
@@ -48,16 +49,16 @@ As one of the most basic and easy-to-discover mistakes, division by zero should 
 
 Without dynamic testing or symbolic execution it is rather hard to find this kind of expression, since the right side of the division may come from a variable. On the other hand, finding the cases where the right side is a literal is trivial.
 
-Taking a look at the graph representation of the previous example (in~\Cref{fig:AST-PPT}), it is relatively easy to find the problematic nodes. A natural language definition of the problem would sound like: ,,we are looking for binary expressions that have a literal zero on the right side''.
+Taking a look at the graph representation of the previous example (in~\Cref{fig:AST-PPT}), it is relatively easy to find the problematic nodes. A natural language definition of the problem would sound like this: ,,we are looking for binary expressions that have a literal zero on the right side''.
 
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.8\textwidth]{AST-PPT.pdf}
-  \caption{Graph Representation of the One Line Long Source Code}
+  \caption{Graph representation of the code snippet of~\Cref{lst:oneliner}}
   \label{fig:AST-PPT}
 \end{figure}
 
-One way to formalize this declarative definition in Cypher can be seen in~\Cref{lst:division-by-zero}. Executing this query would find matching nodes with the right type, bind them to the corresponding names and check, whether the required relations are present, resulting in a state like in~\Cref{fig:AST-query-PPT}. Finally the result is the \code{BinaryExpression} node that can be used to get the precise location of the expression in the source code and report it as problematic.
+One way to formalize this declarative definition in Cypher can be seen in~\Cref{lst:division-by-zero}. Executing this query on the syntax graph of the source code would find matching nodes with the right type, bind them to the corresponding names, and check whether the required relations are present, resulting in a state like in~\Cref{fig:AST-query-PPT}. Finally, the result is the \code{BinaryExpression} node. By querying the source code location (also stored in the graph connected to the node) this query can report the precise location of the expression in the source code as problematic.
 
 \begin{figure}[!htb]
 	\begin{minipage}{\textwidth}
@@ -79,6 +80,7 @@ One way to formalize this declarative definition in Cypher can be seen in~\Cref{
 
 
 \section{Handling Import and Export}
+\label{sect:handling-import-export}
 Since the beginning, JavaScript projects have grown tremendously. With the size of the average project, the language has also matured for handling bigger, more complex code repositories. With ES6, a module syntax has been introduced to spread the codebase into files, even directories. (Even before ES6 there have been several module systems, but ES6 described a standard for it.)
 
 As described previously, I instruct the parser to process source files as modules. An ES6 \emph{module} differs in two ways from a \emph{script}: it is automatically interpreted as a \emph{strict-mode code}, and one can use \code{import} and \code{export} statements in them.
@@ -136,7 +138,7 @@ The imported features are placed in the module-level global scope as a \code{Var
 \end{figure}
 
 \subsection{Connecting Imports to Exports}
-Since there are several ways to export and import features, there are even more combinations of these. This paper does not aim to cover all of these, but to show that it's possible to connect graph module representations based.
+Since there are several ways to both export and import features, there are even more combinations. This report does not aim to cover all of these, but to show that it is possible to connect graph module representations based on simple rules.
 
 Executing the following steps emulates the resolution made by the interpreter of the source codes and connects the usages of the imported feature to the declaration of the exported one:
 
@@ -161,21 +163,22 @@ The Cypher query in~\Cref{lst:connect-import-export} manages to connect the exac
 	\end{minipage}
 \end{figure}
 
-After executing the query in~\Cref{lst:connect-import-export}, the two ASG subgraphs are connected with a new edge (see~\Cref{fig:import-export-example}). This enables executing global-level queries addressing multiple modules. These newly added relations are always removed when either the source or the destination is removed, in case a module is modified. Thus it is optimal to run this query only when all of the files are already processed and the chance of modification in the near future is low.
+After executing the query in~\Cref{lst:connect-import-export}, the two ASG subgraphs are connected with a new edge (see~\Cref{fig:import-export-example}). This enables executing global-level queries addressing multiple modules. These newly added relations are always removed when either the source or the destination is removed, in case a module is modified. Thus it is optimal to run this query only when all of the files are already processed and the chance of modification in the near future is low. (This might happen after a modification is sent to the VCS or the developer saves the files in the IDE.)
 
 \begin{sidewaysfigure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{import-export-example}
-  \caption{Merged ASG subgraphs.}
+  \caption{Connected ASG subgraphs.}
   \label{fig:import-export-example}
 \end{sidewaysfigure}
 
 
 \section{Dead Code Search}
 \label{sect:dead-code-search}
-Code that is written, but not used in the whole codebase is often called \emph{dead code}. Without symbolic execution it is a complex problem to decide what part of the code is reachable, but (excluding dynamic evaluation --- eg., \code{eval} in JavaScript) it is feasible to find function declarations in a file that are possibly not referenced in the local scope.
+Code that is written, but not used in the whole codebase is often called \emph{dead code}. Without symbolic execution it is a complex problem to decide what part of the code is reachable, but (excluding dynamic evaluation, e.g., \code{eval} in JavaScript) it is feasible to find function declarations in a file which are possibly not referenced in the local scope.
 % TODO cite
 
+\subsection{Search Algorithm as a Graph Query}
 If a function declaration is not exported from the module and no exported declaration references it, it is highly likely that the declaration is unreachable and contains \emph{dead code}. With the following steps and the Cypher query described in~\Cref{lst:dead-code} it is possible to locate dead code in a file.
 
 \begin{enumerate}
@@ -192,13 +195,16 @@ If a function declaration is not exported from the module and no exported declar
 		\lstinputlisting[
 			language=Cypher,
 			captionpos=b,
-			caption={Cypher Query for Finding Dead Code.},
+			caption={Cypher query for finding dead code.},
 			label={lst:dead-code}
 		]{include/sources/dead-code-search.cypher}
 	\end{minipage}
 \end{figure}
 
-Note that this Cypher query is simplified and only prepared for one script in the database. Compared to other commercially available software even this simple query can return better results. For a test file it returns a clique of function declarations that are referencing each other, but none of them are referenced indirectly from the export statements (see~\Cref{fig:dead-code-result}. A commercially available tool reports these declarations in three rounds and requires user input.
+\subsection{Evaluating the Result}
+For the sake of conciseness, I present the query for a simplified version of this algorithm, which only works with a single module in the database.
+
+Compared to other commercially available software, this solution is able to detect more dead code scenarios: e.g., circular references without incoming calls (see~\Cref{fig:dead-code-result}. Instead of reporting the problems one-by-one or layer-by-layer, it reports the clique, without user input.
 
 \begin{figure}[htbp]
   \centering
@@ -208,9 +214,10 @@ Note that this Cypher query is simplified and only prepared for one script in th
 \end{figure}
 % TODO recolor and replace caption
 
-This query utilizes several possibilities only available in Neo4j. Since the query modifies the database, but the modifications are derived information, it should not be stored in the database. Database transactions that can be discarded, but still query the modified database are highly utilized here.
+\subsection{Transformation in a Transaction}
+This query utilizes several possibilities only available in Neo4j. Since the query modifies the database, but the modifications are derived information, they should not be stored in the database. Database transactions that can be discarded, but still query the modified database are highly utilized here.
 
-This trick is only required because it is not possible to declare transitive closure\footnote{Transitive closure is marked with \code{*} in Cypher.} over arbitrary node type and edge label sequence in Cypher. One can match and replace every sequence with a new, dedicated labeled edge and declare a transitive closure over it, but this requires the database to be modified (see~\Cref{fig:transitive-closure}).
+It is not possible to declare transitive closure\footnote{Transitive closure is marked with an asteriks in Cypher.} over arbitrary node type and edge label sequence in one Cypherquery. This can be overcame by utilizing the \emph{trick} of starting a new transaction, writing the database and immediately querying the modified created data, then discarding the transaction. One can match and replace every sequence with a new, dedicated labeled edge and declare a transitive closure over it, but this requires the database to be modified (see~\Cref{fig:transitive-closure}).
 
 \begin{figure}[htbp]
   \centering
@@ -238,10 +245,10 @@ In this section I demonstrate how to transform the basic ASG structures into a C
 \label{sect:cfg-paths}
 As previously mentioned, nodes can have multiple incoming and outgoing edges. At execution time when the state of the program is at a given CFG node --- based on the dynamic state of the execution --- it may continue with any statement of the corresponding subsequent nodes.
 
-Without running or interpreting the source code it is only possible to find and map every scenario in the ASG and transform them into nodes and edges in the CFG. A possible execution path is a path in the graph from one of the entry nodes to one of the exit nodes. The constraints on this path may be insatiable, thus an execution of the source code may not iterate over this path. The CFG thus contains every feasible, and some infeasible execution paths.
+Without running or interpreting the source code it is only possible to find and map every scenario in the ASG and transform them into nodes and edges in the CFG. A possible execution path is a path in the graph from one of the entry nodes to one of the exit nodes. The constraints on this path may be insatisfiable, thus an execution of the source code may not iterate over this path. The CFG thus contains every feasible, and some infeasible execution paths.
 
 \subsection{Transforming by Node Type}
-There are several ways to transform the ASG into a CFG. Since my approach utilizes a graph database, the framework transforms the graph one smaller subgraph at a time based on typized pattern matching.
+There are several ways to transform the ASG into a CFG. Since my approach utilizes a graph database, the framework transforms the graph one smaller subgraph at a time based on pattern matching.
 
 \subsubsection{Self-Containing Transformations}
 % containing?
@@ -285,17 +292,17 @@ The assigned behavior to this node type and structure is the following:
 \paragraph{IfStatement}
 This branching statement is parsed into one graph node. This node has two or three references. It must have one condition that decides the branching direction. A (positive) consequence is also required, but the alternate path reference is optional.
 
-In order to optimally transform these two scenarios, two transforming patterns are necessary.
+In order to optimally transform these two scenarios, two transformation patterns are necessary.
 \begin{enumerate}[topsep=0pt]
 	\item Both scenarios evaluate the \code{Expression}.
 	\item The positive consequence is connected with the \code{true} path, and the end node of the consequence node is connected to the end of the \code{IfStatement}.
 	\item If there is an alternate branch, its start node is connected with the \code{false} path from the conditional \code{Expression} and its end node is also connected to the end node of the \code{IfStatement}.
 \end{enumerate}
 
-This transformation creates a diamond shape flow. If there are more alternative branches, the ASG represents them in chained containment. Thus eventually every branching will be connected, one-by-one.
+This transformation creates a diamond-shaped flow. If there are more alternative branches, the ASG represents them in chained containment. Thus eventually every branching will be connected, one-by-one.
 
 \paragraph{FunctionDeclaration}
-Function declaration structures are rather simple. The node has references to its parameters and body. The parameters --- if necessary --- are evaluated at calling. The \code{FunctionBody} contains a list of directives and a list of statements.
+Function declaration structures are rather simple. The node has references to its parameters and body. The parameters --- if necessary --- are evaluated upon calling. The \code{FunctionBody} contains a list of directives and a list of statements.
 
 The transformation pattern ignores the directives and immediately connects the \code{Function\-Declaration} to the list of \code{Statement}s, both ways (as after the function should also end after the last statement has been executed).
 
@@ -303,7 +310,7 @@ The transformation pattern ignores the directives and immediately connects the \
 % ExpressionStatement
 
 \subsubsection{Expressions}
-There are 28 expression implementations in the Shift metamodel. Such as literal expressions for strings, booleans, numerals, null, infinity, and regular expressions. There are also expressions representing class declarations, arrays, array functions. Unary and binary operators are also parsed into a corresponding unary or binary expressions.
+There are 28 expression implementations in the Shift metamodel, for example literal expressions for strings, booleans, numerals, null, infinity, and regular expressions. There are also expressions representing class declarations, arrays, array functions. Unary and binary operators are also parsed into corresponding unary or binary expressions.
 
 The prototype of the framework contains graph transformation patterns for literal and call expressions. Regarding the control flow graph, literals are immediately evaluated, so their end node is connected directly. Call expressions try to find the declaration of the called function and set it as the next block of the control flow.
 
@@ -312,18 +319,16 @@ The end node of the function declaration is also connected to the end node of th
 In case the call expression provides parameters, they are also transformed into the CFG and evaluated in the given order.
 
 \subsection{Transformation Challenges}
-Besides the thorough work required for writing the transformation rules for every class and structure in the metamodel, there are also other challenges. Helping graph structures introduced for easy querying may slow down or even make impossible to correctly query given patterns.
+Besides the effort required for writing the transformation rules for every class and structure in the metamodel, there are also other challenges. Helping graph structures introduced for easy querying may slow down or even make impossible to correctly query given patterns.
 
 Queries for dead code search (detailed in~\Cref{sect:dead-code-search}) for example require the list ordering and CFG end nodes to be removed, or the transitive closure slows down the query. This would make it unsuitable for near real-time user feedback.
 
-Another challenge occurs, when a dynamic object or its member is passed as a parameter to a function call. When evaluated, the function declaration references it with alias; the static analysis, however, may only guess the current value or reference. Substituting all the possible uses for a given reference and collecting dynamically added members may be a partial solution, but this is a future work of the research.
+Another challenge occurs, when a dynamic object or its member is passed as a parameter to a function call. When evaluated, the function declaration references it with an alias; the static analysis, however, may only guess the current value or reference. Substituting all the possible uses for a given reference and collecting dynamically added members may be a partial solution, but this is a future work of the research.
 
 \subsection{Test Generation}
 As previously mentioned in~\Cref{sect:cfg-paths}, the CFG contains every feasible, and some infeasible execution paths. In Cypher it is also possible to find the shortest paths or every path between two nodes. Knowing the entrance node of the CFG and selecting an arbitrary node in the CFG it is thus possible to list every path from the entry node to the selected one. This node can represent, e.g., a troublesome, unwanted or unexpected state.
 
-With the transformation of the statements and the conditions of the if statements and other branching structures into a statisfactory problem it may be possible to decide whether there are program inputs that take the execution of the program to the selected node.
-
-This topic falls out of reach of the current research.
+With the transformation of the statements and the conditions of the if statements and other branching structures into a statisfactory problem it may be possible to decide whether there are program inputs that take the execution of the program to the selected node. This topic is subject to future work.
 
 
 \section{Language Limitations}
