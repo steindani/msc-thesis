@@ -249,20 +249,18 @@ Based on historic evolution, these solutions can be categorized in three main ca
 Graphs are well-known and in computer science widely used mathematical concept, which has been around for many decades. Numerous graph technologies have evolved, each with their advantages and disadvantages. From graphs themselves to physical and virtual worlds, many scenarios can be represented as graphs and stored in graph databases with their respective data model. This section loosely follows~\cite{scm, On_Graph_Computing}.
 % TODO cite http://link.springer.com/article/10.1007%2Fs10586-015-0472-6
 
-\begin{figure}[!ht]
+Simple, \emph{textbook-style} graphs can be extended in several different ways. To describe the connections in more detail, one may add directionality to edges (\emph{directed graph}). To allow different connections, one may label the edges (\emph{labeled graph}). \emph{Typed graphs} introduce types for vertices. \emph{Property graphs} add even more possibilities by introducing properties. Each graph element, both vertices and edges can be described with a collection of properties. The properties are key--value pairs, e.g.\ \texttt{type = `Person'}, \texttt{name = `John'}, \texttt{age = 34}.
+
+
+\begin{figure}[htbp]
 	\centering
-	\includegraphics[width=0.8\textwidth]{include/figures/graph-classes}
-	\caption{Graph data models~(based on~\cite{DBLP:journals/corr/abs-1006-2361}).}
-	\label{fig:graph-classes}
+	\includegraphics[width=0.6\textwidth]{graph-example}
+	\caption{Typed and labeled property graph example.}
+	\label{fig:graph-example}
 \end{figure}
 
-The most basic graph model is the \emph{simple graph}, formally defined as $G = (V, E)$, where $V$ is the set of vertices and $E \subseteq V \times V$ is the set of edges. Simple graphs are sometimes referred as textbook-style graphs because they are an integral part of academic literature. Simple graphs are useful for modeling homogeneous systems and have plenty of algorithms for processing.
 
-Simple graphs can be extended in several different ways (see \cref{fig:graph-classes}). To describe the connections in more detail, one may add directionality to edges (\emph{directed graph}). To allow different connections, one may label the edges (\emph{labeled graph}).
-
-\emph{Typed graphs} introduce types for vertices. \emph{Property graphs} (sometimes called \emph{attributed graphs}) add even more possibilities by introducing properties. Each graph element, both vertices and edges can be described with a collection of properties. The properties are key--value pairs, e.g.\ \texttt{type = `Person'}, \texttt{name = `John'}, \texttt{age = 34}. \emph{Semantic graphs} use Uniform Resource Identifiers (URIs) instead of labels, otherwise they have similar expressive power as labeled graphs.
-
-My approach utilizes typed (labeled) property graphs.
+My approach utilizes typed (labeled) property graphs (see~\Cref{fig:graph-example}).
 
 \subsubsection{Graph Computing Technologies}
 The practice of data storage and processing is encumbered with space and time trade-off. This trade-off is also present in various graph computing technologies. This section discusses the categorization of these technologies and mentions a few technologies of which the most popular ones are detailed in~\cref{sect:graph-databases}.
@@ -282,7 +280,7 @@ Persistent graph databases are the prevalent group of graph computing technologi
 
 Since global graph algorithms are not feasible, these systems are optimized for local neighborhood analysis and concurrent access. Global graph analytics are inefficient due to the communication overhead and the computational overhead, e.g., ensuring ACID transactional semantics.
 
-Example for persistent, real-time graph databases: \emph{InfiniteGraph}, \emph{Neo4j} (see \cref{sect:neo4j}), \emph{OrientDB}, and \emph{Titan} (see \cref{sect:titan}).
+Example for persistent, real-time graph databases: \emph{InfiniteGraph}, \emph{Neo4j} (see \cref{sect:neo4j}), \emph{OrientDB}, and \emph{Titan}~\cite{titan}.
 % TODO cite
 
 \paragraph{Batch-Processing Graph Frameworks}
@@ -318,7 +316,7 @@ Neo4j is one of the most popular and most mature NoSQL graph databases developed
 It can be deployed two ways: in \emph{server mode} the database is started separately and listens for queries on its HTTP REST and Bolt interface; where in \emph{embedded mode} it runs in the same JVM as the only client application.
 
 \paragraph{Data Model}
-The graph model in Neo4j, \code{Neo4jGraph} is very similar to the \emph{TinkerPop} graph computing framework's property graph data model. More precisely it is a labeled property graph, since the relations are labeled and the nodes can also hold multiple labels; the nodes and relations can both hold properties.
+The graph model of Neo4j is an implementation of a labeled property graph. The relations are labeled and the nodes can hold multiple labels; the nodes and relations can both hold properties.
 
 \paragraph{Sharding}
 Although the \emph{Enterprise Edition} of Neo4j has a high availability solution and supports clustered replication and cache sharding, it does not support sharded data storage over a cluster of devices. This results in the advantage of low latency (clustering provides scale out capabilities for read), the ability to handle transactions with ACID (Atomicity, Consistency, Isolation, and Durability) semantics.~\cite{neo4j-product}
@@ -342,54 +340,10 @@ Other interesting and useful features of Cypher include:
 %  \item Query profiling.
 \end{itemize}
 
-%\textquote[\cite{neo4j-developer}]{Since October 2015 the openCypher project aims to provide an open grammar, language specification, technical compatibility kit and reference implementation of parser, planner and runtime for Cypher.}
+\subsubsection{Alternative Graph Databases}
+Although other database solutions, like Titan~\cite{titan} or OrientDB might serve as an alternative, the rapid development and feature set of Neo4j ruled them out as a candidate for my approach.
 
-\paragraph{Additional Notes}
-\begin{itemize}[topsep=0pt]
-  \item[+] When Neo4j is deployed in server mode, besides the REST and Bolt interfaces, a web interface is also available, where a read-evaluate-print loop (REPL) interface helps the user with interactive querying. The results are either shown in a table or an interactive graph display, where the user can automatically add necessary nodes and relationships from the database (without explicitly executing another query). It also supplies the user with information about the contents of the database, labels, indexes.
-  \item[+] Since Neo4j was written in Java (and Scala) and also published as a Maven package, it is easy to integrate and start using in a new project. There is no need for installation or configuration.
-\end{itemize}
-
-\subsubsection{Titan}
-\label{sect:titan}
-\textquote[\cite{titan}]{Titan is a scalable graph database optimized for storing and querying graphs containing hundreds of billions of vertices and edges distributed across a multi-machine cluster. Titan is a transactional database that can support thousands of concurrent users executing complex graph traversals in real time.}
-
-Titan was developed by \emph{Aurelius} until the company was acquired by \emph{DataStax} in 2015. DataStax has expressed its intentions to preserve the effort made by front-end users dependent on Titan and ensures the current users that the foreseeable merging procedure to DataStax Enterprise solutions will be as simple as possible~\cite{titan-datastax-acquirement}.
-
-\paragraph{Architecture}
-\textquote[\cite{titan-arch,titan-benefits}]{Titan is designed to support the processing of graphs so large that they require storage and computational capacities beyond what a single machine can provide. Titan implements robust, modular interfaces for data persistence, data indexing, and client access. Titan’s modular architecture allows it to interoperate with a wide range of storage, index, and client technologies; it also eases the process of extending Titan to support new ones.}
-
-Titan is based on one or more disk-based storage and indexing adapters. Titan comes out-of-the-box with 3 data storage adapters: \emph{Cassandra}, \emph{HBase}, and \emph{BerkeleyDB}; and also 2 indexing adapters: \emph{Elasticsearch} and \emph{Lucene}. These indexing adapters speed up the performance of queries, and enable more complex queries.
-
-Like Neo4j, applications based on Titan can also interact with it in two ways~\cite{titan-arch}:
-\begin{itemize}[topsep=0pt]
-  \item Embedding Titan in the application allows direct querying against the graph within the same Java virtual machine (JVM). In this case query execution, caching, transaction handling all happens in the same JVM. The data retrieval from the storage adapters can be either local or remote.
-  \item With a local or remote Titan instance one can interact by submitting Gremlin queries to the server.
-\end{itemize}
-
-
-\paragraph{Data Model}
-Titan natively supports the property graph data model as defined by \emph{TinkerPop}.
-
-\paragraph{Sharding}
-Since Titan can be used with Cassandra as the data storage adapter, the architecture inherits every one of Cassandra's advantages. It is possible to set up a highly available Titan cluster with no single points of failure. This configuration also utilizes the Cassandra's partitioner (a hash-based, sophisticated partitioning system).
-
-Using multiple storage backend servers eliminates read (and depending on the consistency level, sometimes even write) bottlenecks as these servers can serve data for the same query in a coordinated manner utilizing that the architecture lacks the master/slave layout. A caching layer ensures the availability of the most used data parts from the memory cache speeding up the queries even more. Elastic scalability allows the introduction and removal of machines to the live cluster.
-
-
-\paragraph{Query Language}
-Titan natively supports the imperative graph traversal language Gremlin (by \emph{TinkerPop}).
-
-
-% \subsubsection{OrientDB}
-% \label{sect:orientdb}
-% \paragraph{Architecture}
-% \paragraph{Data Model}
-% \paragraph{Sharding}
-% \paragraph{Query Language}
-
-\subsubsection{EMF Modeling and VIATRA Query}
-For rapidly changing, albeit smaller datasets, incremental querying using VIATRA Query over EMF models (see \cref{sect:emf-viatra}) can be a solution. Since VIATRA stores the database in-memory, is is not suitable for my approach.
+For rapidly changing, albeit smaller datasets, incremental querying using VIATRA~\cite{viatra} Query over EMF~\cite{EMF} models can be a solution. Since VIATRA stores the database in-memory, is is not suitable for my approach.
 
 
 \section{Integrated Development Environment (IDE)}
@@ -399,7 +353,7 @@ For rapidly changing, albeit smaller datasets, incremental querying using VIATRA
 % TODO
 
 \subsection{Visual Studio Code}
-Visual Studio Code~\cite{vscode} is Microsoft's take on a lightweight, yet powerful Integrated Developer Environment for modern programming languages. It is available for free for Windows, OS X and Linux. It comes with built-in support for JavaScript, TypeScript and has a growing ecosystem of extensions for other languages, theming, and developer support~\cite{vscode-extensions}.
+Visual Studio Code~\cite{vscode} is Microsoft's take on a lightweight, yet powerful Integrated Developer Environment for modern programming languages. It is available for free for Windows, macOS and Linux. It comes with built-in support for JavaScript, TypeScript and has a growing ecosystem of extensions for other languages, theming, and developer support~\cite{vscode-extensions}.
 
 Debugging is also made easy, as the editor can be attached to the running code and the developer can add break points, look at call stacks and evaluate statements with an interactive console. With the relatively small package, Git support comes built-in: reviewing changed lines, staging files, making commits can be made right in the IDE.
 
@@ -428,3 +382,7 @@ An extension is a package of source code, resources, and configuration files. Th
 Language server framework and sample implementation helps developers create a dedicated process for resource-heavy language server applications. It is the better design choice if the extension may slow down other extensions while working. Its possibilities are limited, as custom communication between the client extension and the language server needs modification in the underlying communication protocol handler.
 
 \paragraph{Debuggers} Connecting an external debugger written for any language to VS Code is also possible through the VS Code Debug protocol.
+
+\subsection{Alternative IDEs}
+There are several alternatives to Visual Studio Code. \emph{Atom}, \emph{Eclipse}, and \emph{WebStorm} can all be extended with a plugin adding extra features for a given language. Since VSC is one of the most actively developed lightweight IDEs aiming for JavaScript (and TypeScript) development, I have developed an plugin integrating the IDE with my framework.
+% TODO see evaluation

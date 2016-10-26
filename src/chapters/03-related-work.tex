@@ -5,7 +5,7 @@
 In this chapter I enumerate a subset of similar systems, approaches and discuss related work.
 
 \section{Tern}
-\textquote[http://ternjs.net]{Tern is a stand-alone code-analysis engine for JavaScript. It is intended to be used with a code editor plugin to enhance the editor's support for intelligent JavaScript editing. Features provided are:
+\textquote[\cite{tern}]{Tern is a stand-alone code-analysis engine for JavaScript. It is intended to be used with a code editor plugin to enhance the editor's support for intelligent JavaScript editing. Features provided are:
 
 \begin{itemize}[topsep=0pt]
 	\item Autocompletion on variables and properties
@@ -21,9 +21,9 @@ The Tern suite is a modular, extendable stand-alone system. Editor plugins commu
 
 
 \section{TAJS}
-Type Analyzer for JavaScript (TAJS)~\cite{tajs} is a dataflow analysis tool infering type information and call graphs. The current version (as of 2016) can model scripts of ECMAScript 3; it also contains model of the standard library and partial model of the HTML DOM and browser API.~\cite{tajs-git}
+Type Analyzer for JavaScript (TAJS)~\cite{tajs} is a dataflow analysis tool infering type information and call graphs developed by the programming language research group at Aarhus University, with contributions from Universität Freiburg.
 
-The initial aim of TAJS was to warn programmers for the following problematic cases. This enumeration follows~\cite{jensen_type_2009}.
+The current version (as of 2016) can model scripts of ECMAScript 3; it also contains model of the standard library and partial model of the HTML DOM and browser API.~\cite{tajs-git} The initial aim of TAJS was to warn programmers for the following problematic cases. This enumeration follows~\cite{jensen_type_2009}.
 
 \begin{itemize}[topsep=0pt]
   \item invoking a non-function value as a function
