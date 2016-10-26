@@ -2,13 +2,56 @@
 \chapter{Background and Related Work}
 \label{chap:background-and-related-work}
 
-In this chapter I enumerate a subset of similar systems and discuss related work.
+In this chapter I enumerate a subset of similar systems, approaches and discuss related work.
+
+\section{Tern}
+\textquote[http://ternjs.net]{Tern is a stand-alone code-analysis engine for JavaScript. It is intended to be used with a code editor plugin to enhance the editor's support for intelligent JavaScript editing. Features provided are:
+
+\begin{itemize}[topsep=0pt]
+	\item Autocompletion on variables and properties
+	\item Function argument hints
+	\item Querying the type of an expression
+	\item Finding the definition of something
+	\item Automatic refactoring
+\end{itemize}
+
+Tern is open-source (MIT license), written in JavaScript, and capable of running both on node.js and in the browser.}
+
+The Tern suite is a modular, extendable stand-alone system. Editor plugins communicate with the Tern server module, connected to the Acorn parser (introduced in~\Cref{sect:acorn}) and the inference engine. Third-party plugins can introduce implementation environmental or behavioral information for the system, for example ECMAScript module loading rules, or node.js~\cite{nodejs} specific variables.~\cite{tern-docs}
+
+
+\section{TAJS}
+Type Analyzer for JavaScript (TAJS)~\cite{tajs} is a dataflow analysis tool infering type information and call graphs. The current version (as of 2016) can model scripts of ECMAScript 3; it also contains model of the standard library and partial model of the HTML DOM and browser API.~\cite{tajs-git}
+
+The initial aim of TAJS was to warn programmers for the following problematic cases. This enumeration follows~\cite{jensen_type_2009}.
+
+\begin{itemize}[topsep=0pt]
+  \item invoking a non-function value as a function
+  \item reading an absent variable
+  \item accessing a property of \code{null} or \code{undefined}
+  \item reading an absent property of an object
+  \item writing to variables or object properties that are never read
+  \item implicitly converting a primitive value to an object
+  \item implicitly converting \code{undefined} to a number
+  \item calling a function object both as a function and as a constructor or passing function parameters with varying types
+  \item calling a built-in function with an invalid number of parameters or with a parameter of an unexpected type
+\end{itemize}
+
+
+\section{TRICORDER}
+TRICORDER~\cite{tricorder} is a pluggable program analysis platform used internally at Google, helping developers and reviewers notice possible problems with code changes. The system mainly supports C$++$, Go, and Java codes, but it has support for JavaScript too.
+
+Related researches show that static analysis tools are either not used or ignored, when not configured correctly and take more time from the user than necessary. \textquote[\cite{tricorder}]{High false positive rates, confusing output, and poor integration into the developers' workflow all contribute to the lack of use in everyday development activities \cite{johnson2013don, layman2007toward}.
+
+TRICORDER introduces an effective place to show warnings. Given that all developers at Google use code review tools before submitting changes, TRICORDER's primary use is to provide analysis results at code review time. This has the added benefit of enabling peer accountability, where the reviewer will see if the author chose to ignore analysis results.}
+
 
 \section{JavaScript Parsers}
 \label{sect:javascript-parsers}
 In this section I showcase the most used, \emph{trending} JavaScript parser technologies and justify why I have chosen the Shapesecurity Shift family as the parser and additional toolset for my approach.
 
 \subsection{Acorn}
+\label{sect:acorn}
 \begin{itemize}
 	\item \url{https://github.com/ternjs/acorn}
 \end{itemize}

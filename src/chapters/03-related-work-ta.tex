@@ -44,39 +44,6 @@ Flow’s type checking is opt-in — you do not need to type check all your code
 \item \url{https://code.facebook.com/posts/1505962329687926/flow-a-new-static-type-checker-for-javascript/}
 \end{itemize}
 
-
-\subsection{TAJS}
-Type Analyzer for JavaScript (TAJS) is a dataflow analysis tool infering type information and call graphs. The current version (as of 2016) can model scripts of ECMAScript 3; it also contains model of the standard library and partial model of the HTML DOM and browser API.~\cite{tajs-git}
-
-The initial aim of TAJS was to warn programmers for the following problematic cases. This enumeration follows~\cite{jensen_type_2009}.
-
-\begin{enumerate}
-  \item invoking a non-function value as a function
-  \item reading an absent variable
-  \item accessing a property of \code{null} or \code{undefined}
-  \item reading an absent property of an object
-  \item writing to variables or object properties that are never read
-  \item implicitly converting a primitive value to an object
-  \item implicitly converting \code{undefined} to a number
-  \item calling a function object both as a function and as a constructor or passing function parameters with varying types
-  \item calling a built-in function with an invalid number of parameters or with a parameter of an unexpected type
-\end{enumerate}
-
-\begin{itemize}
- \item \url{http://www.brics.dk/TAJS/}
- \item \url{https://github.com/cs-au-dk/TAJS}
- \item \url{http://www.srl.inf.ethz.ch/workshop2014/eth-moeller.pdf}
-\end{itemize}
-
-\subsection{Tern}
-\begin{itemize}
- \item \url{http://marijnhaverbeke.nl/blog/tern.html}
- \item \url{http://ternjs.net/doc/manual.html#infer}
- \item \url{http://ternjs.net/doc/manual.html#typedef}
- \item \url{https://github.com/angelozerr/tern.java}
- \item \url{https://github.com/ternjs/tern/blob/master/lib/infer.js}
-\end{itemize}
-
 \subsection{JSNice -- Programming Tools with Big Data and Conditional Random Fields (ETHZ)}
 \begin{itemize}
  \item \url{http://www.srl.inf.ethz.ch/jsnice.php}
