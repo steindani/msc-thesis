@@ -2,7 +2,7 @@
 \label{chap:evaluation-of-the-prototype}
 In this chapter I present the measurements of various system functions and the runtime characteristics of the prototype framework.
 
-Due to the underlying approached, the presented framework has its limitations and tradeoffs. Processing one file at a time makes the approach incremental with file-level granularity, potentially saving time on the whole, but takes a large amount of time integrating the parser into the system. The approach also requires less memory during the parsing phase, but takes more time once every file was processed and the connecting phase takes place.
+Due to the underlying approached, the presented framework has its limitations and trade-offs. Processing one file at a time makes the approach incremental with file-level granularity, potentially saving time on the whole, but takes a large amount of time integrating the parser into the system. The approach also requires less memory during the parsing phase, but takes more time once every file was processed and the connecting phase takes place.
 
 \section{Benchmarking Environment}
 In order to make sure that the measurements are reproduceable, and are not affected by user input or other environmental events, the measurements were carried out in the cloud. In this section I detail the hardware and software configurations for the benchmarks.
@@ -63,7 +63,7 @@ In order to present an accurate and wide-range measurement, I have selected the 
 
 Since the source code contains language elements not yet standardized, I transpiled the files before they are parsed by the Shift parser. This step is not calculated in the benchmark. The resulting files are then imported into the database one-by-one, sequentially, thus the parallel optimizations are not present in this measurement.
 
-Based on~\Cref{fig:import-steps} the time requirement of the parsing and scope analysis steps are negligible compared to the third step. Iterating and storing the elements of the ASG in the graph database shows polinomial correlation with the size of the graph. It is also visible that most of the files are parsed under one second, which makes this approach useable in real-life usage.
+Based on~\Cref{fig:import-steps} the time requirement of the parsing and scope analysis steps are negligible compared to the third step. Iterating and storing the elements of the ASG in the graph database shows polynomial correlation with the size of the graph. It is also visible that most of the files are parsed under one second, which makes this approach usable in real-life usage.
 
 These results are based on two separate, sequential, full import of the source code repository.
 

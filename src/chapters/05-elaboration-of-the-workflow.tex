@@ -217,7 +217,7 @@ Compared to other commercially available software, this solution is able to dete
 \subsection{Transformation in a Transaction}
 This query utilizes several possibilities only available in Neo4j. Since the query modifies the database, but the modifications are derived information, they should not be stored in the database. Database transactions that can be discarded, but still query the modified database are highly utilized here.
 
-It is not possible to declare transitive closure\footnote{Transitive closure is marked with an asteriks in Cypher.} over arbitrary node type and edge label sequence in one Cypherquery. This can be overcame by utilizing the \emph{trick} of starting a new transaction, writing the database and immediately querying the modified created data, then discarding the transaction. One can match and replace every sequence with a new, dedicated labeled edge and declare a transitive closure over it, but this requires the database to be modified (see~\Cref{fig:transitive-closure}).
+It is not possible to declare transitive closure\footnote{Transitive closure is marked with an asterisk in Cypher.} over arbitrary node type and edge label sequence in one Cypher query. This can be overcame by utilizing the \emph{trick} of starting a new transaction, writing the database and immediately querying the modified created data, then discarding the transaction. One can match and replace every sequence with a new, dedicated labeled edge and declare a transitive closure over it, but this requires the database to be modified (see~\Cref{fig:transitive-closure}).
 
 \begin{figure}[htbp]
   \centering
@@ -245,7 +245,7 @@ In this section I demonstrate how to transform the basic ASG structures into a C
 \label{sect:cfg-paths}
 As previously mentioned, nodes can have multiple incoming and outgoing edges. At execution time when the state of the program is at a given CFG node --- based on the dynamic state of the execution --- it may continue with any statement of the corresponding subsequent nodes.
 
-Without running or interpreting the source code it is only possible to find and map every scenario in the ASG and transform them into nodes and edges in the CFG. A possible execution path is a path in the graph from one of the entry nodes to one of the exit nodes. The constraints on this path may be insatisfiable, thus an execution of the source code may not iterate over this path. The CFG thus contains every feasible, and some infeasible execution paths.
+Without running or interpreting the source code it is only possible to find and map every scenario in the ASG and transform them into nodes and edges in the CFG. A possible execution path is a path in the graph from one of the entry nodes to one of the exit nodes. The constraints on this path may be unsatisfiable, thus an execution of the source code may not iterate over this path. The CFG thus contains every feasible, and some infeasible execution paths.
 
 \subsection{Transforming by Node Type}
 There are several ways to transform the ASG into a CFG. Since my approach utilizes a graph database, the framework transforms the graph one smaller subgraph at a time based on pattern matching.
@@ -328,7 +328,7 @@ Another challenge occurs, when a dynamic object or its member is passed as a par
 \subsection{Test Generation}
 As previously mentioned in~\Cref{sect:cfg-paths}, the CFG contains every feasible, and some infeasible execution paths. In Cypher it is also possible to find the shortest paths or every path between two nodes. Knowing the entrance node of the CFG and selecting an arbitrary node in the CFG it is thus possible to list every path from the entry node to the selected one. This node can represent, e.g., a troublesome, unwanted or unexpected state.
 
-With the transformation of the statements and the conditions of the if statements and other branching structures into a statisfactory problem it may be possible to decide whether there are program inputs that take the execution of the program to the selected node. This topic is subject to future work.
+With the transformation of the statements and the conditions of the if statements and other branching structures into a satisfactory problem it may be possible to decide whether there are program inputs that take the execution of the program to the selected node. This topic is subject to future work.
 
 
 \section{Language Limitations}

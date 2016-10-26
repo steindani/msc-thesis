@@ -143,7 +143,7 @@ To be able to report precise location for a problem, the graph also contains lin
 
 
 \subsubsection{Storing the Graph Representation}
-If the parser successfully processes the source code, the resulting ASG is transformed with the forementioned rules. In a writing transaction, the transformed graph is serialized and stored in the database.
+If the parser successfully processes the source code, the resulting ASG is transformed with the aforementioned rules. In a writing transaction, the transformed graph is serialized and stored in the database.
 
 \paragraph{Metadata}
 Besides the ASG, additional properties are stored. For example, for every source file, a node exists in the graph connected to nodes belonging to the particular ASG. This makes it easier to handle nodes of a file as a whole.
@@ -151,7 +151,7 @@ Besides the ASG, additional properties are stored. For example, for every source
 \paragraph{Multilayered Graph}
 With more complex rules it is also feasible to store multiple versions of the same file in the database. This makes it possible to maintain multilayered versioning for multiple users.
 
-If the VCS supports branching the code development, the framework could also accomodate this behaviour. For example if two developers work on the \emph{master} development branch in their own IDE, there could be layers for each of them.
+If the VCS supports branching the code development, the framework could also accommodate this behavior. For example if two developers work on the \emph{master} development branch in their own IDE, there could be layers for each of them.
 
 \begin{figure}[!htb]
   \centering

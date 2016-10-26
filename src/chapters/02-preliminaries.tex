@@ -27,7 +27,7 @@ The syntactic sugars added to the language across the editions of ECMAScript mad
 
 
 \section{Static Analysis}
-The idea of static analysis is almost half a century old. A paper from 1995 states that \textquote[\cite{wichmann_industrial_1995}]{The idea  that computer software should be used to analyse source programs rather than compile them, has a history of at least 25 years.}
+The idea of static analysis is almost half a century old. A paper from 1995 states that \textquote[\cite{wichmann_industrial_1995}]{The idea  that computer software should be used to analyze source programs rather than compile them, has a history of at least 25 years.}
 
 Source code analysis can be used to discover facts about a particular program. Two basic automated analysis methods exist for this purpose:
 \begin{itemize}[topsep=0pt]
@@ -38,7 +38,7 @@ Source code analysis can be used to discover facts about a particular program. T
 % > The term is usually applied to the analysis performed by an automated tool, with human analysis being called program understanding, program comprehension, or code review. Software inspections and Software walkthroughs are also used in the latter case.
 % https://en.wikipedia.org/wiki/Static_program_analysis
 
-While high-level language (e.g., C$++$, Java) source codes are checked at least by the compiler, JavaScript is usually not compiled before is is published. Thus a specific static analysis tool for JavaScript should aim to discover unwanted traits of the source in ways a generic compiler would not be able to, resulting in better code quality. These traits, \emph{code smells} are usually perceptable while running the code. Another way to locate these bugs is to write and run tests, dynamically testing the program.
+While high-level language (e.g., C$++$, Java) source codes are checked at least by the compiler, JavaScript is usually not compiled before is is published. Thus a specific static analysis tool for JavaScript should aim to discover unwanted traits of the source in ways a generic compiler would not be able to, resulting in better code quality. These traits, \emph{code smells} are usually perceptible while running the code. Another way to locate these bugs is to write and run tests, dynamically testing the program.
 % \cite[][72]{wichmann_industrial_1995}
 
 The two analysis methods are complementing each other. They discover different subsets of problematic constructions. While static analysis can discover syntactical problems (like the lack of the default case in a switch), dynamic analysis may catch behavioral problems (such as error handling and timing errors). Information discovered using static analysis may be used later in dynamic testing, resulting in a hybrid technique.
@@ -53,11 +53,11 @@ Static analysis tools employ diverse levels of abstraction. \emph{Formatters} ar
 For dynamic languages static analysis has even more use cases. It allows finding previously undefined property reads, catching invokement of non-functional variables~\cite{jensen_type_2009}, detecting dead code.
 
 \subsection{Advantages and Disadvantages}
-Since static analysis tools deliberately do not evaluate the source code, there are fundamental limitations to what problems they can discover. In the context of my work, static analysis has the following tradeoffs.
+Since static analysis tools deliberately do not evaluate the source code, there are fundamental limitations to what problems they can discover. In the context of my work, static analysis has the following trade-offs.
 
 \subsubsection{Advantages}
 \paragraph{No Need for Execution}
-Since there are no need for execution, the hardware and software requirements of the analysis software does not need to match the requrements of the application. There is also no need to emulate or mock its dependencies, making the analysis more portable and cost efficient.
+Since there are no need for execution, the hardware and software requirements of the analysis software does not need to match the requirements of the application. There is also no need to emulate or mock its dependencies, making the analysis more portable and cost efficient.
 
 \paragraph{Early Detection of Possible Errors}
 Static analysis may catch problems even before the whole software is complete or even runnable, potentially making fixing the problems easier and cheaper.~\cite{xie}
@@ -72,7 +72,7 @@ While dynamic testing executes the manually written or automatically generated t
 However, with a given limitation of granularity (e.g., considering a single file as the unit of the processing), in case of a source code modification, previous results can be reused. There is a possibility that only the modified --- and other affected --- parts need to be processed again. The incremental approach of static analysis may speed up the process by orders of magnitude~\cite{stein-daniel-bsc}.
 % TODO clarify
 
-\paragraph{False Positives} Static analysis can not prove the correctness of a source code. It rather warn in case there is a possibility of a problem. Thus static analysis tools can introduce false positive warnings and flag code parts as problematic even if they behave correcly.
+\paragraph{False Positives} Static analysis can not prove the correctness of a source code. It rather warn in case there is a possibility of a problem. Thus static analysis tools can introduce false positive warnings and flag code parts as problematic even if they behave correctly.
 
 To reduce the number of false positive warnings, one usually introduces more precise, specified rules and more thorough analysis.~\cite{clang}
 
@@ -181,7 +181,7 @@ A \emph{parser} forms the second phase of a parsing process, using the output to
 \end{figure}
 
 \paragraph{Abstract Syntax Tree}
-An \emph{Abstract Syntax Tree} (AST) is a tree representation of the syntactic structure of the result of a parsing along a grammar. The nodes of the tree denote a construct occuring in the input, while the edges represent the connection between these nodes based on the grammar rules.
+An \emph{Abstract Syntax Tree} (AST) is a tree representation of the syntactic structure of the result of a parsing along a grammar. The nodes of the tree denote a construct occurring in the input, while the edges represent the connection between these nodes based on the grammar rules.
 
 As mentioned in~\cref{sect:source-code-processing}, source code contains much more detail (e.g., indentation, whitespace, comments) than is required and restrained during the parsing process. Thus this representation is a more compact, \emph{abstract} syntax tree. It may be transformed based on transformation rules and source code can be generated from ASTs. Without restraining the layout information and reusing it during the code generation, the resulting text can show differences in indents, whitespaces and expression formulation compared to the initial source code.
 
@@ -286,7 +286,7 @@ Example for persistent, real-time graph databases: \emph{InfiniteGraph}, \emph{N
 % TODO cite
 
 \paragraph{Batch-Processing Graph Frameworks}
-In case there is no real-time requirement for the analysis accessing the whole dataset, batch-processing graph frameworks can be used for global analytics. Since there is alsoo no requirement for quick response time, the applied algorithm can even scan data multiple times and leverage sequential reads from the disk. These systems can be used to periodically process data and feed back the results into real-time graph databases. Most of these frameworks utilize Hadoop for storage (HDFS) and processing algorithms implemented using the MapReduce paradigm.
+In case there is no real-time requirement for the analysis accessing the whole dataset, batch-processing graph frameworks can be used for global analytics. Since there is also no requirement for quick response time, the applied algorithm can even scan data multiple times and leverage sequential reads from the disk. These systems can be used to periodically process data and feed back the results into real-time graph databases. Most of these frameworks utilize Hadoop for storage (HDFS) and processing algorithms implemented using the MapReduce paradigm.
 
 Example batch-processing graph frameworks: \emph{Apache Hama}, \emph{Apache Giraph}, and \emph{DataStax Aurelius Faunus}.
 % TODO cite
@@ -354,12 +354,12 @@ Other interesting and useful features of Cypher include:
 \label{sect:titan}
 \textquote[\cite{titan}]{Titan is a scalable graph database optimized for storing and querying graphs containing hundreds of billions of vertices and edges distributed across a multi-machine cluster. Titan is a transactional database that can support thousands of concurrent users executing complex graph traversals in real time.}
 
-Titan was developed by \emph{Aurelius} until the company was aquired by \emph{DataStax} in 2015. DataStax has expressed its intentions to preserve the effort made by front-end users dependent on Titan and ensures the current users that the foreseeable merging procedure to DataStax Enterprise solutions will be as simple as possible~\cite{titan-datastax-acquirement}.
+Titan was developed by \emph{Aurelius} until the company was acquired by \emph{DataStax} in 2015. DataStax has expressed its intentions to preserve the effort made by front-end users dependent on Titan and ensures the current users that the foreseeable merging procedure to DataStax Enterprise solutions will be as simple as possible~\cite{titan-datastax-acquirement}.
 
 \paragraph{Architecture}
 \textquote[\cite{titan-arch,titan-benefits}]{Titan is designed to support the processing of graphs so large that they require storage and computational capacities beyond what a single machine can provide. Titan implements robust, modular interfaces for data persistence, data indexing, and client access. Titan’s modular architecture allows it to interoperate with a wide range of storage, index, and client technologies; it also eases the process of extending Titan to support new ones.}
 
-Titan is based on one or more disk-based storage and indexing adapters. Titan comes out-of-the-box with 3 data storage adapters: \emph{Cassandra}, \emph{HBase}, and \emph{BerkeleyDB}; and also 2 indexing adapters: \emph{Elasticsearch} and \emph{Lucene}. These indexing adapters speed up the performanceof queries, and enable more complex queries.
+Titan is based on one or more disk-based storage and indexing adapters. Titan comes out-of-the-box with 3 data storage adapters: \emph{Cassandra}, \emph{HBase}, and \emph{BerkeleyDB}; and also 2 indexing adapters: \emph{Elasticsearch} and \emph{Lucene}. These indexing adapters speed up the performance of queries, and enable more complex queries.
 
 Like Neo4j, applications based on Titan can also interact with it in two ways~\cite{titan-arch}:
 \begin{itemize}[topsep=0pt]
@@ -404,9 +404,9 @@ Visual Studio Code~\cite{vscode} is Microsoft's take on a lightweight, yet power
 Debugging is also made easy, as the editor can be attached to the running code and the developer can add break points, look at call stacks and evaluate statements with an interactive console. With the relatively small package, Git support comes built-in: reviewing changed lines, staging files, making commits can be made right in the IDE.
 
 \subsubsection{IntelliSense}
-Visual Studio Code's syntax highlighting and autocomplete system is called IntelliSense, that also provides better completition based on variable types, function definitions, and imported modules. IntelliSense provides syntactical features like \emph{format on type}, \emph{outlining}; and also language service features like \emph{peek}, \emph{go to definition}, \emph{find all references} and \emph{rename symbol}.
+Visual Studio Code's syntax highlighting and autocomplete system is called IntelliSense, that also provides better completion based on variable types, function definitions, and imported modules. IntelliSense provides syntactical features like \emph{format on type}, \emph{outlining}; and also language service features like \emph{peek}, \emph{go to definition}, \emph{find all references} and \emph{rename symbol}.
 
-To make these smarter functions possible, JavaScript service relies upon the TypeScript language service to handle JavaScript source code. It uses the same type inference system as TypeScript to determine the type of a value. (It recognises the \emph{``ES3-style''} class declaration.) Explicit JSDoc annotations can also be used, in case the type inference does not provide the desired type information. For major libraries it is also possible to download an import a type definition file.
+To make these smarter functions possible, JavaScript service relies upon the TypeScript language service to handle JavaScript source code. It uses the same type inference system as TypeScript to determine the type of a value. (It recognizes the \emph{``ES3-style''} class declaration.) Explicit JSDoc annotations can also be used, in case the type inference does not provide the desired type information. For major libraries it is also possible to download an import a type definition file.
 
 \subsubsection{Extensions}
 Visual Studio Code is built with extensions in mind. Extensions make it possible to add new languages, themes, debuggers, and to connect to additional services. The framework runs them in a separate process, ensuring they will not slow the editor down.

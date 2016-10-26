@@ -48,7 +48,7 @@ TRICORDER introduces an effective place to show warnings. Given that all develop
 
 \section{JavaScript Parsers}
 \label{sect:javascript-parsers}
-In this section I showcase the most used, \emph{trending} JavaScript parser technologies and justify why I have chosen the Shapesecurity Shift family as the parser and additional toolset for my approach.
+In this section I showcase the most used, \emph{trending} JavaScript parser technologies and justify why I have chosen the Shape Security Shift family as the parser and additional toolset for my approach.
 
 \subsection{Acorn}
 \label{sect:acorn}
@@ -61,17 +61,17 @@ The parser is also configurable with several options, \code{locations} being one
 \textquote[\cite{acorn}]{Acorn is designed support allow plugins which, within reasonable bounds, redefine the way the parser works. Plugins can add new token types and new tokenizer contexts (if necessary), and extend methods in the parser object.}
 
 \subsection{Esprima}
-Esprima is also an open-source, ECMAScript standard-compilant parser. It fully supports ES7, and produces ESTree models. It has a great user-base and several tools depend on it. It also has experimental support for JSX, an XML syntax extending JavaScript for React~\cite{react}, \textquote[\cite{react-tutorial}]{a declarative, efficient, and flexible JavaScript library for building user interfaces}.
+Esprima is also an open-source, ECMAScript standard-compliant parser. It fully supports ES7, and produces ESTree models. It has a great user-base and several tools depend on it. It also has experimental support for JSX, an XML syntax extending JavaScript for React~\cite{react}, \textquote[\cite{react-tutorial}]{a declarative, efficient, and flexible JavaScript library for building user interfaces}.
 
 
 \subsection{Shift}
 \label{sect:shift}
-The Shift~\cite{shift} family consists of several tools. Besides the parser, there is a scope analyzer, a code validator, fuzzer, and a code generator, besiders others.
+The Shift~\cite{shift} family consists of several tools. Besides the parser, there is a scope analyzer, a code validator, fuzzer, and a code generator, besides others.
 
 \subsection{Shift AST}
 The reason behind the number of tooling in this family is due to the fact that Shift does not conform the ESTree specification. In 2014, Shape Security, the company behind Shift announced a new JavaScript AST specification~\cite{shift-spec}. This specification was developed with ECMAScript 6 in mind, along with analysis and transformation.
 
-The specicification describes interface for an AST syntax that can represent the structure of an ECMAScript source code. According to Shape Security, a \textquote[\cite{shift-spec-comparison}]{good AST format…
+The specification describes interface for an AST syntax that can represent the structure of an ECMAScript source code. According to Shape Security, a \textquote[\cite{shift-spec-comparison}]{good AST format…
 
 \begin{itemize}
 	\item minimizes the number of inhabitants that do not represent a program.
