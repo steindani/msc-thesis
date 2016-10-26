@@ -52,48 +52,58 @@ In this section I showcase the most used, \emph{trending} JavaScript parser tech
 
 \subsection{Acorn}
 \label{sect:acorn}
-\begin{itemize}
-	\item \url{https://github.com/ternjs/acorn}
-\end{itemize}
+Acorn~\cite{acorn} is an open-source, small JavaScript written in ES6. It is up-to-date, able to parse ECMAScript version 3, 5, 6, 7, and the newest one, 8. The resulting AST structure of the parser conforms the ESTree specification~\cite{estree}.
 
+It is also able to parse multiple files into a single AST, connected with a \code{Program} node. This is not to be confused with an ASG connecting multiple ASTs. To analyze and navigate in the resulting AST, Acorn provides a walker interface, to be used with a visitor pattern based algorithm.
 
-\subsection{ChakraCore}
-\begin{itemize}
-	\item \url{https://github.com/Microsoft/ChakraCore}
-\end{itemize}
+The parser is also configurable with several options, \code{locations} being one of the most useful for my approach. Setting this option stores the location of the represented source snippet in the AST node. There is also an error-tolerant version of the parser enabling parsing unfinished or syntactically incorrect sources.
+
+\textquote[\cite{acorn}]{Acorn is designed support allow plugins which, within reasonable bounds, redefine the way the parser works. Plugins can add new token types and new tokenizer contexts (if necessary), and extend methods in the parser object.}
+
+\subsection{Esprima}
+Esprima is also an open-source, ECMAScript standard-compilant parser. It fully supports ES7, and produces ESTree models. It has a great user-base and several tools depend on it. It also has experimental support for JSX, an XML syntax extending JavaScript for React~\cite{react}, \textquote[\cite{react-tutorial}]{a declarative, efficient, and flexible JavaScript library for building user interfaces}.
 
 
 \subsection{Shift}
 \label{sect:shift}
+The Shift~\cite{shift} family consists of several tools. Besides the parser, there is a scope analyzer, a code validator, fuzzer, and a code generator, besiders others.
+
+\subsection{Shift AST}
+The reason behind the number of tooling in this family is due to the fact that Shift does not conform the ESTree specification. In 2014, Shape Security, the company behind Shift announced a new JavaScript AST specification~\cite{shift-spec}. This specification was developed with ECMAScript 6 in mind, along with analysis and transformation.
+
+The specicification describes interface for an AST syntax that can represent the structure of an ECMAScript source code. According to Shape Security, a \textquote[\cite{shift-spec-comparison}]{good AST format…
+
 \begin{itemize}
-	\item \url{http://shift-ast.org/}
-	\item \url{https://github.com/shapesecurity/shift-java}
-	\item \url{http://engineering.shapesecurity.com/2014/12/announcing-shift-javascript-ast.html}
-	\item \url{http://engineering.shapesecurity.com/2015/01/a-technical-comparison-of-shift-and.html}
-	\item \url{http://engineering.shapesecurity.com/2015/02/using-the-shift-reducer.html}
-	\item \url{http://engineering.shapesecurity.com/2015/04/two-phase-parsing.html}
+	\item minimizes the number of inhabitants that do not represent a program.
+	\item is at least partially homogenous to allow for a simple and efficient visitor.
+	\item does not impede moving, copying, or replacing subtrees.
+	\item discourages duplication in code that operates on it.
 \end{itemize}
+}
 
-\subsubsection{Bandolier}
-\begin{itemize}
-	\item \url{http://engineering.shapesecurity.com/2016/03/announce-bandolier.html}
-	\item \url{https://github.com/shapesecurity/bandolier}
-\end{itemize}
+\subsection{Shift Scope Analyzer}
+\textquote[\cite{shift-scope}]{The Shift Scope Analyser produces a data structure called a scope tree that represents all of the scoping information of a given program. Each element of the scope tree represents a single scope in the analysed program, and contains many pieces of information, including:
 
+\begin{itemize}[topsep=0pt]
+	\item the scope type (there are 12 of them!)
+	\item the AST node associated with the scope
+	\item variables declared within that scope, each of which points to its declarations and references
+	\item whether the scope contains a with statement or direct call to eval, making it dynamic
+\end{itemize}}
 
-\subsection{Traceur}
-\begin{itemize}
-	\item \url{https://github.com/google/traceur-compiler}
-\end{itemize}
+\subsection{Additional Notes}
+\begin{itemize}[topsep=0pt]
+	\item Besides JavaScript, most of the Shift family is also available for Java projects. This makes it easier to integrate it with projects and tools only available for Java.
 
+	\item Shape Security has a project, Bandolier~\cite{bandolier} for packaging projects with ES6 modules into a single JavaScript file, imitating the export-import mechanism, related to my approach.
 
-\subsection{UglifyJS2}
-\begin{itemize}
-	\item \url{https://github.com/mishoo/UglifyJS2}
+	\item Shape Security is also developing a semantic transformer~\cite{shift-semantics-java} for ECMAScript ASTs, also related to my approach.
 \end{itemize}
 
 \subsection{Comparison of Parser Technologies}
-\subsubsection{Speed} Although speed is not the most important property of a system aiming to make sure no errors are present, quick response can boost the performance of the user. \Cref{table:speed-comparison-of-parsers} shows the time difference between parsers processing various source codes repositories. The benchmark~\footnote{\url{http://esprima.org/test/compare.html}} was run on a personal computer without specific considerations or fine-tuning for benchmarks. Its sole purpose is to get a rough comparison between the different technologies available.
+In order to find a best parser and related technologies, I had to compare them: measure their speed, investigate their parameters and output model, and transform their extra functions into potential features of my approach.
+
+\subsubsection{Speed} Although speed is not the most important property of a system aiming to make sure no errors are present, swift response can boost the performance of the user. \Cref{table:speed-comparison-of-parsers} shows the time difference between parsers processing various source codes repositories. The benchmark~\footnote{\url{http://esprima.org/test/compare.html}} was run on a personal computer without specific considerations or fine-tuning for benchmarks. Its sole purpose is to get a rough comparison between the different technologies available.
 
 It is visible that Shift NEE\footnote{Early error checking disabled. NEE -- No Early Errors} is one of the fastest parsers available.
 
@@ -114,5 +124,9 @@ It is visible that Shift NEE\footnote{Early error checking disabled. NEE -- No E
 \end{table}
 
 \subsubsection{Metamodel and Precision}
-\subsubsection{Development Activity}
-\subsubsection{Platforms Supported}
+For analysis and transformation purposes it is rather important to have a model with as much and as precise information as possible. If the parser produces a model conforming a detailed metamodel, it is easier to differentiate seemingly similar cases.
+
+Based on the comparison~\cite{shift-spec-comparison} between the ESTree and the Shift AST specification, it is visible that Shift is a better choice if more detail is required.
+
+% \subsubsection{Development Activity}
+% \subsubsection{Platforms Supported}
