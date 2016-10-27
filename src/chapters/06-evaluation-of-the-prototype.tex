@@ -113,6 +113,20 @@ It is also unexpected to have the top two clusters show no correlation with the 
 The results are based on one-time, file-by-file import and transformation of the source code repository, containing 780 files. Since the CFG transformation in the framework is far from finished, deeper examination of the results is subject to future work.
 
 
+\section{IDE Integration}
+\label{sect:ide-integration}
+Besides executing measurements, I also created a plugin for Visual Studio Code (introduced in~\Cref{sect:visual-studio-code}) that sends the content of the open file to the framework, when the file is modified and saved. Then it requests the results of the dead code search, and conviniently displays it using the API provided by Visual Studio Code.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{vsc-integration}
+  \caption{Proof-of-concept plugin integration in an industrial case study.}
+  \label{fig:vsc-integration}
+\end{figure}
+
+\Cref{fig:vsc-integration} shows the proof-of-concept plugin integration displaying dead code warnings for a file in an industrial case study. The previously introduced results in~\Cref{fig:dead-code-result} shows that the approach was able to find circular references without incoming calls and report the clique, without user input. To validate the results, I have manually checked the presented warnings.
+
+
 \section{Threats to Validity}
 \label{sect:evaluation-threats}
 Although I carefully designed and executed each measurement, there might have been factors beyond control that influence the results yielded. In this section, I try to list the possible mistakes and also discuss the steps taken to mitigate their effects.

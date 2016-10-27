@@ -350,11 +350,10 @@ For rapidly changing, albeit smaller datasets, incremental querying using VIATRA
 
 \section{Integrated Development Environment (IDE)}
 \label{sect:IDE}
-
-% Static analysis tools are usually employed by developers within the integrated development environment they use.
-% TODO
+Apart from the continuous integration workflow, static analysis tools are usually employed by developers within the integrated development environment they use. In this section I introduce one of the many freely available IDEs, and detail how static analysis tools can be integrated with it.
 
 \subsection{Visual Studio Code}
+\label{sect:visual-studio-code}
 Visual Studio Code~\cite{vscode} is Microsoft's take on a lightweight, yet powerful Integrated Developer Environment for modern programming languages. It is available for free for Windows, macOS and Linux. It comes with built-in support for JavaScript, TypeScript and has a growing ecosystem of extensions for other languages, theming, and developer support~\cite{vscode-extensions}.
 
 Debugging is also made easy, as the editor can be attached to the running code and the developer can add break points, look at call stacks and evaluate statements with an interactive console. With the relatively small package, Git support comes built-in: reviewing changed lines, staging files, making commits can be made right in the IDE.
@@ -386,5 +385,4 @@ Language server framework and sample implementation helps developers create a de
 \paragraph{Debuggers} Connecting an external debugger written for any language to VS Code is also possible through the VS Code Debug protocol.
 
 \subsection{Alternative IDEs}
-There are several alternatives to Visual Studio Code. \emph{Atom}, \emph{Eclipse}, and \emph{WebStorm} can all be extended with a plugin adding extra features for a given language. Since VSC is one of the most actively developed lightweight IDEs aiming for JavaScript (and TypeScript) development, I have developed an plugin integrating the IDE with my framework.
-% TODO see evaluation
+There are several alternatives to Visual Studio Code. \emph{Atom}, \emph{Eclipse}, and \emph{WebStorm} can all be extended with a plugin adding extra features for a given language. Since VSC is one of the most actively developed lightweight IDEs aiming for JavaScript (and TypeScript) development, I have developed an plugin integrating the IDE with my framework (see~\Cref{sect:ide-integration}).
