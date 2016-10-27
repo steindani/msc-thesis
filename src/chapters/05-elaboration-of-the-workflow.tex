@@ -8,7 +8,7 @@ In this chapter I demonstrate the various steps of the workflow in detail. I int
 As mentioned in~\Cref{sect:overview-transforming-the-source-code}, this transformation is carried out by the Shape Security Shift toolkit. The source code is fed into the parser along with the parameters for the parsing algorithm. Considering the new constructs introduced in ES6 (\Cref{sect:ecmascript}), I've chosen to parse every file as a \emph{Module}. This affects the grammar used in the parser and the resulting data model.
 % TODO href Shift
 
-The parse result of the one-line code snippet in~\Cref{lst:oneliner} is shown in~\Cref{lst:oneliner-ast-json} formalized as a JSON tree model. % TODO remove JSON tree
+The parse result of the one-line code snippet in~\Cref{lst:oneliner} was previously presented in~\Cref{fig:ast-asg-example}.
 
 \begin{figure}[!htb]
 	\begin{minipage}{\textwidth}
@@ -20,18 +20,6 @@ The parse result of the one-line code snippet in~\Cref{lst:oneliner} is shown in
 		]{include/sources/oneliner.js}
 	\end{minipage}
 \end{figure}
-
-\begin{figure}[!htb]
-	\begin{minipage}{\textwidth}
-		\lstinputlisting[
-			language=JSON,
-			captionpos=b,
-			caption={AST output of the parser serialized in JSON format.},
-			label={lst:oneliner-ast-json},
-		]{include/sources/oneliner-ast.json}
-	\end{minipage}
-\end{figure}
-
 
 \section{Storing the ASG in the Graph Database}
 Once the source code is parsed and the ASG is returned, the framework updates the stored graph representation. Since \Cref{sect:maintaining-the-graph} details how the Java Object structure is transformed into a graph, this section only describes the queries used for the maintenance.
@@ -49,7 +37,7 @@ As one of the most basic and easy-to-discover mistakes, division by zero should 
 
 Without dynamic testing or symbolic execution it is rather hard to find this kind of expression, since the right side of the division may come from a variable. On the other hand, finding the cases where the right side is a literal is trivial.
 
-Taking a look at the graph representation of the previous example (in~\Cref{fig:AST-PPT}), it is relatively easy to find the problematic nodes. A natural language definition of the problem would sound like this: ,,we are looking for binary expressions that have a literal zero on the right side''.
+Taking a look at~\Cref{fig:AST-PPT}, the graph representation of the previous example, it is relatively easy to find the problematic nodes. A natural language definition of the problem would sound like this: ,,we are looking for binary expressions that have a literal zero on the right side''.
 
 \begin{figure}[!htb]
   \centering
