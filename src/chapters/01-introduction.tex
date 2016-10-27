@@ -2,7 +2,6 @@
 \label{chap:introduction}
 
 \section{Context}
-
 Quality control plays an important role in large-scale software development. The number of coding errors are significantly increasing with the number of contributors. The more developers work together on developing a software, the more versatile their coding styles and conventions are.
 
 To ensure the quality of the source code, thus the software itself, and at the same time help developers with their tasks, the need arises for a solution continuously reviewing the code, searching for mistakes, and enforcing conventions.
@@ -15,7 +14,7 @@ To ensure the quality of the source code, thus the software itself, and at the s
 \end{figure}
 
 Version control systems (VCS) and continuous integration (CI)~\cite{CI} solutions are widely used tools of the modern software developers. \Cref{fig:CI-workflow} shows an extended version of the generally used continuous integration workflow.
-The basic workflow consists of the following steps. The developer makes modifications to the codebase using their \textit{Development Environment}. The modifications are committed into a \textit{Version Control System}, and this commit triggers the \textit{Build Environment} to build the project. The \textit{Testing Environment} can then perform runtime tests on latest build of the project. After this process, the results --- build and test logs --- are presented to the developer.
+The basic workflow consists of the following steps: 1) the developer makes modifications to the codebase using their \textit{Development Environment}, 2) the modifications are committed into a \textit{Version Control System}, and 3) this commit triggers the \textit{Build Environment} to build the project. Then 4) the \textit{Testing Environment} can perform runtime tests on the latest build of the project, and 5) the results --- build and test logs --- are presented to the developer.
 
 These logs help the developers discover bugs and failures before the software is released for manual testing or production purposes. Producing this information often and as early as possible --- thus making sure the software is working as intended --- is vital for agile development.
 
@@ -24,7 +23,7 @@ A proven method of enhancing software quality is utilizing static program analys
 
 \section{Problem Statement}
 
-Static analysis methods verifying that the code is compliant with coding conventions are often time consuming and resource intensive in practice. The size of the codebase may require a scalable solution, especially for continuous integration purposes, since the entire verification process needs to be carried out on the whole codebase once it is (partially) modified.
+Static analysis methods verifying that the code is compliant with coding conventions is often time consuming and resource intensive in practice. The size of the codebase may require a scalable solution, especially for continuous integration purposes, since the entire verification process needs to be carried out on the whole codebase once it is (partially) modified.
 
 A temporary solution to tackle this problem is to process the changes in batches. This way --- to save resources --- static analyses are carried out for a joined group of changes, rather than for every individual commit.
 
@@ -46,9 +45,9 @@ The framework relies on two substantial technologies: 1)~a source code parser, a
 
 This report is structured as follows.
 \Cref{chap:preliminaries} introduces the previously mentioned background technologies required and selected to build an incremental static analyzer.
-\Cref{chap:related-work} details the various approaches and related researches.
-\Cref{chap:overview-of-the-approach} shows the overview of my approach and gives detailed view of the main components of its architecture.
+\Cref{chap:related-work} details the various approaches and related works.
+\Cref{chap:overview-of-the-approach} shows the overview of my approach and details the main components of its architecture.
 \Cref{chap:elaboration-of-the-workflow} presents the implementation of the framework, and discusses the steps of the analysis.
 \Cref{chap:evaluation-of-the-prototype} demonstrates and evaluates the performance of the framework.
-\Cref{chap:future-vision} reveals future vision ideas and possibilities.
+\Cref{chap:future-vision} reveals future visions and possible ways of further improvements.
 \Cref{chap:conclusions} concludes the report.

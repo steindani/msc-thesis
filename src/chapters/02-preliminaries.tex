@@ -2,7 +2,7 @@
 \chapter{Preliminaries}
 \label{chap:preliminaries}
 
-In this chapter I propose the conceptual foundations and related technologies of my work. Here I discuss the building blocks required to design a static analyzer framework for JavaScript.
+In this chapter I propose the conceptual foundations and related technologies of my work. Also, I discuss the building blocks required to design a static analyzer framework for JavaScript.
 
 \section{JavaScript}
 One of the most used dynamic languages in the world is JavaScript. According to~\cite{js-usage}, JavaScript is the most utilized client-side programming language for websites, with over 94\% estimated usage. In this section I concisely introduce the language and highlight its features relevant to my approach.
@@ -10,15 +10,15 @@ One of the most used dynamic languages in the world is JavaScript. According to~
 \subsection{From Glue Language to a Full-Fledged Language}
 This section follows~\cite{10.1109/MC.2012.57}. The language written in 10 days by Brendan Eich in April 1995 --- originally called LiveScript --- was one of the first attempts at bringing dynamic behavior to the web. It was supposed to look like Java, leaving its complexity behind and appealing for developers looking for easy scripting solutions on the web.
 
-The initial goal --- to create a language for portable applications --- is seemingly achieved by the time of writing this report. While it has been gaining traction due to its simpler syntax, the language, its tooling, and its community had time to evolve, making it the most used web programming language and shifting from simpler scripts to complex systems on the web and desktops.
+The initial goal --- to create a language for portable applications --- has been seemingly achieved by the time of writing this report. While it has been gaining popularity due to its simpler syntax, the language, its tooling, and its community had time to evolve, making it the most used web programming language. JavaScript has shifted from simpler scripts to complex systems on the web, desktops, and servers.
 
 \subsection{ECMAScript}
 \label{sect:ecmascript}
 After its release, JavaScript was submitted to and standardized by the Ecma International industry association, resulting in the first release of the ECMAScript language specification (of the ECMA-262 standard~\cite{ecma-262}) in June 1997. Apart from JavaScript, there are several implementations, e.g., ActionScript, Chakra, JScript, and V8.
 
-There are several reasons why the standard and the usage of ECMAScript is getting more and more popular. Besides the improvement of the developer tools, developer community, and being the trend, conscious and regular development of the language also makes the language more appealing. At the time of writing this report there are 8 editions of the standard, 6 of them published. The last published edition, ES7 was published in June 2016, one year after the previous edition, ES6.
+There are several reasons why the standard and the usage of ECMAScript is getting more and more popular. Besides the improvement of the developer tools, developer community, and being already popular, conscious and regular development of the language also makes the language more appealing. At the time of writing this report there are 8 editions of the standard, 6 of them published. The last published edition, ES7 was published in June 2016, one year after the previous edition, ES6.
 
-The initial language specifications were indulgent, and only best practices were guiding the developers. The challenges of analyzing such dynamic, untyped language able to express one thing in several different ways may be one of the reasons why there are only a few tools present even today.
+The initial language specifications were indulgent, and only best practices were guiding the developers. The challenges of analyzing such dynamic, untyped language able to express one thing in several different ways may be one of the reasons why there are only a few tools present even today implementing static analysis for ECMAScript.
 
 The syntactic sugars added to the language across the editions of ECMAScript made it possible to express the most used code parts in an easier manner. Encouraging the developers to use these constructs makes it easier to interpret the source code --- both manually and with source code analysis.
 
@@ -50,14 +50,14 @@ The two analysis methods are complementing each other. They discover different s
 \subsection{Use Cases}
 Static analysis tools employ diverse levels of abstraction. \emph{Formatters} are able to ensure that the source code complies with a predefined style guide. \emph{Linters} check for stylistic and programming errors, thus indicating suspicious programming constructs. \emph{Formal verification}, on the other hand, utilizes formal mathematical methods to prove statements about a piece of source code and its behavior.
 
-For dynamic languages static analysis has even more use cases. It allows finding previously undefined property reads, catching invokement of non-functional variables~\cite{jensen_type_2009}, detecting dead code.
+For dynamic languages static analysis has even more use cases. For example, it allows finding previously undefined property reads, catching invokement of non-functional variables~\cite{jensen_type_2009}, detecting dead code.
 
 \subsection{Advantages and Disadvantages}
 Since static analysis tools deliberately do not evaluate the source code, there are fundamental limitations to what problems they can discover. In the context of my work, static analysis has the following trade-offs.
 
 \subsubsection{Advantages}
 \paragraph{No Need for Execution}
-Since there are no need for execution, the hardware and software requirements of the analysis software does not need to match the requirements of the application. There is also no need to emulate or mock its dependencies, making the analysis more portable and cost efficient.
+Since there is no need for execution, the hardware and software requirements of the analysis software do not need to match the requirements of the application. There is also no need to emulate or mock its dependencies, making the analysis more portable and cost efficient.
 
 \paragraph{Early Detection of Possible Errors}
 Static analysis may catch problems even before the whole software is complete or even runnable, potentially making fixing the problems easier and cheaper.~\cite{xie}
@@ -72,9 +72,7 @@ While dynamic testing executes the manually written or automatically generated t
 However, with a given limitation of granularity (e.g., considering a single file as the unit of the processing), in case of a source code modification, previous results can be reused. There is a possibility that only the modified --- and other affected --- parts need to be processed again. The incremental approach of static analysis may speed up the process by orders of magnitude~\cite{stein-daniel-bsc}.
 % TODO clarify
 
-\paragraph{False Positives} Static analysis can not prove the correctness of a source code. It rather warn in case there is a possibility of a problem. Thus static analysis tools can introduce false positive warnings and flag code parts as problematic even if they behave correctly.
-
-To reduce the number of false positive warnings, one usually introduces more precise, specified rules and more thorough analysis.~\cite{clang}
+\paragraph{False Positives} Static analysis can not prove the correctness of a source code. It rather warn in case there is a possibility of a problem. Thus static analysis tools can introduce false positive warnings and flag code parts as problematic even if they behave correctly. To reduce the number of false positive warnings, one usually introduces more precise, specified rules and more thorough analysis.~\cite{clang}
 
 \subsection{Source Code Processing and Analysis}
 \label{sect:source-code-processing}
@@ -185,13 +183,17 @@ An \emph{Abstract Syntax Tree} (AST) is a tree representation of the syntactic s
 
 As mentioned in~\cref{sect:source-code-processing}, source code contains much more detail (e.g., indentation, whitespace, comments) than is required and restrained during the parsing process. Thus this representation is a more compact, \emph{abstract} syntax tree. It may be transformed based on transformation rules and source code can be generated from ASTs. Without restraining the layout information and reusing it during the code generation, the resulting text can show differences in indents, whitespaces and expression formulation compared to the initial source code.
 
-\Cref{fig:ast-asg-example} shows an example AST (in black), where a one-statement JavaScript file is parsed. The content of the file was only \code{var foo = 1 / 0;}.
+\Cref{fig:ast-asg-example} shows an example AST (in black), where a one-statement JavaScript file is parsed. The content of the file was only the following line:
+
+\lstinputlisting[
+  language=JavaScript
+]{include/sources/oneliner.js}
 
 \subsubsection{Scope Analyzer}
 A \emph{scope analyzer} or \emph{context analyzer} produces a data structure that represents the scoping information of a program, extending the information available from an AST or an ASG. An element representing a scope in this data structure may contain, inter alia, metadata about the scope itself, the AST node related to the scope, available assets (variables, functions, etc.) in that scope.~\cite{shift-scope}
 
 \paragraph{Abstract Semantic Graph}
-An \emph{Abstract Semantic Graph} (ASG) differs from an Abstract Syntax Tree. 1)~ASGs are graphs, and 2)~express more than the syntactic information; ASGs carry semantic information expressed with additional edges. These edges can not exist in an AST, as they are non-tree edges (cross-edges). For example they may connect variable references to their declarations.~\cite{raghavan_dex:_2004}
+An \emph{Abstract Semantic Graph} (ASG) differs from an Abstract Syntax Tree in two essential concepts: ASGs 1)~are not necessarily trees, and 2)~express more than the syntactic information; ASGs carry semantic information expressed with additional edges. An example of this type of edge connects variable references to their declarations.~\cite{raghavan_dex:_2004}
 
 An ASG is a graph representation of a parse result; the nodes represent subterms of an expression. Shared subterms can occur, having more than one node linked to the same, common subterm. Compilers generally work on ASGs internally, since not only the syntactical, but the behavioral information is also represented in them.
 
@@ -226,7 +228,7 @@ An ASG is a graph representation of a parse result; the nodes represent subterms
 
 
 \section{Handling Large Interconnected Data}
-Once the source code is transformed into ASGs, they have to be persisted. Instead of storing them in-memory, my approach is based on graph databases. In this section I introduce the concept of graph databases, and graph pattern matching. I also present graph database implementations and select the appropriate technology for the approach.
+Once the source code is transformed into ASGs, the graphs have to be persisted. Instead of storing them in-memory, my approach employs graph databases. In this section I introduce the concept of graph databases, and graph pattern matching. I also present different types of graph database implementations from which I selected the most appropriate technology for the approach.
 
 The advancements in hardware components -- the ever increasing amount of processing power, and memory and storage speed and sizes -- and the analogous growth of data to be stored and processed during the last more than fifty years yielded various solutions.
 
@@ -246,7 +248,7 @@ Based on historic evolution, these solutions can be categorized in three main ca
 \end{itemize}
 
 \subsection{On Graph Computing}
-Graphs are well-known and in computer science widely used mathematical concept, which has been around for many decades. Numerous graph technologies have evolved, each with their advantages and disadvantages. From graphs themselves to physical and virtual worlds, many scenarios can be represented as graphs and stored in graph databases with their respective data model. This section loosely follows~\cite{scm, On_Graph_Computing}.
+The mathematical concepts of graphs are well-known and widely used in computer sciences. Numerous graph technologies have evolved, each with their advantages and disadvantages. From graphs themselves to physical and virtual worlds, many scenarios can be represented as graphs and stored in graph databases with their respective data model. This section loosely follows~\cite{scm, On_Graph_Computing}.
 % TODO cite http://link.springer.com/article/10.1007%2Fs10586-015-0472-6
 
 Simple, \emph{textbook-style} graphs can be extended in several different ways. To describe the connections in more detail, one may add directionality to edges (\emph{directed graph}). To allow different connections, one may label the edges (\emph{labeled graph}). \emph{Typed graphs} introduce types for vertices. \emph{Property graphs} add even more possibilities by introducing properties. Each graph element, both vertices and edges can be described with a collection of properties. The properties are key--value pairs, e.g.\ \texttt{type = `Person'}, \texttt{name = `John'}, \texttt{age = 34}.
@@ -270,13 +272,13 @@ The landscape of graph storing and processing solutions is populated and diverse
 \paragraph{In-Memory Graph Toolkits}
 The challenge of big data problems shed light on that the existing disk-based systems can not offer timely response due to the latency of hard disks. The role of storage shifted from the hard drive to the memory of the system. In-memory graph databases are constrained to graphs that fit into the main memory. Thus these systems are single-user systems that are oriented towards low-latency graph analysis.
 
-The locality of data allows the usage of rich algorithm libraries and the choice of the adequate graph representation with respective space-time trade-off. The constraint of space allows large graphs (with millions of edges) to be stored and processed, but this is not sufficient in all cases.
+The locality of data allows the usage of rich algorithm libraries and the choice of the adequate graph representation with respective space-time trade-off. The constraint of space allows large graphs (with millions of edges) to be stored and processed, but this may not be sufficient in all cases.
 
 Example in-memory graph toolkits: \emph{Apache Giraph}, \emph{Microsoft Graph Engine} (formerly \emph{Trinity}), \emph{Apache Spark GraphX}, \emph{WhiteDB}.
 % TODO cite
 
 \paragraph{Persistent, Real-Time Graph Databases}
-Persistent graph databases are the prevalent group of graph computing technologies. Unlike in-memory graph tools, graph databases persist data on hard drives, thus they can support billions of edges on a single machine and distributed systems can handle hundreds of billions of edges. These databases can provide multi-user concurrency, transactional semantics and eventual consistency.
+Persistent graph databases are the prevalent group of graph computing technologies. Unlike in-memory graph tools, graph databases persist data on hard drives, thus are able to store billions of edges on a single machine and distributed systems can handle hundreds of billions of edges. These databases can provide multi-user concurrency, transactional semantics and eventual consistency.
 
 Since global graph algorithms are not feasible, these systems are optimized for local neighborhood analysis and concurrent access. Global graph analytics are inefficient due to the communication overhead and the computational overhead, e.g., ensuring ACID transactional semantics.
 
@@ -284,7 +286,7 @@ Example for persistent, real-time graph databases: \emph{InfiniteGraph}, \emph{N
 % TODO cite
 
 \paragraph{Batch-Processing Graph Frameworks}
-In case there is no real-time requirement for the analysis accessing the whole dataset, batch-processing graph frameworks can be used for global analytics. Since there is also no requirement for quick response time, the applied algorithm can even scan data multiple times and leverage sequential reads from the disk. These systems can be used to periodically process data and feed back the results into real-time graph databases. Most of these frameworks utilize Hadoop for storage (HDFS) and processing algorithms implemented using the MapReduce paradigm.
+In case there is no real-time requirement for an analysis that accesses the whole dataset, batch-processing graph frameworks can be used for global analytics. Since there is also no requirement for quick response time, the applied algorithm can even scan data multiple times and leverage sequential reads from the disk. These systems can be used to periodically process data and feed back the results into real-time graph databases. Most of these frameworks utilize Hadoop for storage (HDFS) and processing algorithms implemented using the MapReduce paradigm.
 
 Example batch-processing graph frameworks: \emph{Apache Hama}, \emph{Apache Giraph}, and \emph{DataStax Aurelius Faunus}.
 % TODO cite
@@ -306,7 +308,7 @@ A match of a pattern is a tuple of pattern parameters that fulfill all the follo
 
 \subsection{Graph Databases}
 \label{sect:graph-databases}
-Since my approach is based on graph-based data handling, it is essential to employ the most suitable technique. In this case suitable refers to having the following traits: being fast, flexible, versatile, and easy to use and deploy. In this section I give an overview on the most promising candidates and justify why I have chosen Neo4j as the foundation of my approach.
+Since my approach is based on graph-based data handling, it is essential to employ the most suitable technique. For my approach suitable refers to having the following traits: being fast, flexible, versatile, and easy to use and deploy. In this section I give an overview on the most promising candidates and justify why I have chosen Neo4j as the foundation of my approach.
 
 \subsubsection{Neo4j}
 \label{sect:neo4j}
