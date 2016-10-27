@@ -44,22 +44,7 @@ In the architectural overview, the IDE also represents the working set of the so
 \label{sect:overview-transforming-the-source-code}
 One of the most important third party components of the approach is the source code parser. This component is used to transform a given source file, a \emph{compilation unit} into a model representation of the syntax and semantics of the source code. The process itself is detailed in~\Cref{sect:source-code-processing}.
 
-A source code parsing toolkit with the following traits makes it possible to integrate it into the framework with ease:
-
-\begin{itemize}[topsep=0pt]
-  \item Provide the Abstract Syntax Tree and Abstract Semantic Graph for the parsed source file.
-
-  \item Also provide scoping information
-  % TODO
-
-  \item Source code position
-  % TODO
-
-  \item Metamodel for the representation
-  The more detailed metamodel, the better.
-\end{itemize}
-
-Since the \emph{Shape Security Shift} toolkit (detailed in~\Cref{sect:shift}) suits these requirements well, I have used the Java implementation of the \emph{Shift Parser}, and \emph{Scope Analyzer}.
+Since \emph{Shape Security Shift} (detailed in~\Cref{sect:shift}) suits my approach the best (see comparison of JavaScript parsers in~\Cref{sect:comparison-of-parser-technologies}), I have used the Java implementation of the \emph{Shift Parser}, and \emph{Scope Analyzer}.
 
 
 \subsection{Graph Maintenance}

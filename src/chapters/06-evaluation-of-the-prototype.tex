@@ -69,13 +69,13 @@ Since the source code contains language elements not yet standardized, I transla
 
 Based on~\Cref{fig:import-steps} the time requirement of the parsing and scope analysis steps are negligible compared to the third step. Iterating and storing the elements of the ASG in the graph database shows polynomial correlation with the size of the graph. It is also visible that most of the files are parsed under one second, which makes this approach usable in real-life usage.
 
-These results are based on two separate, sequential, full import of the source code repository.
+These results are based on two separate, sequential, full import of the source code repository, containing 780 files.
 
-\subsection{Connecting the Subgraphs}
+%\subsection{Connecting the Subgraphs}
 % TODO write or hide
 
 \subsection{Dead Code Search}
-% TODO write
+Searching for dead code snippets consists of two phases: first, the call graph has to be prepared, then the graph is queried for unreachable code. Since the transformation rules and queries are far from complete and are not covering every code model scenario, this measurement can only report the characteristics of the current implementation.
 
 \begin{figure}[!htb]
   \centering
@@ -83,6 +83,10 @@ These results are based on two separate, sequential, full import of the source c
   \caption{The characteristics of dead code search.}
   \label{fig:deadcode-search}
 \end{figure}
+
+\Cref{fig:deadcode-search} shows at least two horizontal clusters for both steps. On the bottom, there are files that probably contain none or only a few nodes processed by the queries. Based on the figure and manual testing, the characteristics of the upper cluster is to be expected when the transformation rules provide full coverage, resulting in constant runtime for most cases.
+
+The results are based on one-time, file-by-file import and dead code search of the source code repository, containing 780 files.
 
 \subsection{ASG to CFG Transformation}
 In order to measure the characteristics of the CFG transformation, I have imported the source files of the Tresorit web client one-by-one and executed the CFG transformation queries for that one file.
@@ -106,7 +110,7 @@ In order to measure the characteristics of the CFG transformation, I have import
 
 It is also unexpected to have the top two clusters show no correlation with the size of the resulting graph size. This phenomenon can be explained with the reasons above or with the way Neo4j executes declarative transformations.
 
-Since the CFG transformation in the framework is far from finished, deeper examination of the results is subject to future work.
+The results are based on one-time, file-by-file import and transformation of the source code repository, containing 780 files. Since the CFG transformation in the framework is far from finished, deeper examination of the results is subject to future work.
 
 
 \section{Threats to Validity}
