@@ -5,7 +5,7 @@
 In this chapter I propose the conceptual foundations and related technologies of my work. Also, I discuss the building blocks required to design a static analyzer framework for JavaScript.
 
 \section{JavaScript}
-One of the most used dynamic languages in the world is JavaScript. According to~\cite{js-usage}, JavaScript is the most utilized client-side programming language for websites, with over 94\% estimated usage. In this section I briefly summarize the history of JavaScript, present recent advancements and discuss why it is timely to utilize static analysis techniques for the language.
+Ohe most used dynamic languages in the world is JavaScript. According to~\cite{js-usage}, JavaScript is the most utilized client-side programming language for web applications, with over 94\% estimated usage. In this section I briefly summarize the history of JavaScript, present recent advancements and discuss why it is timely to utilize static analysis techniques for the language.
 
 \subsection{From Glue Language to a Full-Fledged Language}
 This section follows~\cite{10.1109/MC.2012.57}. The language written in 10 days by Brendan Eich in April 1995 --- originally called LiveScript --- was one of the first attempts at bringing dynamic behavior to the web. It was supposed to look like Java, leaving its complexity behind and appealing for developers looking for easy scripting solutions on the web.
@@ -20,7 +20,7 @@ There are several reasons why the standard and the usage of ECMAScript is gettin
 
 The initial language specifications were indulgent, and only best practices were guiding the developers. The challenges of analyzing such dynamic, untyped language able to express one thing in several different ways may be one of the reasons why there are only a few tools present even today implementing static analysis for ECMAScript.
 
-The syntactic sugars added to the language across the editions of ECMAScript made it possible to express the most used code parts in an easier manner. Encouraging the developers to use these constructs makes it easier to interpret the source code --- both manually and with source code analysis.
+The syntactic sugars added to the language across the editions of ECMAScript made it possible to express the most used code parts in an easier manner, while being more concise. Encouraging the developers to use these constructs makes it easier to interpret the source code --- both manually and with source code analysis.
 
 % \subsection{Emerging Languages Translating to JavaScript}
 % \subsubsection{WebAssembly}
@@ -309,7 +309,7 @@ Since my approach is based on graph-based data handling, it is essential to empl
 
 \subsubsection{Neo4j}
 \label{sect:neo4j}
-Neo4j is one of the most popular and most mature NoSQL graph databases developed by \emph{Neo Technology}. It is open-source, well-documented and continuously-developed. Neo4j is available in two editions: a free \emph{Community Edition} and a paid \emph{Enterprise Edition}.~\cite{neo4j}
+Neo4j is the most popular~\cite{db-engines-ranking} and most mature NoSQL graph database, developed by \emph{Neo Technology}. It is open-source, well-documented and continuously-developed. Neo4j is available in two editions: a free \emph{Community Edition} and a paid \emph{Enterprise Edition}.~\cite{neo4j}
 
 \paragraph{Architecture}
 It can be deployed two ways: in \emph{server mode} the database is started separately and listens for queries on its HTTP REST and Bolt interface; where in \emph{embedded mode} it runs in the same JVM as the only client application.
