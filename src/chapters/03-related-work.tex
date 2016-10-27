@@ -137,7 +137,7 @@ Based on the comparison~\cite{shift-spec-comparison} between the ESTree and the 
 % \subsubsection{Development Activity}
 % \subsubsection{Platforms Supported}
 
-\begin{table}[htbp]
+\begin{table}[ht!]
 	\newcommand{\yes}{$\CIRCLE$\xspace}
 	\newcommand{\somewhat}{$\LEFTcircle$\xspace}
 	\newcommand{\no}{$\Circle$\xspace}
@@ -146,12 +146,13 @@ Based on the comparison~\cite{shift-spec-comparison} between the ESTree and the 
 		\toprule
 		                             & \textbf{Flow\footnote{https://flowtype.org}} & \textbf{Tern} & \textbf{TAJS} & \textbf{TRICORDER} & \textbf{My approach} \\ \midrule
 		\textbf{Open-source}         &     \yes      &     \yes      &     \yes      &        \no         &         \yes         \\
-		\textbf{Linting}             &     \yes      &               &               &        \yes        &         \yes         \\
-		\textbf{Dead code detection} &               &               &               &        \somewhat   &         \yes         \\
-		\textbf{Type inferencing}    &               &               &               &        \somewhat   &         \somewhat    \\
+		\textbf{Linting}             &     \yes      &     \somewhat &     \no       &        \yes        &         \yes         \\
+		\textbf{Dead code detection} &     \no       &     \no       &     \no       &        \somewhat   &         \yes         \\
+		\textbf{Type inferencing}    &     \yes      &     \yes      &     \yes      &        \somewhat   &         \somewhat    \\
 		\textbf{Languages}           &      JS*      &      JS       &      ESX      &     JS, Go, Py     &          JS          \\ \bottomrule
 	\end{tabular}
 
 	\caption{Comparison of static analysis frameworks.}
 	\label{table:comparison-of-frameworks}
 \end{table}
+\vfill
