@@ -14,7 +14,7 @@ The initial goal --- to create a language for portable applications --- has been
 
 \subsection{ECMAScript}
 \label{sect:ecmascript}
-After its release, JavaScript was submitted to and standardized by the Ecma International industry association, resulting in the first release of the ECMAScript language specification (of the ECMA-262 standard~\cite{ecma-262}) in June 1997. Apart from JavaScript, there are several implementations, e.g., ActionScript, Chakra, JScript, and V8.
+After its release, JavaScript was submitted to and standardized by the Ecma International industry association, resulting in the first release of the ECMAScript language specification (of the ECMA-262 standard~\cite{ecma-262}) in June 1997. Apart from JavaScript, there are several implementations, e.g., \emph{ActionScript}, \emph{Chakra}, \emph{JScript}, and \emph{V8}.
 
 There are several reasons why the standard and the usage of ECMAScript is getting more and more popular. Besides the improvement of the developer tools, developer community, and being already popular, conscious and regular development of the language also makes the language more appealing. At the time of writing this report there are 8 editions of the standard, 6 of them published. The last published edition, ES7 was published in June 2016, one year after the previous edition, ES6.
 
@@ -38,8 +38,7 @@ Source code analysis can be used to discover facts about a particular program. T
 % > The term is usually applied to the analysis performed by an automated tool, with human analysis being called program understanding, program comprehension, or code review. Software inspections and Software walkthroughs are also used in the latter case.
 % https://en.wikipedia.org/wiki/Static_program_analysis
 
-While high-level language (e.g., C$++$, Java) source codes are checked at least by the compiler, JavaScript is usually not compiled before is is published. Thus a specific static analysis tool for JavaScript should aim to discover unwanted traits of the source in ways a generic compiler would not be able to, resulting in better code quality. These traits, \emph{code smells} are usually perceptible while running the code. Another way to locate these bugs is to write and run tests, dynamically testing the program.
-% \cite[][72]{wichmann_industrial_1995}
+While high-level language (e.g., C$++$, Java) source codes are checked at least by the compiler, JavaScript is usually not compiled before is is published. Thus a specific static analysis tool for JavaScript should aim to discover unwanted traits of the source in ways a generic compiler would not be able to, resulting in better code quality. These traits, \emph{code smells} are usually perceptible while running the code. Another way to locate these bugs is to write and run tests, dynamically testing the program.~\cite{wichmann_industrial_1995}
 
 The two analysis methods are complementing each other. They discover different subsets of problematic constructions. While static analysis can discover syntactical problems (like the lack of the default case in a switch), dynamic analysis may catch behavioral problems (such as error handling and timing errors). Information discovered using static analysis may be used later in dynamic testing, resulting in a hybrid technique.
 
@@ -76,11 +75,9 @@ However, with a given limitation of granularity (e.g., considering a single file
 
 \subsection{Source Code Processing and Analysis}
 \label{sect:source-code-processing}
-The source code of a program is a sequence of instructions formulated in a programming language as a text. Grammars of formal languages are a set of rules describing what the compiler considers a valid input---how to create valid instructions or a set of instructions from the alphabet of the language \emph{(syntax)}. A source code processing entity (transformer, or hereafter \emph{compiler}) assigns a meaning \emph{(semantics)} and transforms the instruction to another language (generally an intermediate language or bytecode).
+The source code of a program is a sequence of instructions formulated in a programming language as a text. Grammars of formal languages are a set of rules describing what the compiler considers a valid input---how to create valid instructions or a set of instructions from the alphabet of the language \emph{(syntax)}. A source code processing entity (transformer, or hereafter \emph{compiler}) assigns a meaning \emph{(semantics)} and transforms the instruction to another language (generally an intermediate language or bytecode).~\cite{Aho:1986:CPT:6448}
 
 What input data the compiler considers useful information depends on the semantics of the language the compiler is built for. Source codes contain a much wider variety of data than a compiler requires for transforming, analyzing the application: comments, function declaration order, indentation, line breaks all help the reader (and writer) of the code, but carry no additional information.
-
-% TODO cite Compilers: Principles, Techniques, and Tools (2nd Edition) Hardcover – by Alfred V. Aho, Monica S. Lam, Ravi Sethi, Jeffrey D. Ullman
 
 \Cref{fig:processing-the-source-code} shows the general process for processing source code and transforming a stream of characters into a data structure with \emph{meaning} (semantic information).
 
