@@ -2,7 +2,7 @@
 \chapter{Preliminaries}
 \label{chap:preliminaries}
 
-In this chapter I propose the conceptual foundations and related technologies of my work. Also, I discuss the building blocks required to design a static analyzer framework for JavaScript.
+In this chapter I present the conceptual foundations and related technologies of my work. Also, I discuss the building blocks required to design a static analyzer framework for JavaScript.
 
 \section{JavaScript}
 Ohe most used dynamic languages in the world is JavaScript. According to~\cite{js-usage}, JavaScript is the most utilized client-side programming language for web applications, with over 94\% estimated usage. In this section I briefly summarize the history of JavaScript, present recent advancements and discuss why it is timely to utilize static analysis techniques for the language.
@@ -18,7 +18,7 @@ After its release, JavaScript was submitted to and standardized by the Ecma Inte
 
 There are several reasons why the standard and the usage of ECMAScript is getting more and more popular. Besides the improvement of the developer tools, developer community, and being already popular, conscious and regular development of the language also makes the language more appealing. At the time of writing this report there are 8 editions of the standard, 6 of them published. The last published edition, ES7 was published in June 2016, one year after the previous edition, ES6.
 
-The initial language specifications were indulgent, and only best practices were guiding the developers. The challenges of analyzing such dynamic, untyped language able to express one thing in several different ways may be one of the reasons why there are only a few tools present even today implementing static analysis for ECMAScript.
+The initial language specifications were indulgent, and only best practices were guiding the developers. The challenges of analyzing such dynamic, untyped language --- able to express one thing in several different ways --- may be one of the reasons why there are only a few tools present even today implementing static analysis for ECMAScript.
 
 The syntactic sugars added to the language across the editions of ECMAScript made it possible to express the most used code parts in an easier manner, while being more concise. Encouraging the developers to use these constructs makes it easier to interpret the source code --- both manually and with source code analysis.
 
@@ -38,7 +38,7 @@ Source code analysis can be used to discover facts about a particular program. T
 % > The term is usually applied to the analysis performed by an automated tool, with human analysis being called program understanding, program comprehension, or code review. Software inspections and Software walkthroughs are also used in the latter case.
 % https://en.wikipedia.org/wiki/Static_program_analysis
 
-While high-level language (e.g., C$++$, Java) source codes are checked at least by the compiler, JavaScript is usually not compiled before is is published. Thus a specific static analysis tool for JavaScript should aim to discover unwanted traits of the source in ways a generic compiler would not be able to, resulting in better code quality. These traits, \emph{code smells} are usually perceptible while running the code. Another way to locate these bugs is to write and run tests, dynamically testing the program.~\cite{wichmann_industrial_1995}
+While high-level language (e.g., C$++$, Java) source codes are checked at least by the compiler, JavaScript is usually not compiled before it is published. Thus a specific static analysis tool for JavaScript should aim to discover unwanted traits of the source in ways a generic compiler would not be able to, resulting in better code quality. These traits, \emph{code smells} are usually perceptible while running the code. Another way to locate these bugs is to write and run tests, dynamically testing the program.~\cite{wichmann_industrial_1995}
 
 The two analysis methods are complementing each other. They discover different subsets of problematic constructions. While static analysis can discover syntactical problems (like the lack of the default case in a switch), dynamic analysis may catch behavioral problems (such as error handling and timing errors). Information discovered using static analysis may be used later in dynamic testing, resulting in a hybrid technique.
 
@@ -49,7 +49,7 @@ The two analysis methods are complementing each other. They discover different s
 \subsection{Use Cases}
 Static analysis tools employ diverse levels of abstraction. \emph{Formatters} are able to ensure that the source code complies with a predefined style guide. \emph{Linters} check for stylistic and programming errors, thus indicating suspicious programming constructs. \emph{Formal verification}, on the other hand, utilizes formal mathematical methods to prove statements about a piece of source code and its behavior.
 
-For dynamic languages static analysis has even more use cases. For example, it allows finding previously undefined property reads, catching invokement of non-functional variables~\cite{jensen_type_2009}, detecting dead code.
+For dynamic languages static analysis has even more use cases. For example, it allows finding previously undefined property reads, catching invocation of non-functional variables~\cite{jensen_type_2009}, detecting dead code.
 
 \subsection{Advantages and Disadvantages}
 Since static analysis tools deliberately do not evaluate the source code, there are fundamental limitations to what problems they can discover. In the context of my work, static analysis has the following trade-offs.
@@ -59,7 +59,7 @@ Since static analysis tools deliberately do not evaluate the source code, there 
 Since there is no need for execution, the hardware and software requirements of the analysis software do not need to match the requirements of the application. There is also no need to emulate or mock its dependencies, making the analysis more portable and cost efficient.
 
 \paragraph{Early Detection of Possible Errors}
-Static analysis may catch problems even before the whole software is complete or even runnable, potentially making fixing the problems easier and cheaper.~\cite{xie}
+Static analysis may catch problems even before the whole software is complete or even runnable, potentially allowing the developers to fix the problems earlier in the development process.~\cite{xie}
 
 \paragraph{Thorough}
 While dynamic testing executes the manually written or automatically generated test cases covering a portion of the source code, static analysis systematically explores every possible execution scenarios. Thus it may achieve higher coverage and detect more problems in the code.~\cite{xie}
@@ -68,10 +68,10 @@ While dynamic testing executes the manually written or automatically generated t
 \paragraph{Speed} Static analysis trades CPU time and memory for better code quality. By design it may be multiple orders of magnitude slower than compilation. Its speed depends not only on the underlying data structure and algorithms, but also the level of analysis.~\cite{clang}
 % TODO extend
 
-However, with a given limitation of granularity (e.g., considering a single file as the unit of the processing), in case of a source code modification, previous results can be reused. There is a possibility that only the modified --- and other affected --- parts need to be processed again. The incremental approach of static analysis may speed up the process by orders of magnitude~\cite{stein-daniel-bsc}.
+However, with a given limitation of granularity (e.g., considering a single file as the unit of processing), in case of a source code modification, previous results can be reused. There is a possibility that only the modified --- and other affected --- parts need to be processed again. The incremental approach of static analysis may speed up the process by orders of magnitude~\cite{stein-daniel-bsc}.
 % TODO clarify
 
-\paragraph{False Positives} Static analysis can not prove the correctness of a source code. It rather warn in case there is a possibility of a problem. Thus static analysis tools can introduce false positive warnings and flag code parts as problematic even if they behave correctly. To reduce the number of false positive warnings, one usually introduces more precise, specified rules and more thorough analysis.~\cite{clang}
+\paragraph{False Positives} Static analysis can not prove the correctness of a source code. It rather warns in case there is a possibility of a problem. Thus static analysis tools can introduce false positive warnings and flag code parts as problematic even if they behave correctly. To reduce the number of false positive warnings, one usually introduces more precise, specified rules and more thorough analysis.~\cite{clang}
 
 \subsection{Source Code Processing and Analysis}
 \label{sect:source-code-processing}
@@ -271,25 +271,22 @@ The challenge of big data problems shed light on that the existing disk-based sy
 
 The locality of data allows the usage of rich algorithm libraries and the choice of the adequate graph representation with respective space-time trade-off. The constraint of space allows large graphs (with millions of edges) to be stored and processed, but this may not be sufficient in all cases.
 
-Example in-memory graph toolkits: \emph{Apache Giraph}, \emph{Microsoft Graph Engine} (formerly \emph{Trinity}), \emph{Apache Spark GraphX}, \emph{WhiteDB}.
-% TODO cite
+Example in-memory graph toolkits: \emph{Apache Giraph}\footnote{\small\url{http://giraph.apache.org}}, \emph{Microsoft Graph Engine}\footnote{\small\url{https://www.graphengine.io}} (formerly \emph{Trinity}), \emph{Apache Spark GraphX}\footnote{\small\url{http://spark.apache.org/graphx/}}, \emph{WhiteDB}\footnote{\small\url{http://whitedb.org}}.
 
 \paragraph{Persistent, Real-Time Graph Databases}
 Persistent graph databases are the prevalent group of graph computing technologies. Unlike in-memory graph tools, graph databases persist data on hard drives, thus are able to store billions of edges on a single machine and distributed systems can handle hundreds of billions of edges. These databases can provide multi-user concurrency, transactional semantics and eventual consistency.
 
 Since global graph algorithms are not feasible, these systems are optimized for local neighborhood analysis and concurrent access. Global graph analytics are inefficient due to the communication overhead and the computational overhead, e.g., ensuring ACID transactional semantics.
 
-Example for persistent, real-time graph databases: \emph{InfiniteGraph}, \emph{Neo4j} (see \cref{sect:neo4j}), \emph{OrientDB}, and \emph{Titan}~\cite{titan}.
-% TODO cite
+Example for persistent, real-time graph databases: \emph{InfiniteGraph}\footnote{\small\url{http://www.objectivity.com/products/infinitegraph/}}, \emph{Neo4j} (see \cref{sect:neo4j}), \emph{OrientDB}\footnote{\small\url{http://orientdb.com}}, and \emph{Titan}~\cite{titan}.
 
 \paragraph{Batch-Processing Graph Frameworks}
 In case there is no real-time requirement for an analysis that accesses the whole dataset, batch-processing graph frameworks can be used for global analytics. Since there is also no requirement for quick response time, the applied algorithm can even scan data multiple times and leverage sequential reads from the disk. These systems can be used to periodically process data and feed back the results into real-time graph databases. Most of these frameworks utilize Hadoop for storage (HDFS) and processing algorithms implemented using the MapReduce paradigm.
 
-Example batch-processing graph frameworks: \emph{Apache Hama}, \emph{Apache Giraph}, and \emph{DataStax Aurelius Faunus}.
-% TODO cite
+Example batch-processing graph frameworks: \emph{Apache Hama}\footnote{\small\url{https://hama.apache.org}} and \emph{Apache Giraph}\footnote{\small\url{http://giraph.apache.org}}.
 
 \subsection{Evaluating Queries on a Data Structure}
-Numerous strategies exist for defining and executing queries over data structures. They can be defined in an imperative manner with programming languages like a navigation described in \emph{Gremlin} over a graph database. Declarative solutions also exist, where the query plan is calculated from the query formalized in a declarative language (like \emph{SQL}, \emph{SPARQL}, and \emph{Cypher}) and execution is performed by a query framework (such as \emph{4store} and \emph{Neo4j}). Graph pattern matching -- one of the declarative querying solutions, supplemented by imperative logic -- forms the foundation of my approach.
+Numerous strategies exist for defining and executing queries over data structures. They can be defined in an imperative manner with programming languages like a navigation described in \emph{Gremlin} over a graph database. Declarative solutions also exist, where the query plan is calculated from the query formalized in a declarative language (like \emph{SQL}\footnote{Structured Query Language}, \emph{SPARQL}\footnote{SPARQL Protocol and RDF Query Language}, and \emph{Cypher}) and execution is performed by a query framework (such as \emph{4store} and \emph{Neo4j}). Graph pattern matching -- one of the declarative querying solutions, supplemented by imperative logic -- forms the foundation of my approach.
 
 \subsubsection{Graph Pattern Matching}
 \textquote[\cite{csmr}]{Graph patterns are a declarative, graph-like formalism representing a condition (or constraint) to be matched against instance model graphs. The formalism is useful for various purposes in model-driven development, such as defining model transformation rules or defining general purpose model queries including model validation constraints. A graph pattern consists of structural constraints prescribing the interconnection between nodes and edges of a given type.
@@ -342,7 +339,7 @@ Other interesting and useful features of Cypher include:
 \subsubsection{Alternative Graph Databases}
 Although other database solutions, like Titan~\cite{titan} or OrientDB might serve as an alternative, the rapid development and feature set of Neo4j ruled them out as a candidate for my approach.
 
-For rapidly changing, albeit smaller datasets, incremental querying using VIATRA~\cite{viatra} Query over EMF~\cite{EMF} models can be a solution. Since VIATRA stores the database in-memory, is is not suitable for my approach.
+For rapidly changing, albeit smaller datasets, incremental querying using VIATRA~\cite{viatra} Query over EMF~\cite{EMF} models can be a solution. Since VIATRA stores the database in-memory, it is not suitable for my approach.
 
 
 \section{Integrated Development Environment (IDE)}
@@ -376,10 +373,9 @@ An extension is a package of source code, resources, and configuration files. Th
   \item Evolved editing -- rich language support can be provided, including IntelliSense services, peek, hover and diagnostic (info, warning and error messages).
 \end{itemize}
 
-\paragraph{Language Servers} For high cost IO or CPU intensive tasks.
-Language server framework and sample implementation helps developers create a dedicated process for resource-heavy language server applications. It is the better design choice if the extension may slow down other extensions while working. Its possibilities are limited, as custom communication between the client extension and the language server needs modification in the underlying communication protocol handler.
+\paragraph{Language Servers} The language server framework and its sample implementation helps developers create a dedicated process for resource-heavy language server applications. It is the better design choice if the extension may slow down other extensions while working. Its possibilities are limited, as custom communication between the client extension and the language server needs modification in the underlying communication protocol handler.
 
 \paragraph{Debuggers} Connecting an external debugger written for any language to VS Code is also possible through the VS Code Debug protocol.
 
 \subsection{Alternative IDEs}
-There are several alternatives to Visual Studio Code. \emph{Atom}, \emph{Eclipse}, and \emph{WebStorm} can all be extended with a plugin adding extra features for a given language. Since VSC is one of the most actively developed lightweight IDEs aiming for JavaScript (and TypeScript) development, I have developed an plugin integrating the IDE with my framework (see~\Cref{sect:ide-integration}).
+There are several alternatives to Visual Studio Code. \emph{Atom}\footnote{\small\url{https://atom.io}}, \emph{Eclipse}\footnote{\small\url{https://eclipse.org}}, and \emph{WebStorm}\footnote{\small\url{https://www.jetbrains.com/webstorm/}} can all be extended with a plugin adding extra features for a given language. Since VSC is one of the most actively developed lightweight IDEs aiming for JavaScript (and TypeScript) development, I have developed an extension integrating the IDE with my framework (see~\Cref{sect:ide-integration}).

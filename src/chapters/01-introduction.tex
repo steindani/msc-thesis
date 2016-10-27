@@ -4,7 +4,7 @@
 \section{Context}
 Quality control plays an important role in large-scale software development. The number of coding errors are significantly increasing with the number of contributors. The more developers work together on developing a software, the more versatile their coding styles and conventions are.
 
-To ensure the quality of the source code, thus the software itself, and at the same time help developers with their tasks, the need arises for a solution continuously reviewing the code, searching for mistakes, and enforcing conventions.
+To ensure the quality of the source code, and at the same time help developers with their tasks, there is a growing need for a solution that allows continuous checks for the code. Such checks include code reviews, searching for mistakes, and enforcing conventions.
 
 \begin{figure}[!ht]
 	\centering
@@ -13,7 +13,7 @@ To ensure the quality of the source code, thus the software itself, and at the s
 	\label{fig:CI-workflow}
 \end{figure}
 
-Version control systems (VCS) and continuous integration (CI)~\cite{CI} solutions are widely used tools of the modern software developers. \Cref{fig:CI-workflow} shows an extended version of the generally used continuous integration workflow.
+Version control systems (VCS) and continuous integration (CI)~\cite{CI} solutions are widely used tools of modern software developers. \Cref{fig:CI-workflow} shows an extended version of the generally used continuous integration workflow.
 The basic workflow consists of the following steps: 1) the developer makes modifications to the codebase using their \textit{Development Environment}, 2) the modifications are committed into a \textit{Version Control System}, and 3) this commit triggers the \textit{Build Environment} to build the project. Then 4) the \textit{Testing Environment} can perform runtime tests on the latest build of the project, and 5) the results --- build and test logs --- are presented to the developer.
 
 These logs help the developers discover bugs and failures before the software is released for manual testing or production purposes. Producing this information often and as early as possible --- thus making sure the software is working as intended --- is vital for agile development.
@@ -23,11 +23,11 @@ A proven method of enhancing software quality is utilizing static program analys
 
 \section{Problem Statement}
 
-Static analysis methods verifying that the code is compliant with coding conventions is often time consuming and resource intensive in practice. The size of the codebase may require a scalable solution, especially for continuous integration purposes, since the entire verification process needs to be carried out on the whole codebase once it is (partially) modified.
+Static analysis methods verifying that the code is compliant with coding conventions is often time-consuming and resource-intensive in practice. The size of the codebase may necessitate a scalable solution, especially for continuous integration purposes, since the entire verification process needs to be carried out on the whole codebase every time it is modified.
 
 A temporary solution to tackle this problem is to process the changes in batches. This way --- to save resources --- static analyses are carried out for a joined group of changes, rather than for every individual commit.
 
-In an ideal situation, even before committing the changes, the developers receive feedback about the problems their modifications could cause.
+In an ideal situation, even before committing the changes, the developers would receive feedback about the problems their modifications could cause.
 
 
 \section{Objectives and Contributions}
@@ -36,7 +36,7 @@ My main objective is to provide a solution for reducing the time required for a 
 
 In this work I create a framework that transforms the whole source code repository into a graph representation and maintains it subsequently. The proposed approach is suitable for performing code convention compliance checks, for executing built-in static analysis tests and arbitrary transforming extensions written by the user.
 
-In order to speed up the static analysis, the presented framework uses incremental processing. Thus it is able to process a subset of the repository, e.g. only the modifications introduced by the latest commit, then integrate the changes into the maintained representation. This way the system can process the modifications in a commit incrementally. After the initial query evaluation and report generation, consecutive runs can be executed significantly more efficiently.
+In order to speed up the static analysis, the presented framework uses incremental processing. Thus it is able to process a subset of the repository, e.g. only the modifications introduced by the latest commit, then integrate the changes into the maintained representation. This way the system can process the modifications for each commit incrementally. After the initial query evaluation and report generation, consecutive runs can be executed significantly more efficiently.
 
 The framework relies on two substantial technologies: 1)~a source code parser, and 2)~a database solution. Also, the framework provides interfaces making integration possible with external tools, such as version control systems and integrated developer environments.
 
@@ -44,7 +44,7 @@ The framework relies on two substantial technologies: 1)~a source code parser, a
 \section{Structure of the Report}
 
 This report is structured as follows.
-\Cref{chap:preliminaries} introduces the previously mentioned background technologies required and selected to build an incremental static analyzer.
+\Cref{chap:preliminaries} introduces the previously mentioned background technologies selected to build an incremental static analyzer.
 \Cref{chap:related-work} details the various approaches and related works.
 \Cref{chap:overview-of-the-approach} shows the overview of my approach and details the main components of its architecture.
 \Cref{chap:elaboration-of-the-workflow} presents the implementation of the framework, and discusses the steps of the analysis.
