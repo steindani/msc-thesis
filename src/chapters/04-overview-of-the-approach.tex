@@ -6,7 +6,7 @@ In this chapter I introduce the high-level architecture overview of the proposed
 
 \section{Architecture}
 \label{sect:architecture}
-\Cref{fig:architecture-overview} shows the overview of the framework's architecture. Since the novelty of the approach is how the source code representation is handled --- stored, transformed, and queried --- the heart of the approach is visualized on the right half of the figure. This is embedded and utilized in the framework itself, and integrated into the continuous integration circle and user-facing systems.
+\Cref{fig:architecture-overview} shows the overview of the framework's architecture. Since the novelty of the approach is how the source code representation is handled --- stored, transformed, and queried --- the essence of the approach is visualized on the right half of the figure. This is embedded and utilized in the framework itself, and integrated into the continuous integration circle and user-facing systems.
 
 \begin{figure}[!htb]
   \centering
@@ -22,7 +22,7 @@ In this chapter I introduce the high-level architecture overview of the proposed
 % TODO intro text (maybe the difference between this, steps of processing and the enumeration)
 
 \subsection{Workflow Integration Points}
-The framework is intended to be integrated with at least two types of development tooling. First, connecting to the \emph{Version Control System} makes it possible to extend the continuous integration workflow and provide the users of the system with current information about the codebase they are working on. Second, connecting to the \emph{Integrated Development Environment} empowers their users with feedback on the current modifications.
+The proposed framework is intended to be integrated with at least two types of development tooling. First, connecting to the \emph{Version Control System} makes it possible to extend the continuous integration workflow and provide the users of the system with current information about the codebase they are working on. Second, connecting to the \emph{Integrated Development Environment} empowers their users with feedback on the current modifications.
 
 \subsubsection{Version Control System (VCS)}
 Version control systems are change management systems for files (e.g., documents, software code). They store revisions of the current set of files managed by the system. Each revision is differentiated with a timestamp and also the person performing the changes are associated with a revision.
@@ -31,7 +31,7 @@ Version control is one of the most essential collaboration tools. When developer
 
 Integrating a VCS into the architecture makes it possible to extend the workflow with the features of the framework. By automatically calculating the changeset and forwarding this information to the framework, it is possible to keep an up-to-date representation of the version controlled data source.
 
-The most known implementations are Git~\cite{git}, Subversion (SVN)~\cite{svn}, Mercurial (Hg)~\cite{hg}.
+The most known implementations are Git~\cite{git}, Subversion (SVN)~\cite{svn}, and Mercurial (Hg)~\cite{hg}.
 
 \subsubsection{Integrated Development Environment (IDE)}
 An IDE is an application for (software) developers that integrates several tools making it easier to write, compile, and test the product. Integrated development environments are detailed in \Cref{sect:IDE}.
@@ -48,7 +48,7 @@ Since \emph{Shape Security Shift} (detailed in~\Cref{sect:shift}) suits my appro
 
 
 \subsection{Graph Maintenance}
-The novelty of my approach is how it processes, stores and connects the source code representation in a graph database. In this section I'll discuss how the subgraphs of the source code files are prepared and then connected to each other constructing a connected graph representing the whole source code repository.
+The novelty of my approach is how it processes, stores and connects the source code representation in a graph database. In this section I discuss how the subgraphs of the source code files are prepared and then connected to each other constructing a connected graph representing the whole source code repository.
 
 The process can be summarized in 4 concise sentences:
 \begin{enumerate}[topsep=0pt]
@@ -128,15 +128,15 @@ To be able to report precise location for a problem, the graph also contains lin
 
 
 \subsubsection{Storing the Graph Representation}
-If the parser successfully processes the source code, the resulting ASG is transformed with the aforementioned rules. In a writing transaction, the transformed graph is serialized and stored in the database.
+If the parser successfully processes the source code, the resulting ASG is transformed using the aforementioned rules. In a writing transaction, the transformed graph is serialized and stored in the database.
 
 \paragraph{Metadata}
-Besides the ASG, additional properties are stored. For example, for every source file, a node exists in the graph connected to nodes belonging to the particular ASG. This makes it easier to handle nodes of a file as a whole.
+Besides the ASG, additional properties are stored. For example, for every source file, a node exists in the graph connected to nodes belonging to the particular ASG. This enables handling nodes of a file as a whole.
 
 \paragraph{Multilayered Graph}
-With more complex rules it is also feasible to store multiple versions of the same file in the database. This makes it possible to maintain multilayered versioning for multiple users.
+With more complex rules it is also feasible to store multiple versions of the same file in the database. This yields the ability to maintain multilayered versioning for multiple users.
 
-If the VCS supports branching the code development, the framework could also accommodate this behavior. For example if two developers work on the \emph{master} development branch in their own IDE, there could be layers for each of them.
+If the VCS supports branching the code development, the framework could also accommodate this behavior. For example if two developers work on the \emph{master} development branch in their own IDE, there could be layers for all of them.
 
 \begin{figure}[!htb]
   \centering
@@ -145,14 +145,14 @@ If the VCS supports branching the code development, the framework could also acc
   \label{fig:multilayered-graph}
 \end{figure}
 
-One layer containing every ASG for the \emph{master} branch. One layer for each user containing only the ASGs of their modified files. In these layers the ASGs are connected (based on the import and export statements) in the same layer, if both are present in the same. If not, they are connected to the corresponding file in the \emph{master} branch (see~\Cref{fig:multilayered-graph}).
+One layer contains every ASG for the \emph{master} branch. One layer for each user, containing only the ASGs of their modified files. ASGs in these are connected if both are present in the same layer. If not, they are connected to the corresponding file in the layer of the \emph{master} branch (see~\Cref{fig:multilayered-graph}).
 
 \subsubsection{Transforming the Graph}
 After the data has been stored in the database, it can be freely transformed with framework- or user-defined rules. This step may be utilized for transforming the set of subgraphs into one connected graph based on the export and import rules of the language (detailed in~\Cref{sect:handling-import-export}).
 
-Neo4j makes it possible to execute in-place transformations, where querying with pattern matching and manipulations may be declared in the same query. The possibilities of Neo4j are detailed in~\Cref{sect:neo4j}. Transformation examples are presented and visualized in~\Cref{chap:elaboration-of-the-workflow}.
+Neo4j allows the execution of in-place transformations, where querying with pattern matching and manipulations may be declared in the same query. The possibilities of Neo4j are detailed in~\Cref{sect:neo4j}. Transformation examples are presented and visualized in~\Cref{chap:elaboration-of-the-workflow}.
 
 \subsection{Executing Graph Queries}
 By utilizing the built-in pattern-matching abilities of Neo4j, it is easier and more user-friendly to write pseudo-graphic, declarative patterns to find a structure in the graph --- compared to the generally used visitor patterns.~\cite{csmr} An example graph pattern query is detailed in~\Cref{sect:division-by-zero}.
 
-If the query language of Neo4j, Cypher is not powerful enough to express logic in a standalone query, one may also utilize arbitrary Java code. This code may be used inside the query or even command multiple queries and aggregate the result.
+If the query language of Neo4j, Cypher is not powerful enough to express logic in a standalone query, one may also employ arbitrary Java code. This code may be used inside the query or even command multiple queries and aggregate the result.
