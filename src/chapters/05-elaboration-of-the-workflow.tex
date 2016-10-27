@@ -2,7 +2,7 @@
 \chapter{Elaboration of the Workflow}
 \label{chap:elaboration-of-the-workflow}
 
-In this chapter I demonstrate the various steps of the static analysis workflow in detail. I employ small working source code examples in order to demonstrate the steps of the source code transformation.
+In this chapter I demonstrate the various steps of the static analysis workflow in detail. I employ small working source code examples in order to demonstrate the steps of the source code transformation. A prototype implementation of the proposed workflow is available as an open-source project at {\small\url{https://github.com/FTSRG/codemodel-rifle}}.
 
 \section{Transforming the Source Code Into an AST}
 As mentioned in~\Cref{sect:overview-transforming-the-source-code}, this transformation is carried out by the Shape Security Shift toolkit. The source code is passed to the parser along with the parameters for the parsing algorithm. Considering the new constructs introduced in ES6 (\Cref{sect:ecmascript}), I've chosen to parse every file as a \emph{Module}. This affects the grammar used in the parser and the resulting data model.
