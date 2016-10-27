@@ -3,22 +3,24 @@
 
 My main objective was and still is to provide a solution for reducing the time required for a global, codebase-level reevaluation of static analysis after a change occurs.
 
-The created framework can transform a rather large source code repository as a whole into a graph representation and maintain it subsequently. It is fount that the approach is suitable for performing code convention compliance checks and for executing static analysis tests on the graph representation.
+The created framework can transform a rather large source code repository as a whole into a graph representation and maintain it subsequently. It is found that the approach is suitable for performing code convention compliance checks and for executing static analysis tests on the graph representation.
 
-This approach is also utilizes incremental processing with file-level granularity, speeding up the static analysis. Based on my measurements the framework is fast enough to help its users with fast changing code repositories.
+This approach also utilizes incremental processing with file-level granularity, speeding up the static analysis. Based on my measurements the framework is fast enough to help its users with fast changing code repositories.
 
 Once the framework contains enough transformations and queries for handling the language, it can extend the everyday toolkit of developers.
 
 \section{Summary of Contributions}
-I presented an extensible proof of my novel concept to perform incremental static analysis on dynamic source code repositories based on graph transformations. My proposal is based on software code modeling, model transformation and graph pattern matching. The feasibility of the approach was evaluated using manual validation and benchmarking.
+I presented an extensible proof of my novel concept to perform incremental static analysis on dynamic source code repositories based on graph transformations. My proposal is based on software code modeling, graph transformation and graph pattern matching. The feasibility of the approach was evaluated using manual validation and benchmarking.
 
 \subsection{Scientific Contributions}
 I have achieved the following scientific contributions:
 
 \begin{itemize}[topsep=0pt]
-	\item Proposed a novel architecture for building an incremental static analyzer using freely available components.
+	\item Proposed an architecture for building an incremental static analyzer using freely available components.
 	\item Proposed an approach to transform JavaScript source code repository into a connected graph model.
 	\item Provided an algorithm to update the graph data model incrementally.
+	\item Presented a working method for finding problematic code parts using graph pattern matching.
+	\item Provided a transformation approach for creating CFG from ASG.
 \end{itemize}
 
 \subsection{Practical Accomplishments}
@@ -30,7 +32,7 @@ I have also achieved the following practical accomplishments:
 	\item Designed a benchmark evaluating the approach.
 \end{itemize}
 
-\section{Key Differences}
+\section{Novel Results}
 Compared to my earlier work in static analysis~\cite{stein-daniel-tdk,stein-daniel-bsc,stein-daniel-ttc}, this report has the following novel contributions:
 
 \begin{itemize}[topsep=0pt]

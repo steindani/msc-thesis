@@ -1,18 +1,18 @@
 \chapter{Future Vision}
 \label{chap:future-vision}
 
-My goal was to create the foundation of a versatile tool capable of doing even more than originally planned. While writing this report I have come up with many ideas possible with my approach and with enough work and hopefully help of users using the framework it can achieve its full potential.
-
-There are several steps of complexity this approach may be utilized:
+My goal was to create the foundation of a versatile tool capable of doing even more than originally planned. Based on my approach there are several use-cases it makes possible:
 
 \begin{itemize}[topsep=0pt]
-  \item Since there are linters available with numerous linting rules, there is no point creating another one and copying those rules. But writing rules, constraints using graph patterns may be easier and faster. If the framework is already utilized on a repository, there is no harm writing new linting rules.
+  \item Existing linters do a good job at analyzing linting rules. However, extending them with new, complex rules is difficult. My approach allows tool developers to formalize rules more intuitively with graph patterns.
 
   \item With connecting the ASGs there are new possibilities in static analysis that were not possible or available before. This might be used for finding usages of source code elements, helping refactors and finding problematic structures reaching across files.
 
-  \item Having several files processed in the same database also enables comparing them, potentially allowing executing plagiarism searches.
+  \item Having several files processed in the same database also enables comparing them, potentially allowing executing sophisticated graph-based plagiarism searches.
 
   \item Transforming the ASG into CFG not only allows path searches, but combining it with other tools and techniques may result in automated test generation. This can result in higher code coverage and the more unresolved references discovered.
 
   \item Based on the CFG and the ASG, basic type inferencing algorithms may produce typing information in the untyped source code, allowing even more ways to write queries and constraints on the source code.
 \end{itemize}
+
+Since the transformation rules in the framework are far from finished, writing more, more precise, optimized, and general transformation rules and examining the benchmark results is subject to future work.

@@ -2,7 +2,7 @@
 \chapter{Related Work}
 \label{chap:related-work}
 
-In this chapter I enumerate a subset of similar systems, approaches and discuss related work.
+In this chapter I enumerate the most notable similar systems, approaches and discuss related work.
 
 \section{Tern}
 \textquote[\cite{tern}]{Tern is a stand-alone code-analysis engine for JavaScript. It is intended to be used with a code editor plugin to enhance the editor's support for intelligent JavaScript editing. Features provided are:
@@ -15,15 +15,15 @@ In this chapter I enumerate a subset of similar systems, approaches and discuss 
 	\item Automatic refactoring
 \end{itemize}
 
-Tern is open-source (MIT license), written in JavaScript, and capable of running both on node.js and in the browser.}
+Tern is open-source (MIT license), written in JavaScript, and capable of running both on node.js~\cite{nodejs} and in the browser.}
 
-The Tern suite is a modular, extendable stand-alone system. Editor plugins communicate with the Tern server module, connected to the Acorn parser (introduced in~\Cref{sect:acorn}) and the inference engine. Third-party plugins can introduce implementation environmental or behavioral information for the system, for example ECMAScript module loading rules, or node.js~\cite{nodejs} specific variables.~\cite{tern-docs}
+The Tern suite is a modular, extendable stand-alone system. Editor plugins communicate with the Tern server module, connected to the Acorn parser (introduced in~\Cref{sect:acorn}) and the inference engine. Third-party plugins can introduce implementation environmental or behavioral information for the system, for example ECMAScript module loading rules, or node.js specific variables.~\cite{tern-docs}
 
 
 \section{TAJS}
 Type Analyzer for JavaScript (TAJS)~\cite{tajs} is a dataflow analysis tool infering type information and call graphs developed by the programming language research group at Aarhus University, with contributions from Universität Freiburg.
 
-The current version (as of 2016) can model scripts of ECMAScript 3; it also contains model of the standard library and partial model of the HTML DOM and browser API.~\cite{tajs-git} The initial aim of TAJS was to warn programmers for the following problematic cases. This enumeration follows~\cite{jensen_type_2009}.
+The current version (as of 2016) can model scripts of ECMAScript 3; it also contains model of the standard library and partial model of the HTML DOM and browser API.~\cite{tajs-git} The initial aim of TAJS was to warn programmers about the following problematic cases. This enumeration follows~\cite{jensen_type_2009}.
 
 \begin{itemize}[topsep=0pt]
   \item invoking a non-function value as a function
@@ -48,17 +48,17 @@ TRICORDER introduces an effective place to show warnings. Given that all develop
 
 \section{JavaScript Parsers}
 \label{sect:javascript-parsers}
-In this section I showcase the most used, \emph{trending} JavaScript parser technologies and justify why I have chosen the Shape Security Shift family as the parser and additional toolset for my approach.
+In this section I showcase the most used, trending JavaScript parser technologies and justify why I have chosen the Shape Security Shift family as the parser and additional toolset for my approach.
 
 \subsection{Acorn}
 \label{sect:acorn}
-Acorn~\cite{acorn} is an open-source, small JavaScript written in ES6. It is up-to-date, able to parse ECMAScript version 3, 5, 6, 7, and the newest one, 8. The resulting AST structure of the parser conforms the ESTree specification~\cite{estree}.
+Acorn~\cite{acorn} is an open-source, small JavaScript written in ECMAScript 6 (see \Cref{sect:ecmascript}). It is up-to-date, able to parse ECMAScript version 3, 5, 6, 7, and the newest one, 8. The resulting AST structure of the parser conforms the ESTree specification~\cite{estree}.
 
-It is also able to parse multiple files into a single AST, connected with a \code{Program} node. This is not to be confused with an ASG connecting multiple ASTs. To analyze and navigate in the resulting AST, Acorn provides a walker interface, to be used with a visitor pattern based algorithm.
+It is also able to parse multiple files into a single AST, connected with a \code{Program} node. To analyze and navigate in the resulting AST, Acorn provides a walker interface, to be used with a visitor pattern based algorithm.
 
 The parser is also configurable with several options, \code{locations} being one of the most useful for my approach. Setting this option stores the location of the represented source snippet in the AST node. There is also an error-tolerant version of the parser enabling parsing unfinished or syntactically incorrect sources.
 
-\textquote[\cite{acorn}]{Acorn is designed support allow plugins which, within reasonable bounds, redefine the way the parser works. Plugins can add new token types and new tokenizer contexts (if necessary), and extend methods in the parser object.}
+%\textquote[\cite{acorn}]{Acorn is designed support allow plugins which, within reasonable bounds, redefine the way the parser works. Plugins can add new token types and new tokenizer contexts (if necessary), and extend methods in the parser object.}
 
 \subsection{Esprima}
 Esprima is also an open-source, ECMAScript standard-compliant parser. It fully supports ES7, and produces ESTree models. It has a great user-base and several tools depend on it. It also has experimental support for JSX, an XML syntax extending JavaScript for React~\cite{react}, \textquote[\cite{react-tutorial}]{a declarative, efficient, and flexible JavaScript library for building user interfaces}.
@@ -69,7 +69,7 @@ Esprima is also an open-source, ECMAScript standard-compliant parser. It fully s
 The Shift~\cite{shift} family consists of several tools. Besides the parser, there is a scope analyzer, a code validator, fuzzer, and a code generator, besides others.
 
 \subsubsection{Shift AST}
-The reason behind the number of tooling in this family is due to the fact that Shift does not conform the ESTree specification. In 2014, Shape Security, the company behind Shift announced a new JavaScript AST specification~\cite{shift-spec}. This specification was developed with ECMAScript 6 in mind, along with analysis and transformation.
+The reason behind the number of tools is due to the fact that Shift does not conform the ESTree specification. In 2014, Shape Security, the company behind Shift announced a new JavaScript AST specification~\cite{shift-spec}. This specification was developed with ECMAScript 6 in mind, along with analysis and transformation.
 
 The specification describes interface for an AST syntax that can represent the structure of an ECMAScript source code. According to Shape Security, a \textquote[\cite{shift-spec-comparison}]{good AST format…
 
@@ -92,6 +92,8 @@ The specification describes interface for an AST syntax that can represent the s
 \end{itemize}}
 
 \subsubsection{Additional Notes}
+The Shift family has other interesting members and features as well:
+
 \begin{itemize}[topsep=0pt]
 	\item Besides JavaScript, most of the Shift family is also available for Java projects. This makes it easier to integrate it with projects and tools only available for Java.
 
@@ -103,7 +105,7 @@ The specification describes interface for an AST syntax that can represent the s
 \subsection{Comparison of Parser Technologies}
 In order to find a best parser and related technologies, I had to compare them: measure their speed, investigate their parameters and output model, and transform their extra functions into potential features of my approach.
 
-\subsubsection{Speed} Although speed is not the most important property of a system aiming to make sure no errors are present, swift response can boost the performance of the user. \Cref{table:speed-comparison-of-parsers} shows the time difference between parsers processing various source codes repositories. The benchmark~\footnote{\url{http://esprima.org/test/compare.html}} was run on a personal computer without specific considerations or fine-tuning for benchmarks. Its sole purpose is to get a rough comparison between the different technologies available.
+\subsubsection{Speed} Although speed is not the most important property of a system aiming to make sure no errors are present, swift response can boost the performance of the user. \Cref{table:speed-comparison-of-parsers} shows the time difference between parsers processing various source codes repositories. The benchmark~\footnote{\url{http://esprima.org/test/compare.html}} was run on a personal computer. Its sole purpose is to get a rough comparison between the different technologies available running in a JavaScript environment.
 
 It is visible that Shift NEE\footnote{Early error checking disabled. NEE -- No Early Errors} is one of the fastest parsers available.
 
@@ -111,10 +113,13 @@ It is visible that Shift NEE\footnote{Early error checking disabled. NEE -- No E
 \centering
 \begin{tabular}{@{}lllllll@{}}
 \toprule
-\textbf{Source}                                               & \textbf{\begin{tabular}[c]{@{}l@{}}Esprima\\ 2.7.2\end{tabular}} & \textbf{UglifyJS2}                                      & \textbf{Traceur}                                        & \textbf{\begin{tabular}[c]{@{}l@{}}Acorn\\ 2.4.0\end{tabular}} & \textbf{Shift}                                          & \textbf{\begin{tabular}[c]{@{}l@{}}Shift\\ (NEE)\end{tabular}} \\ \midrule
-\begin{tabular}[c]{@{}l@{}}jQuery.Mobile\\ 1.4.2\end{tabular} & \begin{tabular}[c]{@{}l@{}}154.0\\ ±22.3\%\end{tabular}          & \begin{tabular}[c]{@{}l@{}}244.6\\ ±8.4\%\end{tabular}  & \begin{tabular}[c]{@{}l@{}}304.6\\ ±15.1\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}215.3\\ ±16.9\%\end{tabular}        & \begin{tabular}[c]{@{}l@{}}480.7\\ ±13.1\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}119.9\\ ±11.9\%\end{tabular}                    \\
-\begin{tabular}[c]{@{}l@{}}Angular\\ 1.2.5\end{tabular}       & \begin{tabular}[c]{@{}l@{}}125.5\\ ±16.3\%\end{tabular}          & \begin{tabular}[c]{@{}l@{}}212.2\\ ±11.2\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}254.1\\ ±20.7\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}146.3\\ ±18.6\%\end{tabular}        & \begin{tabular}[c]{@{}l@{}}452.7\\ ±12.5\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}94.6\\ ±18.2\%\end{tabular}                     \\
-\begin{tabular}[c]{@{}l@{}}React\\ 0.13.3\end{tabular}        & \begin{tabular}[c]{@{}l@{}}134.7\\ ±10.8\%\end{tabular}          & \begin{tabular}[c]{@{}l@{}}221.6\\ ±8.9\%\end{tabular}  & \begin{tabular}[c]{@{}l@{}}258.5\\ ±13.4\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}176.9\\ ±15.6\%\end{tabular}        & \begin{tabular}[c]{@{}l@{}}496.4\\ ±11.6\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}116.1\\ ±14.2\%\end{tabular}                    \\ \midrule
+\textbf{Source}                                               & \textbf{Esprima\footnote{Esprima version 2.7.2}} & \textbf{UglifyJS2}                                      & \textbf{Traceur}                                        & \textbf{Acorn\footnote{Acorn version 2.4.0}} & \textbf{Shift}                                          & \textbf{Shift (NEE)} \\ \midrule\vspace{1em}
+
+jQuery.Mobile\footnote{jQuery.Mobile version 1.4.2} & \begin{tabular}[c]{@{}l@{}}154.0\\ ±22.3\%\end{tabular}          & \begin{tabular}[c]{@{}l@{}}244.6\\ ±8.4\%\end{tabular}  & \begin{tabular}[c]{@{}l@{}}304.6\\ ±15.1\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}215.3\\ ±16.9\%\end{tabular}        & \begin{tabular}[c]{@{}l@{}}480.7\\ ±13.1\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}119.9\\ ±11.9\%\end{tabular}                    \\\vspace{1em}
+
+Angular\footnote{Angular version 1.2.5}       & \begin{tabular}[c]{@{}l@{}}125.5\\ ±16.3\%\end{tabular}          & \begin{tabular}[c]{@{}l@{}}212.2\\ ±11.2\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}254.1\\ ±20.7\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}146.3\\ ±18.6\%\end{tabular}        & \begin{tabular}[c]{@{}l@{}}452.7\\ ±12.5\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}94.6\\ ±18.2\%\end{tabular}                     \\
+
+React\footnote{React version 0.13.3}        & \begin{tabular}[c]{@{}l@{}}134.7\\ ±10.8\%\end{tabular}          & \begin{tabular}[c]{@{}l@{}}221.6\\ ±8.9\%\end{tabular}  & \begin{tabular}[c]{@{}l@{}}258.5\\ ±13.4\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}176.9\\ ±15.6\%\end{tabular}        & \begin{tabular}[c]{@{}l@{}}496.4\\ ±11.6\%\end{tabular} & \begin{tabular}[c]{@{}l@{}}116.1\\ ±14.2\%\end{tabular}                    \\ \midrule
 
 \textbf{Total}                                                & \textbf{414.3 ms}                                                & \textbf{678.4 ms}                                       & \textbf{817.2 ms}                                       & \textbf{538.5 ms}                                              & \textbf{1429.8 ms}                                      & \textbf{330.6 ms}                                                          \\ \bottomrule
 \end{tabular}
@@ -124,9 +129,9 @@ It is visible that Shift NEE\footnote{Early error checking disabled. NEE -- No E
 \end{table}
 
 \subsubsection{Metamodel and Precision}
-For analysis and transformation purposes it is rather important to have a model with as much and as precise information as possible. If the parser produces a model conforming a detailed metamodel, it is easier to differentiate seemingly similar cases.
+For analysis and transformation purposes it is important to have a model with as much and as precise information as possible. If the parser produces a model conforming a detailed metamodel, it is easier to differentiate seemingly similar cases.
 
-Based on the comparison~\cite{shift-spec-comparison} between the ESTree and the Shift AST specification, it is visible that Shift is a better choice if more detail is required.
+Based on the comparison~\cite{shift-spec-comparison} between the ESTree and the Shift AST specification, it is visible that Shift is a better choice if more details are required.
 
 % \subsubsection{Development Activity}
 % \subsubsection{Platforms Supported}

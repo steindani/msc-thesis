@@ -7,7 +7,7 @@ In this chapter I present the measurements of various system functions and the r
 Due to the underlying approached, the presented framework has its limitations and trade-offs. Processing one file at a time makes the approach incremental with file-level granularity, potentially saving time on the whole, but takes a large amount of time integrating the parser into the system. The approach also requires less memory during the parsing phase, but takes more time once every file was processed and the connecting phase takes place.
 
 \section{Benchmarking Environment}
-In order to make sure that the measurements are reproduceable, and are not affected by user input or other environmental events, the measurements were carried out in the cloud. In this section I detail the hardware and software configurations for the benchmarks.
+In order to make sure that the measurements are reproducible, and are not affected by user input or other environmental events, the measurements were carried out in the cloud. In this section I detail the hardware and software configurations for the benchmarks.
 
 \subsection{Virtual Machine Configuration}
 The benchmarks were carried out in a Microsoft Azure virtual machine~\cite{azure-vm}. Since the approach utilizes a persisted graph database with in-memory caching, I have chosen a configuration with moderate amount of memory for a server and high IO performance.
@@ -36,7 +36,9 @@ The results of the benchmarks can also be affected by the software configuration
 \subsection{Framework Dependencies}
 The prototype of the framework was based on changing and rapidly developed dependencies. Both Neo4j and Shift had version and API changes, so I chose to freeze the versions at a working state and use them for the measurements.
 
-Neo4j was freezed at the first released 3.0 version: 3.0.0. At the time of writing this report it is at version 3.0.6, with 3.1 being available as a beta. Shift was freezed at 2.2.0 with custom modifications --- accepted and merged into later versions.
+Neo4j was freezed at the first released 3.0 version: 3.0.0. At the time of writing this report it is at version 3.0.6, with 3.1 being available as a beta. Shift was freezed at 2.2.0 with custom modifications.
+
+I needed to perform some modifications on the Shift source code, which were later merged\footnote{\small\url{https://github.com/shapesecurity/shift-java/pull/101}} to the Shift repository.
 
 
 \section{Benchmark Cases}
@@ -47,10 +49,10 @@ The framework uses the Neo4j server in embedded mode (instead of a standalone co
 
 While the following benchmarks are prepared with initialized databases, I have measured the time required to prepare an empty database. This is measured by deleting the database folder, restarting the application and executing a simple query counting the nodes.
 
-The database requires 1 second to initialize (936, 945, 1010, 1019, 1022, and 1042 milliseconds in the 6 runs, respectively).
+The database requires on average 996, median 1015 milliseconds to initialize\footnote{936, 945, 1010, 1019, 1022, and 1042 milliseconds in the 6 runs, respectively}.
 
 \subsection{Source to Graph Transformation}
-After the database has been initialized, it can receive content. This transformation process is one of the most time-consuming workflows. Here the source code of the file is read from the disk or the memory, transferred to the server. It is then parsed using the Shift parser, extended with the scope analyzer and stored in the database while iterating over every node in it.
+After the database has been initialized, it can receive content. This transformation process is one of the most time-consuming workflows. Here the source code of the file is read from the disk or the memory, transferred to the server. It is then parsed using the Shift parser, extended with the scope analyzer and stored in the database while iterating over every node.
 
 \begin{figure}[!htb]
   \centering
@@ -63,7 +65,7 @@ After the database has been initialized, it can receive content. This transforma
 
 In order to present an accurate and wide-range measurement, I have selected the repository of the Tresorit web client~\cite{tresorit-webclient}. The current version of this repository contains 780 JavaScript files, with 75\,907 lines of actual code in total. This results in 8\,437\,838 graph nodes.
 
-Since the source code contains language elements not yet standardized, I transpiled the files before they are parsed by the Shift parser. This step is not calculated in the benchmark. The resulting files are then imported into the database one-by-one, sequentially, thus the parallel optimizations are not present in this measurement.
+Since the source code contains language elements not yet standardized, I translated the source code to conform ES5 before it is parsed by the Shift parser. This step is not calculated in the benchmark. The resulting files are then imported into the database one-by-one, sequentially, thus the parallel optimizations are not present in this measurement.
 
 Based on~\Cref{fig:import-steps} the time requirement of the parsing and scope analysis steps are negligible compared to the third step. Iterating and storing the elements of the ASG in the graph database shows polynomial correlation with the size of the graph. It is also visible that most of the files are parsed under one second, which makes this approach usable in real-life usage.
 
@@ -102,7 +104,7 @@ In order to measure the characteristics of the CFG transformation, I have import
   \item The transformation is executed in a parallel manner. If two transformations cause a deadlock in the database, they are canceled and tried again later. It is also possible that subgraphs containing more transformable nodes by the framework are processed slower. The slower the transformations are, the more deadlocks may happen, resulting in slower overall performance.
 \end{itemize}
 
-It is also unexpected to have the top two clusters show no correlation with the size of the resulting graph size. This phenomenon can be explained with the reasons above or with the way Neo4j executes the declarative transformations.
+It is also unexpected to have the top two clusters show no correlation with the size of the resulting graph size. This phenomenon can be explained with the reasons above or with the way Neo4j executes declarative transformations.
 
 Since the CFG transformation in the framework is far from finished, deeper examination of the results is subject to future work.
 
@@ -113,10 +115,8 @@ Although I carefully designed and executed each measurement, there might have be
 
 \subsection{Benchmarking in the Cloud} As a multiple access system, the virtual servers in the cloud can be easily affected by neighboring virtual machines using the same resources. The virtual machine manager can also limit the usage of these resources, if the machines disturb other ones. One can neither control the resources assigned to the machines, nor influence their precise geolocation and connections.
 
-My mitigation strategy is to run the benchmarks multiple times and treat their median as the correct value.
+My mitigation strategy is to run the benchmarks multiple times and treat their median as the representative value, or import a larger codebase with file sizes varying from a few to hundreds of lines.
 
 \subsection{Methodological Mistakes} It is possible that I made mistakes while implementing the approach. It may not adhere to the specification correctly, perform the transformations correctly or measure correctly.
 
 To check the validity of the results, I checked the results manually and with others tools.
-
-\subsection{Measurement Mistakes} I may have committed mistakes in the measurements or was led to the wrong conclusions evaluating these mistakes.
