@@ -45,25 +45,6 @@ Related researches show that static analysis tools are either not used or ignore
 
 TRICORDER introduces an effective place to show warnings. Given that all developers at Google use code review tools before submitting changes, TRICORDER's primary use is to provide analysis results at code review time. This has the added benefit of enabling peer accountability, where the reviewer will see if the author chose to ignore analysis results.}
 
-\newcommand{\yes}{$\CIRCLE$\xspace}
-\newcommand{\somewhat}{$\LEFTcircle$\xspace}
-\newcommand{\no}{$\Circle$\xspace}
-
-\begin{table}[!htb]
-	\centering
-	\begin{tabular}{l|cccc|c}
-		\toprule
-		                             & \textbf{Flow} & \textbf{Tern} & \textbf{TAJS} & \textbf{TRICORDER} & \textbf{My approach} \\ \midrule
-		\textbf{Open-source}         &     \yes      &     \yes      &     \yes      &        \no         &         \yes         \\
-		\textbf{Linting}             &     \yes      &               &               &        \yes        &         \yes         \\
-		\textbf{Dead code detection} &               &               &               &        \yes        &         \yes         \\
-		\textbf{Type inferencing}    &               &               &               &        \yes        &         \somewhat    \\
-		\textbf{Languages}           &      JS*      &      JS       &      ESX      &     JS, Go, Py     &          JS          \\ \bottomrule
-	\end{tabular}
-	
-	\caption{Comparison of static analysis frameworks.}
-	\label{table:speed-comparison-of-parsers}
-\end{table}
 
 \section{JavaScript Parsers}
 \label{sect:javascript-parsers}
@@ -155,3 +136,22 @@ Based on the comparison~\cite{shift-spec-comparison} between the ESTree and the 
 
 % \subsubsection{Development Activity}
 % \subsubsection{Platforms Supported}
+
+\begin{table}[htbp]
+	\newcommand{\yes}{$\CIRCLE$\xspace}
+	\newcommand{\somewhat}{$\LEFTcircle$\xspace}
+	\newcommand{\no}{$\Circle$\xspace}
+	\centering
+	\begin{tabular}{l|cccc|c}
+		\toprule
+		                             & \textbf{Flow\footnote{https://flowtype.org}} & \textbf{Tern} & \textbf{TAJS} & \textbf{TRICORDER} & \textbf{My approach} \\ \midrule
+		\textbf{Open-source}         &     \yes      &     \yes      &     \yes      &        \no         &         \yes         \\
+		\textbf{Linting}             &     \yes      &               &               &        \yes        &         \yes         \\
+		\textbf{Dead code detection} &               &               &               &        \somewhat   &         \yes         \\
+		\textbf{Type inferencing}    &               &               &               &        \somewhat   &         \somewhat    \\
+		\textbf{Languages}           &      JS*      &      JS       &      ESX      &     JS, Go, Py     &          JS          \\ \bottomrule
+	\end{tabular}
+
+	\caption{Comparison of static analysis frameworks.}
+	\label{table:comparison-of-frameworks}
+\end{table}
