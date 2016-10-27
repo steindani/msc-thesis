@@ -2,10 +2,10 @@
 \chapter{Elaboration of the Workflow}
 \label{chap:elaboration-of-the-workflow}
 
-In this chapter I demonstrate the various steps of the workflow in detail. I introduce small working source code examples and use them to demonstrate the transformation steps.
+In this chapter I demonstrate the various steps of the static analysis workflow in detail. I employ small working source code examples in order to demonstrate the steps of the source code transformation.
 
 \section{Transforming the Source Code Into an AST}
-As mentioned in~\Cref{sect:overview-transforming-the-source-code}, this transformation is carried out by the Shape Security Shift toolkit. The source code is fed into the parser along with the parameters for the parsing algorithm. Considering the new constructs introduced in ES6 (\Cref{sect:ecmascript}), I've chosen to parse every file as a \emph{Module}. This affects the grammar used in the parser and the resulting data model.
+As mentioned in~\Cref{sect:overview-transforming-the-source-code}, this transformation is carried out by the Shape Security Shift toolkit. The source code is passed to the parser along with the parameters for the parsing algorithm. Considering the new constructs introduced in ES6 (\Cref{sect:ecmascript}), I've chosen to parse every file as a \emph{Module}. This affects the grammar used in the parser and the resulting data model.
 % TODO href Shift
 
 The parse result of the one-line code snippet in~\Cref{lst:oneliner} was previously presented in~\Cref{fig:ast-asg-example}.
@@ -28,7 +28,7 @@ When a new file is added to the repository, there is no need to prepare the data
 
 The newly created metadata node acts as a subgraph selector, since it is connected to every node belonging to the file (of the given session). This makes it easy to remove the file upon the removal of the file it represents.
 
-In case the file has been modified, its metadata node is looked up and the connected nodes are removed, then the new graph is inserted.
+In case the file has been modified, the nodes connected to its metadata node are removed, then the new graph is inserted.
 
 
 \section{Division by Zero}
@@ -46,7 +46,7 @@ Taking a look at~\Cref{fig:AST-PPT}, the graph representation of the previous ex
   \label{fig:AST-PPT}
 \end{figure}
 
-One way to formalize this declarative definition in Cypher can be seen in~\Cref{lst:division-by-zero}. Executing this query on the syntax graph of the source code would find matching nodes with the right type, bind them to the corresponding names, and check whether the required relations are present, resulting in a state like in~\Cref{fig:AST-query-PPT}. Finally, the result is the \code{BinaryExpression} node. By querying the source code location (also stored in the graph connected to the node) this query can report the precise location of the expression in the source code as problematic.
+One way to formalize this declarative definition in Cypher can be seen in~\Cref{lst:division-by-zero}. Executing this query on the AST of the source code would 1)~find matching nodes with the right type, 2)~bind them to the corresponding names, and 3)~check whether the required relations are present, resulting in a state like in~\Cref{fig:AST-query-PPT}. Finally, the result is the \code{BinaryExpression} node. By querying the source code location (also stored in the graph connected to the node) this query can report the precise location of the expression in the source code as problematic.
 
 \begin{figure}[!htb]
 	\begin{minipage}{\textwidth}
@@ -137,7 +137,7 @@ Executing the following steps emulates the resolution made by the interpreter of
 	\item Connect the \code{Variable} on the import side to the \code{Declaration} on the export side with a \code{declarations} relation.
 \end{enumerate}
 
-The Cypher query in~\Cref{lst:connect-import-export} manages to connect the exact type of imports and exports mentioned in the previous sections. Note that this query does not search for a file exporting the statement. For the correct match it should also check the metadata, whether the found node was declared in a file with matching absolute path.
+The Cypher query in~\Cref{lst:connect-import-export} manages to connect the exact type of imports and exports mentioned previously. Note that this query does not search for a file exporting the statement. For the correct match it should also check the metadata, whether the found node was declared in a file with matching absolute path.
 % TODO absolute path
 
 \begin{figure}[!htb]
@@ -205,7 +205,7 @@ Compared to other commercially available software, this solution is able to dete
 \subsection{Transformation in a Transaction}
 This query utilizes several possibilities only available in Neo4j. Since the query modifies the database, but the modifications are derived information, they should not be stored in the database. Database transactions that can be discarded, but still query the modified database are highly utilized here.
 
-It is not possible to declare transitive closure\footnote{Transitive closure is marked with an asterisk in Cypher.} over arbitrary node type and edge label sequence in one Cypher query. This can be overcame by utilizing the \emph{trick} of starting a new transaction, writing the database and immediately querying the modified created data, then discarding the transaction. One can match and replace every sequence with a new, dedicated labeled edge and declare a transitive closure over it, but this requires the database to be modified (see~\Cref{fig:transitive-closure}).
+It is not possible to declare transitive closure\footnote{Transitive closure is marked with an asterisk in Cypher.} over arbitrary node type and edge label sequence in one Cypher query. This can be tackled by utilizing the \emph{trick} of starting a new transaction, writing the database and immediately querying the modified created data, then discarding the transaction. One can match and replace every sequence with a new, dedicated labeled edge and declare a transitive closure over it, but this requires the database to be modified (see~\Cref{fig:transitive-closure}).
 
 \begin{figure}[htbp]
   \centering
@@ -236,13 +236,13 @@ As previously mentioned, nodes can have multiple incoming and outgoing edges. At
 Without running or interpreting the source code it is only possible to find and map every scenario in the ASG and transform them into nodes and edges in the CFG. A possible execution path is a path in the graph from one of the entry nodes to one of the exit nodes. The constraints on this path may be unsatisfiable, thus an execution of the source code may not iterate over this path. The CFG thus contains every feasible, and some infeasible execution paths.
 
 \subsection{Transforming by Node Type}
-There are several ways to transform the ASG into a CFG. Since my approach utilizes a graph database, the framework transforms the graph one smaller subgraph at a time based on pattern matching.
+There are several ways to transform the ASG into a CFG. Since my approach utilizes a graph database, the framework transforms the graph one smaller subgraph structure at a time, utilizing on pattern matching.
 
 \subsubsection{Self-Containing Transformations}
 % containing?
 The key to this approach is widely used: every node has a \emph{start} and \emph{end} node that acts as a connection point for other nodes --- transformed at another time. These transformations will eventually connect the whole graph and represent the CFG.
 
-This approach makes it possible to parallelize and thus speed up the transformation and also generalize the transformation patterns. The following sections present how different ASG information may be transformed.
+This approach enables parallelization and thus speeds up the transformation, while generalizing the transformation patterns. The following sections present how different ASG information may be transformed.
 
 \subsubsection{Sequencing}
 Knowing the order of the statement sequences is one of the most important information for CFG transformations. Although it can be derived from the indexes of the list nodes, it is a rather compute-heavy operation. The graph thus redundantly contains the sequence information by storing the list elements both chained and indexed.
@@ -262,7 +262,7 @@ If the list contains one or more elements, the ASG structure is transformed as f
 If the list does not contain any elements, its \emph{start} node is connected to its \emph{end} node.
 
 \subsubsection{Statements}
-As the main building blocks of a language, the various statement types represent different behaviors when interpreted. There are several statement types in the \emph{Shift} metamodel, and in this section I introduce a few of these that can be used to build a smaller example program.
+As the main building blocks of a language, the various statement types represent different behaviors when interpreted. There are several statement types in the \emph{Shift} metamodel, and in this section I introduce a few of these for the purpose of building a small example program.
 
 \paragraph{VariableDeclarationStatement}
 A variable declaring statement is parsed into a structure of multiple graph nodes. These are \code{VariableDeclarationStatement}, \code{VariableDeclaration}, and \code{VariableDeclarator}. On the right side of the variable declaration statement is one \code{Expression}.

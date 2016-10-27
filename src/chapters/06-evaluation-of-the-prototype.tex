@@ -7,7 +7,7 @@ In this chapter I present the measurements of various system functions and the r
 Due to the underlying approached, the presented framework has its limitations and trade-offs. Processing one file at a time makes the approach incremental with file-level granularity, potentially saving time on the whole, but takes a large amount of time integrating the parser into the system. The approach also requires less memory during the parsing phase, but takes more time once every file was processed and the connecting phase takes place.
 
 \section{Benchmarking Environment}
-In order to make sure that the measurements are reproducible, and are not affected by user input or other environmental events, the measurements were carried out in the cloud. In this section I detail the hardware and software configurations for the benchmarks.
+In order to make sure that the measurements are reproducible, and are not affected by user input or other environmental events, the measurements were performed in the cloud. In this section I detail the hardware and software configurations for the benchmarks.
 
 \subsection{Virtual Machine Configuration}
 The benchmarks were carried out in a Microsoft Azure virtual machine~\cite{azure-vm}. Since the approach utilizes a persisted graph database with in-memory caching, I have chosen a configuration with moderate amount of memory for a server and high IO performance.
@@ -67,7 +67,7 @@ In order to present an accurate and wide-range measurement, I have selected the 
 
 Since the source code contains language elements not yet standardized, I translated the source code to conform ES5 before it is parsed by the Shift parser. This step is not calculated in the benchmark. The resulting files are then imported into the database one-by-one, sequentially, thus the parallel optimizations are not present in this measurement.
 
-Based on~\Cref{fig:import-steps} the time requirement of the parsing and scope analysis steps are negligible compared to the third step. Iterating and storing the elements of the ASG in the graph database shows polynomial correlation with the size of the graph. It is also visible that most of the files are parsed under one second, which makes this approach usable in real-life usage.
+Based on~\Cref{fig:import-steps} the time requirement of the parsing and scope analysis steps are negligible compared to the third step. Iterating and storing the elements of the ASG in the graph database shows polynomial correlation with the size of the graph. It is also visible that most of the files are parsed under one second, which indicates that it can be employed in continuous and everyday development.
 
 These results are based on two separate, sequential, full import of the source code repository, containing 780 files.
 
@@ -89,7 +89,7 @@ Searching for dead code snippets consists of two phases: first, the call graph h
 The results are based on one-time, file-by-file import and dead code search of the source code repository, containing 780 files.
 
 \subsection{ASG to CFG Transformation}
-In order to measure the characteristics of the CFG transformation, I have imported the source files of the Tresorit web client one-by-one and executed the CFG transformation queries for that one file.
+In order to measure the characteristics of the CFG transformation, I have imported the source files of the Tresorit web client one-by-one and executed the CFG transformation queries at a time.
 
 \begin{figure}[!htb]
   \centering
