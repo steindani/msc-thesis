@@ -206,23 +206,20 @@ An ASG is a graph representation of a parse result; the nodes represent subterms
 	\label{fig:ast-asg-example}
 \end{figure}
 
-\FloatBarrier
+\subsubsection{Type Inference}
+In order to make sure a system behaves correctly according to the specification, a broad range of \emph{formal methods} are present. Besides \emph{model checkers}, \emph{run-time monitoring}, the most popular formal methods are \emph{type systems}.~\cite{pierce2002types} \textquote[\cite{pierce2002types}]{A type system is a syntactic method for automatically checking the absence of certain erroneous behaviors by classifying program phrases according to the kinds of values they compute.}
 
-%\section{Type Inference}
-%
-%Type inference refers to the deduction of the data types of expressions, statements during static analysis.
-%
-%> Type inference refers to the automatic deduction of the data type of an expression in a programming language. If some, but not all, type annotations are already present it is referred to as type reconstruction[citation needed]. The reverse operation of type inference is called type erasure.
-%
-%> It is a feature present in some strongly statically typed languages. It is often characteristic of functional programming languages in general. Some languages that include type inference are Nim, ML, OCaml, F\#, Haskell, Scala, Go, D, Clean, Opa, Rust, Swift, Visual Basic (starting with version 9.0), C\# (starting with version 3.0) and C++11. The ability to infer types automatically makes many programming tasks easier, leaving the programmer free to omit type annotations while still permitting type checking.
-%
-%% https://en.wikipedia.org/wiki/Type_inference
-%
-%\subsection{Typed JavaScript Derivations}
-%
-%\subsection{Analysis of JavaScript Source Codes}
+Type inference refers to the deduction of the data types of expressions, statements in the source code, usually executed during compilation and static analysis. By utilizing type inference, deducing types as \emph{interfaces}, and checking contracts between various parts of the software can yield a more consistent and bug-free code.
+
+Type systems also help developers write the source code with context-aware assistance. With implicitly typed languages the ability to infer data types can make prototyping and developing programs in a more agile fashion, compared to explicitly typed languages. Omiting the type annotations eliminates the need to propagate changes in the source code in case of a refactor, while still executing interface checks prevent type errors at runtime.
+
+\paragraph{Typed JavaScript Derivations} There are several languages with type systems that compile to JavaScript, such as TypeScript\footnote{\small\url{https://www.typescriptlang.org/}}, Dart\footnote{\small\url{https://www.dartlang.org/}}, Elm\footnote{\small\url{http://elm-lang.org/}}, and Flow.
+% TODO ref Flow
+
+%\subsubsection{Tooling}
 %There are several static analysis frameworks and solutions available for JavaScript. I introduce and compare them in detail in \cref{sect:javascript-parsers} (JavaScript parsers) and \cref{sect:javascript-type-inferencers} (JavaScript type inferencing solutions).
 
+\FloatBarrier
 
 \section{Handling Large Interconnected Data}
 In numerous use cases, interconnected data sets can be represented and processed as a graph. \emph{Graph databases} provide a way to efficiently store graphs and evaluate graph queries. In this section I introduce the concept of graph databases, and graph pattern matching. I also present different types of graph database implementations from which I selected the most appropriate technology for the approach.
