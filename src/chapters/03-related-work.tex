@@ -46,6 +46,33 @@ Related researches show that static analysis tools are either not used or ignore
 TRICORDER introduces an effective place to show warnings. Given that all developers at Google use code review tools before submitting changes, TRICORDER's primary use is to provide analysis results at code review time. This has the added benefit of enabling peer accountability, where the reviewer will see if the author chose to ignore analysis results.}
 
 
+\subsection{Facebook Flow}
+Flow~\cite{flow} is an open-source static type checker for JavaScript, written in OCaml, utilizing annotation-based language extension and type inferencing. The implicit infered types can be corrected by explicit type annotations helping the framework. Exported variable, function, and class declarations have to be explicitly annotated.
+% http://flowtype.org/docs/five-simple-examples.html\#2-adding-type-annotations
+
+Since Flow requires a modified language, a new compilation step is required in order to omit the annotations and produce a source code in pure JavaScript.
+% http://flowtype.org/docs/running.html\#using-the-offline-transform-tool
+It is also possible to provide interface files for Flow, enabling to import third party libraries.
+% http://flowtype.org/docs/existing.html
+
+Flow utilizes control flow analysis, enabling property access detection on null or undefined values. It also executes analyses in an incremental fashion, storing the intermittent results in a persistent server and updating it in the background when the source code is changed.
+% http://flowtype.org/docs/about-flow.html
+
+
+\subsection{JSNice -- Programming Tools with Big Data and Conditional Random Fields (ETHZ)}
+\begin{itemize}
+ \item \url{http://www.srl.inf.ethz.ch/jsnice.php}
+ \item \url{http://www.srl.inf.ethz.ch/papers/jsnice15.pdf}
+ \item \url{http://www.jsnice.org/}
+ \item \url{https://github.com/eth-srl/Nice2Predict}
+\end{itemize}
+
+\subsection{Infernu}
+\begin{itemize}
+ \item \url{https://github.com/sinelaw/infernu}
+\end{itemize}
+
+
 \section{JavaScript Parsers}
 \label{sect:javascript-parsers}
 In this section I showcase the most used, trending JavaScript parser technologies and justify why I have chosen the Shape Security Shift family as the parser and additional toolset for my approach.
