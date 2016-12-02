@@ -46,6 +46,20 @@ Related researches show that static analysis tools are either not used or ignore
 TRICORDER introduces an effective place to show warnings. Given that all developers at Google use code review tools before submitting changes, TRICORDER's primary use is to provide analysis results at code review time. This has the added benefit of enabling peer accountability, where the reviewer will see if the author chose to ignore analysis results.}
 
 
+\section{jQAssistant}
+\textquote[\cite{jqassistant-manual}]{jQAssistant~\cite{jqassistant} is a QA tool which allows the definition and validation of project specific rules on a structural level. It is built upon the graph database Neo4j and can easily be plugged into the build process to automate detection of constraint violations and generate reports about user defined concepts and metrics.
+
+Example use cases:
+\begin{itemize}[topsep=0pt]
+	\item Enforce naming conventions, e.g. EJBs, JPA entities, test classes, packages, maven modules etc.
+	\item Validate dependencies between modules of your project
+	\item Separate API and implementation packages
+	\item Detect common problems like cyclic dependencies or tests without assertions
+\end{itemize}}
+
+jQAssistant mainly aims at processing and validating Java projects during the continuous integration process. It utilizes the same database backend and its approach is based on a similiar ideology. Instead of analyzing the semantics of the source code, it concentrates on the structural details and connections within the codebase.
+
+
 \subsection{Facebook Flow}
 Flow~\cite{flow} is an open-source static type checker for JavaScript, written in OCaml, utilizing annotation-based language extension and type inferencing. The implicit infered types can be corrected by explicit type annotations helping the framework. Exported variable, function, and class declarations have to be explicitly annotated.
 % http://flowtype.org/docs/five-simple-examples.html\#2-adding-type-annotations
@@ -59,18 +73,42 @@ Flow utilizes control flow analysis, enabling property access detection on null 
 % http://flowtype.org/docs/about-flow.html
 
 
-\subsection{JSNice -- Programming Tools with Big Data and Conditional Random Fields (ETHZ)}
-\begin{itemize}
- \item \url{http://www.srl.inf.ethz.ch/jsnice.php}
- \item \url{http://www.srl.inf.ethz.ch/papers/jsnice15.pdf}
- \item \url{http://www.jsnice.org/}
- \item \url{https://github.com/eth-srl/Nice2Predict}
-\end{itemize}
+\subsection{JSNice}
+JSNice~\cite{jsnice} is a scalable prediction engine based on Nice2Predict~\cite{nice2predict}, a learning framework for program property prediction. The novel approach of JSNice utilities machine learning; first it learns a probabilistic model from existing, prepared data, then predicts properties for unseen programs based on this model. Besides predicting names of identifiers, it also predicts type annotations of variables, thus producing both syntactic and semantic information.~\cite{jsnice15}
 
 \subsection{Infernu}
-\begin{itemize}
- \item \url{https://github.com/sinelaw/infernu}
-\end{itemize}
+Infernu~\cite{infernu} is a type checker for JavaScript, written in Haskell. \textquote[\cite{infernu}] {Infernu's type system is designed for writing dynamic-looking code in a safe statically type-checked environment. Type annotations are not required [...] instead, Infernu infers the types of expressions by examining the code. If the inferred types contradict each other, Infernu reports the contradiction as an error.
+
+Infernu places restrictions on JS programs that are otherwise valid. In other words, Infernu is a subset of JavaScript. Infernu tries to strike a balance between type system complexity and dynamic-style coding flexibility.
+
+Infernu's type system is based on Damas-Hindley-Milner (and Algorithm W) with added mutable variables (monomorphically constrained using value restriction), and with row type polymorphism, equi-recursive types (constrained to go through row types), rank-2 row types (for polymorphic methods), and simple type classes. Functions are uncurried.}
+
+
+\subsection{Comparison}
+Although several tools are available, they are not widely used. This thesis aims to find out why and whether a graph pattern matching based approach can solve the issues and act as an universal framework. \Cref{table:comparison-of-frameworks} concludes some of the common features of the previously mentioned tools.
+
+\vfill
+\begin{table}[htbp!]
+	\newcommand{\yes}{$\CIRCLE$\xspace}
+	\newcommand{\somewhat}{$\LEFTcircle$\xspace}
+	\newcommand{\no}{$\Circle$\xspace}
+	\centering
+	\begin{tabular}{l|ccccc|c}
+		\toprule
+		                             & \textbf{Flow} & \textbf{jQA} & \textbf{Tern} & \textbf{TAJS} & \textbf{TRICORDER} & \textbf{My approach} \\ \midrule
+		\textbf{Open-source}         &     \yes      &   \yes       &     \yes      &     \yes      &        \no         &         \yes         \\
+		\textbf{Linting}             &     \yes      &   \somewhat  &     \somewhat &     \no       &        \yes        &         \yes         \\
+		\textbf{Dead code detection} &     \no       &   \somewhat  &     \no       &     \no       &        \somewhat   &         \yes         \\
+		\textbf{Type inferencing}    &     \yes      &   \somewhat  &     \yes      &     \yes      &        \somewhat   &         \somewhat    \\
+		\textbf{Languages}           &      JS*      &   Java       &      JS       &      ESX      &     JS, Go, Py     &          JS          \\ \bottomrule
+	\end{tabular}
+
+	\caption{Comparison of static analysis frameworks.}
+	\label{table:comparison-of-frameworks}
+\end{table}
+\vfill
+% \FloatBarrier
+\clearpage
 
 
 \section{JavaScript Parsers}
@@ -163,23 +201,3 @@ Based on the comparison~\cite{shift-spec-comparison} between the ESTree and the 
 
 % \subsubsection{Development Activity}
 % \subsubsection{Platforms Supported}
-
-\begin{table}[ht!]
-	\newcommand{\yes}{$\CIRCLE$\xspace}
-	\newcommand{\somewhat}{$\LEFTcircle$\xspace}
-	\newcommand{\no}{$\Circle$\xspace}
-	\centering
-	\begin{tabular}{l|cccc|c}
-		\toprule
-		                             & \textbf{Flow\footnote{https://flowtype.org}} & \textbf{Tern} & \textbf{TAJS} & \textbf{TRICORDER} & \textbf{My approach} \\ \midrule
-		\textbf{Open-source}         &     \yes      &     \yes      &     \yes      &        \no         &         \yes         \\
-		\textbf{Linting}             &     \yes      &     \somewhat &     \no       &        \yes        &         \yes         \\
-		\textbf{Dead code detection} &     \no       &     \no       &     \no       &        \somewhat   &         \yes         \\
-		\textbf{Type inferencing}    &     \yes      &     \yes      &     \yes      &        \somewhat   &         \somewhat    \\
-		\textbf{Languages}           &      JS*      &      JS       &      ESX      &     JS, Go, Py     &          JS          \\ \bottomrule
-	\end{tabular}
-
-	\caption{Comparison of static analysis frameworks.}
-	\label{table:comparison-of-frameworks}
-\end{table}
-\vfill
