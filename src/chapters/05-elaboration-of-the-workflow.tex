@@ -318,6 +318,64 @@ As previously mentioned in~\Cref{sect:cfg-paths}, the CFG contains every feasibl
 With the transformation of the statements and the conditions of the if statements and other branching structures into a satisfactory problem it may be possible to decide whether there are program inputs that take the execution of the program to the selected node. This topic is subject to future work.
 
 
+\section{Type Inference}
+My approach for finding the possible types of an expression or variable is similiar to the technique introduced for transforming the ASG into a CFG-like structure, as the data flow closely follows the control flow.
+
+Following the approach of Tern (introduced in~\Cref{sect:tern}), first I assign type information to given nodes in the ASG, then propagate this information based on constraints and rules, detailed in this section.
+
+\subsection{Type System}
+In order to represent the types in the graph, structures are introduced and stored in the same graph database. The database has a singular \code{TypeSystem} collector node, connected to every \code{Tag}, representing a type. These \code{Tag}s are attached to a given node, meaning the node can contain a value of the given type.
+
+\subsubsection{Literal Types}
+Since the literal expression nodes in the ASG are explicitly annotated with their type, it is the easyest to mark these nodes with a \code{Tag}: \code{Boolean}, \code{RegExp}, \code{Infinity}, \code{Numeric}, \code{Null}, and \code{String}.
+
+\subsubsection{Classes}
+Handling classes and composite structures requires new \code{Tag}s to be introduced to the type system. These should collect properties and methods, with their possible types also connected. The topic of developing the proper representation and transformations collecting and maintaining these structures is subject to future work.
+
+\subsubsection{Functions}
+Functions take parameters and based on inner logic (that could even consider the type of the parameters and other variables) may return any type of result. If the function declaration body returns a literal, an already tagged variable referende, or a new instance of a class, it is easily tagged.
+
+The representation of function types is also subject to future work. There are two options: 1) either maintain multiple type declarations for a given function, with every combination of parameter types, or 2) store only a composite declaration with a list of possible values for every parameter and the return value.
+
+\subsection{Propagation Strategy}
+As the program runs, the values and thus their respective type is moving from variable to variable through variable reads, operators, expressions, statements, and variable writes. While this process follows the control flow of the program, during static analysis there is no way to find the exact order of execution. Just like the CFG in my approach contains every possible flow, the type annotations in the graph will also contain every possible type that the given node may have.
+
+The basic algorithm for propagating type information is the following:
+\begin{enumerate}[topsep=0pt]
+	\item Identify the literals and class instaces, tag these accordingly.
+	\item Apply the propagation rules considering the constraints and propagate the tags so a given node can only have one reference to a given tag.
+	\item Repeat step 2 until there is no modification in the graph --- or in case of an endless loop stop after given amount of iterations.
+\end{enumerate}
+
+\subsubsection{Expressions}
+There are more than 25 types in the Shift metamodel for JavaScript. Some of these have discriminator values, that may result in different \emph{meaning} for different input types. \code{BinaryExpression}s have an \code{Expression} on their left and a rigth side each with their type information, and the operator gives \emph{meaning} to what the resulting value can be.
+
+A simple addition (a \code{BinaryExpression} with a \code{+} sign as a discriminating \code{BinaryOperator}) can have various results~\cite{js-arithmetic-operators}:
+\begin{itemize}[topsep=0pt]
+	\item \code{Number  + Number  $\longrightarrow$ Number} \hfill\emph{(addition)}
+	\item \code{Boolean + Number  $\longrightarrow$ Number} \hfill\emph{(addition)}
+	\item \code{Boolean + Boolean $\longrightarrow$ Number} \hfill\emph{(addition)}
+	\item \code{Number  + String  $\longrightarrow$ String} \hfill\emph{(concatenation)}
+	\item \code{String  + Boolean $\longrightarrow$ String} \hfill\emph{(concatenation)}
+	\item \code{String  + String  $\longrightarrow$ String} \hfill\emph{(concatenation)}
+\end{itemize}
+
+Logical operators also behave differently compared to e.g., Java. The logical and operator (\code{\&\&}) returns the left expression if it is so-called \emph{falsy} (values that can be converted to \code{false}, such as \code{null}, 0, undefined). If the left side expression is \emph{truthy}, it returns the right side value. Thus the possible return \emph{type} of the expression can be both types and not necessarily \code{Boolean}.
+
+Apart from \code{UnaryExpression}s and \code{BinaryExpression}s, there are several more, most importantly the \code{CallExpression}, that returns the value of the called function, thus a value with the \emph{types} the function may return. Just like in case of the CFG transformations, several rules have to be written in order to cover the various expressions of the language.
+
+Since the base of the transformation is the ASG, where the expression is parsed in the correct precedence, the transformation will also respect this order and compute the possible types of the whole expression.
+
+\subsubsection{Statements}
+
+
+\subsubsection{Variable References}
+
+expressions read, statements assign
+
+\subsection{Limitations}
+arrays, maps, sets, this reference
+
 %\section{Language Limitations}
 % object as a parameter
 % default parameters
