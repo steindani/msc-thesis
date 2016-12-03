@@ -350,17 +350,26 @@ The basic algorithm for propagating type information is the following:
 \subsubsection{Expressions}
 There are more than 25 types in the Shift metamodel for JavaScript. Some of these have discriminator values, that may result in different \emph{meaning} for different input types. \code{BinaryExpression}s have an \code{Expression} on their left and a rigth side each with their type information, and the operator gives \emph{meaning} to what the resulting value can be.
 
-A simple addition (a \code{BinaryExpression} with a \code{+} sign as a discriminating \code{BinaryOperator}) can have various results~\cite{js-arithmetic-operators}:
-\begin{itemize}[topsep=0pt]
-	\item \code{Number  + Number  $\longrightarrow$ Number} \hfill\emph{(addition)}
-	\item \code{Boolean + Number  $\longrightarrow$ Number} \hfill\emph{(addition)}
-	\item \code{Boolean + Boolean $\longrightarrow$ Number} \hfill\emph{(addition)}
-	\item \code{Number  + String  $\longrightarrow$ String} \hfill\emph{(concatenation)}
-	\item \code{String  + Boolean $\longrightarrow$ String} \hfill\emph{(concatenation)}
-	\item \code{String  + String  $\longrightarrow$ String} \hfill\emph{(concatenation)}
-\end{itemize}
+\Cref{table:addition-operator} shows the various results of a simple addition (a \code{BinaryExpression} with a \code{+} sign as a discriminating \code{BinaryOperator}).~\cite{js-arithmetic-operators}
 
-Logical operators also behave differently compared to e.g., Java. The logical and operator (\code{\&\&}) returns the left expression if it is so-called \emph{falsy} (values that can be converted to \code{false}, such as \code{null}, 0, undefined). If the left side expression is \emph{truthy}, it returns the right side value. Thus the possible return \emph{type} of the expression can be both types and not necessarily \code{Boolean}.
+\begin{table}[htbp!]
+	\centering
+	\begin{tabular}{lclclr}
+		\toprule
+		\textbf{Left expression} & \textbf{Operator} & \textbf{Right expression} & & \textbf{Result} & \textbf{Meaning} \\ \midrule
+		Number                   &         +         & Number          & $\longrightarrow$ & Number  & \emph{(addition)} \\
+		Boolean                  &         +         & Number          & $\longrightarrow$ & Number  & \emph{(addition)} \\
+		Boolean                  &         +         & Boolean         & $\longrightarrow$ & Number  & \emph{(addition)} \\
+		Number                   &         +         & String          & $\longrightarrow$ & String  & \emph{(concatenation)} \\
+		String                   &         +         & Boolean         & $\longrightarrow$ & String  & \emph{(concatenation)} \\
+		String                   &         +         & String          & $\longrightarrow$ & String  & \emph{(concatenation)} \\ \bottomrule
+	\end{tabular}
+
+	\caption{Meaning of the addition operator.}
+	\label{table:addition-operator}
+\end{table}
+
+Logical operators also behave differently compared to e.g., Java. The logical and operator (\code{\&\&}) returns the left expression if it is so-called \emph{falsy} (values that can be converted to \code{false}, such as \code{null}, \code{0}, \code{undefined}). If the left side expression is \emph{truthy}, it returns the right side value. Thus the possible return \emph{type} of the expression can be both types and not necessarily \code{Boolean}.
 
 Apart from \code{UnaryExpression}s and \code{BinaryExpression}s, there are several more, most importantly the \code{CallExpression}, that returns the value of the called function, thus a value with the \emph{types} the function may return. Just like in case of the CFG transformations, several rules have to be written in order to cover the various expressions of the language.
 
