@@ -348,7 +348,7 @@ The basic algorithm for propagating type information is the following:
 \end{enumerate}
 
 \subsubsection{Expressions}
-There are more than 25 types in the Shift metamodel for JavaScript. Some of these have discriminator values, that may result in different \emph{meaning} for different input types. \code{BinaryExpression}s have an \code{Expression} on their left and a rigth side each with their type information, and the operator gives \emph{meaning} to what the resulting value can be.
+There are more than 25 types in the Shift metamodel for JavaScript. Some of these have discriminator values, that may result in different \emph{meaning} for different input types. \code{BinaryExpression}s have an \code{Expression} on their left and rigth side each with their type information, and the operator gives \emph{meaning} to what the resulting value can be.
 
 \Cref{table:addition-operator} shows the various results of a simple addition (a \code{BinaryExpression} with a \code{+} sign as a discriminating \code{BinaryOperator}).~\cite{js-arithmetic-operators}
 
@@ -369,21 +369,24 @@ There are more than 25 types in the Shift metamodel for JavaScript. Some of thes
 	\label{table:addition-operator}
 \end{table}
 
-Logical operators also behave differently compared to e.g., Java. The logical and operator (\code{\&\&}) returns the left expression if it is so-called \emph{falsy} (values that can be converted to \code{false}, such as \code{null}, \code{0}, \code{undefined}). If the left side expression is \emph{truthy}, it returns the right side value. Thus the possible return \emph{type} of the expression can be both types and not necessarily \code{Boolean}.
+Logical operators also behave differently compared to e.g., Java. The logical and operator (\code{\&\&}) returns the left expression if it is so-called \emph{falsy} (values that can be converted to \code{false}, such as \code{null}, \code{0}, \code{undefined}). If the left side expression is \emph{truthy}, it returns the right side value. Thus the possible return \emph{type} of the expression can be types of both expression and not necessarily \code{Boolean}.
 
-Apart from \code{UnaryExpression}s and \code{BinaryExpression}s, there are several more, most importantly the \code{CallExpression}, that returns the value of the called function, thus a value with the \emph{types} the function may return. Just like in case of the CFG transformations, several rules have to be written in order to cover the various expressions of the language.
+Apart from \code{UnaryExpression}s and \code{BinaryExpression}s, there are several more. Most importantly the \code{CallExpression}, that returns the value of the called function, thus a value with the \emph{types} the function may return. Just like in case of the CFG transformations, several rules have to be written in order to cover the various expressions of the language.
 
 Since the base of the transformation is the ASG, where the expression is parsed in the correct precedence, the transformation will also respect this order and compute the possible types of the whole expression.
 
 \subsubsection{Statements}
-
+There are also more than 20 \code{Statement} types in the metamodel of Shift. Some of these introduce new, temporary variables in the scope, such as \code{ForStatement} or its specific, \emph{syntactic sugar} version, \code{ForOfStatement}, that iterates over the values of an iterable type. In these cases the transforming graph pattern has to extract the inner type information from the type of the iterable and propagate it to the variable.
 
 \subsubsection{Variable References}
+In JavaScript one may think of a variable identifier as a label, a name, a reference to a value. These variables are represented in the ASG and (most of) their static access references are also represented.
 
-expressions read, statements assign
+When an \code{Expression} accesses the value of a \code{Variable}, a reading \code{Reference} is present in the ASG. The same goes for the \code{VariableDeclarationStatement}s and \code{ExpressionStatement}s with \code{AssignmentExpression} inside, assigning value to a variable, represented by a writing \code{Reference}.
 
-\subsection{Limitations}
-arrays, maps, sets, this reference
+These \code{Reference}s are only present for static scope variable accesses. New transformation rules have to be created covering the cases when an \code{Object} is dynamically introduced to a scope --- e.g., passed as a parameter for a function. This is also subject to future work.
+
+\subsection{Limitations and Obstacles}
+arrays, maps, sets, this reference, method calls forEach, filter
 
 %\section{Language Limitations}
 % object as a parameter
