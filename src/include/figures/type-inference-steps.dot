@@ -1,0 +1,184 @@
+digraph Neo {
+  node [
+    fontsize = "18"
+    shape = "Mrecord"
+    fontname = "Clear Sans Light"
+  ]
+  edge [
+    fontname = "Clear Sans Light"
+    fontsize = "18"
+  ]
+  N2 [
+    label = "{GlobalScope\n
+Scope|'type' = 'Global' : String\l'dynamic' = true : boolean\l}"
+  ]
+  N2 -> N6 [
+    label = "children\n"
+  ]
+  N2 -> N3 [
+    label = "astNode\n"
+  ]
+  N3 [
+    label = "{Module\n
+Node|}"
+  ]
+  N3 -> N11 [
+    label = "items\n"
+  ]
+  N3 -> N18 [
+    label = "items\n"
+  ]
+  N11 [
+    label = "{Statement\n
+ExpressionStatement|}"
+  ]
+  N11 -> N28 [
+    label = "expression\n"
+  ]
+  N28 [
+    label = "{BinaryExpression\n
+Expression|'operator' = 'Div' : String\l}"
+  ]
+  N28 -> N47 [
+    label = "right\n"
+  ]
+  N28 -> N45 [
+    label = "left\n"
+  ]
+  N45 [
+    label = "{Expression\n
+IdentifierExpression|'name' = 'foo' : String\l}"
+  ]
+  N47 [
+    label = "{Expression\n
+LiteralNumericExpression|'value' = 0.0 : double\l}"
+  ]
+  N47 -> N98 [
+    label = "_type\n①",
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    fontname = "Clear Sans Bold",
+    fontsize = "28",
+    penwidth = 3,
+  ]
+  N98 [
+    label = "{Tag\n
+Number|}",
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    fontname = "Clear Sans Bold",
+    fontsize = "28",
+    penwidth = 3,
+  ]
+  N18 [
+    label = "{VariableDeclarationStatement\n
+Statement|}"
+  ]
+  N18 -> N24 [
+    label = "declaration\n"
+  ]
+  N24 [
+    label = "{VariableDeclaration\n
+FunctionDeclarationClassDeclarationVariableDeclaration\n
+VariableDeclarationBinding\n
+VariableDeclarationExpression|'kind' = 'var' : String\l}"
+  ]
+  N24 -> N37 [
+    label = "declarators\n"
+  ]
+  N37 [
+    label = "{VariableDeclarator|}"
+  ]
+  N37 -> N84 [
+    label = "init\n"
+  ]
+  N37 -> N70 [
+    label = "binding\n"
+  ]
+  N70 [
+    label = "{BindingIdentifier\n
+BindingIdentifierMemberExpression\n
+Binding|'name' = 'foo' : String\l}"
+  ]
+  N84 [
+    label = "{Expression\n
+LiteralNumericExpression|'value' = 1.0 : double\l}"
+  ]
+  N84 -> N98 [
+    label = "_type\n①",
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    fontname = "Clear Sans Bold",
+    fontsize = "28",
+    penwidth = 3,
+  ]
+  N6 [
+    label = "{Scope|'type' = 'Module' : String\l'dynamic' = false : boolean\l}"
+  ]
+  N6 -> N3 [
+    label = "astNode\n"
+  ]
+  N6 -> N21 [
+    label = "variables\n"
+  ]
+  N21 [
+    label = "{Map|}"
+  ]
+  N21 -> N30 [
+    label = "foo\n"
+  ]
+  N30 [
+    label = "{Variable|'name' = 'foo' : String\l}"
+  ]
+  N30 -> N53 [
+    label = "declarations\n"
+  ]
+  N30 -> N50 [
+    label = "references\n"
+  ]
+  N30 -> N64 [
+    label = "references\n"
+  ]
+  N50 [
+    label = "{Reference|'accessibility' = 'Read' : String\l}"
+  ]
+  N50 -> N45 [
+    label = "node\n"
+  ]
+  N64 [
+    label = "{Reference|'accessibility' = 'Write' : String\l}"
+  ]
+  N64 -> N70 [
+    label = "node\n"
+  ]
+  N53 [
+    label = "{Declaration|'kind' = 'Var' : String\l}"
+  ]
+  N53 -> N70 [
+    label = "node\n"
+  ]
+  N30 -> N98 [
+    label = "_type\n②",
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    fontname = "Clear Sans Bold",
+    fontsize = "28",
+    penwidth = 3,
+  ]
+  N45 -> N98 [
+    label = "_type\n③",
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    fontname = "Clear Sans Bold",
+    fontsize = "28",
+    penwidth = 3,
+  ]
+  N28 -> N98 [
+    label = "_type\n④",
+    color = "turquoise4",
+    fontcolor = "turquoise4",
+    fontname = "Clear Sans Bold",
+    fontsize = "28",
+    penwidth = 3,
+  ]
+}

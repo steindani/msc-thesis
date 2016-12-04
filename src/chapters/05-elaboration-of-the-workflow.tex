@@ -1,4 +1,4 @@
-% !TEX root = ../main.tex
+cd% !TEX root = ../main.tex
 \chapter{Elaboration of the Workflow}
 \label{chap:elaboration-of-the-workflow}
 
@@ -384,6 +384,15 @@ In JavaScript one may think of a variable identifier as a label, a name, a refer
 When an \code{Expression} accesses the value of a \code{Variable}, a reading \code{Reference} is present in the ASG. The same goes for the \code{VariableDeclarationStatement}s and \code{ExpressionStatement}s with \code{AssignmentExpression} inside, assigning value to a variable, represented by a writing \code{Reference}.
 
 These \code{Reference}s are only present for static scope variable accesses. New transformation rules have to be created covering the cases when an \code{Object} is dynamically introduced to a scope --- e.g., passed as a parameter for a function. This is also subject to future work.
+
+\Cref{fig:type-propagation} shows how the type information may propagate in the graph. After the \code{Literal}s have been tagged \circled{1}, the type information propagates to the \code{Variable} \circled{2} through the \code{VariableDeclarator} and the \code{BindingIdentifierMemberExpression}. This type information is read by the \code{IdentifierExpression} \circled{3} and the final type of the \code{BinaryExpression} based on the rules of adding a number to another number will be calculated and assigned \circled{4}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{type-inference-steps}
+  \caption{Type information propagation.}
+  \label{fig:type-propagation}
+\end{figure}
 
 \subsection{Limitations and Challenges}
 For my thesis I have only investigated whether it is possible to build the foundations of a type inferencing system on graph pattern matching and transformations. The type inferencing system in Tern (introduced in~\Cref{sect:tern}) has already shown that it is possible to do so on in-memory AST representations with visitor patterns.
