@@ -385,8 +385,12 @@ When an \code{Expression} accesses the value of a \code{Variable}, a reading \co
 
 These \code{Reference}s are only present for static scope variable accesses. New transformation rules have to be created covering the cases when an \code{Object} is dynamically introduced to a scope --- e.g., passed as a parameter for a function. This is also subject to future work.
 
-\subsection{Limitations and Obstacles}
-arrays, maps, sets, this reference, method calls forEach, filter
+\subsection{Limitations and Challenges}
+For my thesis I have only investigated whether it is possible to build the foundations of a type inferencing system on graph pattern matching and transformations. The type inferencing system in Tern (introduced in~\Cref{sect:tern}) has already shown that it is possible to do so on in-memory AST representations with visitor patterns.
+
+In order to achieve better language coverage it is subject to future work to develop a proper representation for compound and complex data structures, handle built-in functions and methods of data types. Challenges also include handling the \code{this} references in functions and class methods; anonym functions and method calls like \code{forEach}, \code{map}, or \code{filter}.
+
+With the right constraints it is possible to approximately infer the type of a given expression and help developers with context-aware information and warning for type-related problems.
 
 %\section{Language Limitations}
 % object as a parameter
