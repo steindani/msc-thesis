@@ -216,6 +216,7 @@ It is not possible to declare transitive closure\footnote{Transitive closure is 
 
 
 \section{Control Flow Graph (CFG)}
+\label{sect:transforming-asg-to-cfg}
 Control Flow Graphs (CFG) are graph representations of the computation and control flows in the program. In this graph the nodes represent statements that are not interrupted by control changes. Directed edges represent possible flow of control between the two nodes. Nodes can have multiple incoming and outgoing edges.~\cite{IntroductionToCompilers}
 \Cref{fig:CFG-PPT} presents an example CFG.
 
@@ -319,26 +320,32 @@ With the transformation of the statements and the conditions of the if statement
 
 
 \section{Type Inference}
-My approach for finding the possible types of an expression or variable is similiar to the technique introduced for transforming the ASG into a CFG-like structure, as the data flow closely follows the control flow.
+As detailed in \Cref{sect:introducing-type-inference}, type inference refers to the deduction of the data types of expressions, statements in the source code. My approach to finding the possible types of an expression or variable is similiar to the technique introduced in \Cref{sect:transforming-asg-to-cfg}, transforming the ASG into a CFG-like structure, as the data flow closely follows the control flow.
 
-Following the approach of Tern (introduced in~\Cref{sect:tern}), first I assign type information to given nodes in the ASG, then propagate this information based on constraints and rules, detailed in this section.
+Type inference is a particularly difficult problem, even for statically typed languages. For dynamic languages, such as JavaScript, it is even more problematic and only a few tools are available. The most popular ones are listed in in \Cref{chap:related-work}.
+
+Following the approach of one of these tools, Tern (introduced in~\Cref{sect:tern}), first I assign type information to given nodes in the ASG, then propagate this information based on constraints and rules, detailed in this section.
 
 \subsection{Type System}
 In order to represent the types in the graph, structures are introduced and stored in the same graph database. The database has a singular \code{TypeSystem} collector node, connected to every \code{Tag}, representing a type. These \code{Tag}s are attached to a given node, meaning the node can contain a value of the given type.
 
 \subsubsection{Literal Types}
-Since the literal expression nodes in the ASG are explicitly annotated with their type, it is the easyest to mark these nodes with a \code{Tag}: \code{Boolean}, \code{RegExp}, \code{Infinity}, \code{Numeric}, \code{Null}, and \code{String}.
+Since the literal expression nodes in the ASG are explicitly annotated with their type, it is the easiest to mark these nodes with a \code{Tag}: \code{Boolean}, \code{RegExp}, \code{Infinity}, \code{Numeric}, \code{Null}, and \code{String}.
 
 \subsubsection{Classes}
-Handling classes and composite structures requires new \code{Tag}s to be introduced to the type system. These should collect properties and methods, with their possible types also connected. The topic of developing the proper representation and transformations collecting and maintaining these structures is subject to future work.
+Handling classes and composite structures requires new \code{Tag}s to be introduced to the type system. The \code{Tag}s should contain information about properties and methods, along with their possible types. The topic of developing the proper representation and transformations collecting and maintaining these structures is subject to future work.
 
 \subsubsection{Functions}
-Functions take parameters and based on inner logic (that could even consider the type of the parameters and other variables) may return any type of result. If the function declaration body returns a literal, an already tagged variable referende, or a new instance of a class, it is easily tagged.
+Functions take parameters and based on inner logic (that could even consider the type of the parameters and other variables) may return any type of result. If the function declaration body returns a literal, an already tagged variable reference, or a new instance of a class, it is easily tagged.
 
-The representation of function types is also subject to future work. There are two options: 1) either maintain multiple type declarations for a given function, with every combination of parameter types, or 2) store only a composite declaration with a list of possible values for every parameter and the return value.
+The representation of function types is also subject to future work. I outline two possible representations:
+\begin{enumerate}
+	\item Maintain multiple type declarations for a given function, with every combination of parameter types.
+	\item Store only a composite declaration with a list of possible values for every parameter and the return value.
+\end{enumerate}
 
 \subsection{Propagation Strategy}
-As the program runs, the values and thus their respective type is moving from variable to variable through variable reads, operators, expressions, statements, and variable writes. While this process follows the control flow of the program, during static analysis there is no way to find the exact order of execution. Just like the CFG in my approach contains every possible flow, the type annotations in the graph will also contain every possible type that the given node may have.
+As the program runs, the values and thus their respective types are moving from variable to variable through variable reads, operators, expressions, statements, and variable writes. While this process follows the control flow of the program, during static analysis there is no way to find the exact order of execution. Just like the CFG in my approach contains every possible flow, the type annotations in the graph will also contain every possible type that a given node may have.
 
 The basic algorithm for propagating type information is the following:
 \begin{enumerate}[topsep=0pt]
@@ -348,9 +355,9 @@ The basic algorithm for propagating type information is the following:
 \end{enumerate}
 
 \subsubsection{Expressions}
-There are more than 25 types in the Shift metamodel for JavaScript. Some of these have discriminator values, that may result in different \emph{meaning} for different input types. \code{BinaryExpression}s have an \code{Expression} on their left and rigth side each with their type information, and the operator gives \emph{meaning} to what the resulting value can be.
+There are more than 25 types in the Shift metamodel for JavaScript. Some of these have discriminator values, that may result in different \emph{meaning} for different input types. \code{BinaryExpression}s have an \code{Expression} on their left and rigth side each with their type information, and the operator gives \emph{meaning} (semantics) to what the resulting value can be.
 
-\Cref{table:addition-operator} shows the various results of a simple addition (a \code{BinaryExpression} with a \code{+} sign as a discriminating \code{BinaryOperator}).~\cite{js-arithmetic-operators}
+\Cref{table:addition-operator} shows the various semantics of a simple addition (a \code{BinaryExpression} with a \code{+} sign as a discriminating \code{BinaryOperator}).~\cite{js-arithmetic-operators}
 
 \begin{table}[htbp!]
 	\centering
@@ -365,13 +372,13 @@ There are more than 25 types in the Shift metamodel for JavaScript. Some of thes
 		String                   &         +         & String          & $\longrightarrow$ & String  & \emph{(concatenation)} \\ \bottomrule
 	\end{tabular}
 
-	\caption{Meaning of the addition operator.}
+	\caption{Semantics of the addition operator.}
 	\label{table:addition-operator}
 \end{table}
 
-Logical operators also behave differently compared to e.g., Java. The logical and operator (\code{\&\&}) returns the left expression if it is so-called \emph{falsy} (values that can be converted to \code{false}, such as \code{null}, \code{0}, \code{undefined}). If the left side expression is \emph{truthy}, it returns the right side value. Thus the possible return \emph{type} of the expression can be types of both expression and not necessarily \code{Boolean}.
+Logical operators also behave differently compared to other languages, e.g., Java. The logical and operator (\code{\&\&}) returns the left expression if it is so-called \emph{falsy} (values that can be converted to \code{false}, such as \code{null}, \code{0}, \code{undefined}). If the left side expression is \emph{truthy}, it returns the right side value. Thus the possible return \emph{type} of the expression can be types of both expression and not necessarily \code{Boolean}.
 
-Apart from \code{UnaryExpression}s and \code{BinaryExpression}s, there are several more. Most importantly the \code{CallExpression}, that returns the value of the called function, thus a value with the \emph{types} the function may return. Just like in case of the CFG transformations, several rules have to be written in order to cover the various expressions of the language.
+Apart from \code{UnaryExpression}s and \code{BinaryExpression}s, there are several more. Most importantly the \code{CallExpression}, that returns the value of the called function. A value with possible \emph{types} that the function may return with. Just like in case of the CFG transformations, several rules have to be written in order to cover the various expressions of the language.
 
 Since the base of the transformation is the ASG, where the expression is parsed in the correct precedence, the transformation will also respect this order and compute the possible types of the whole expression.
 
@@ -383,7 +390,7 @@ In JavaScript one may think of a variable identifier as a label, a name, a refer
 
 When an \code{Expression} accesses the value of a \code{Variable}, a reading \code{Reference} is present in the ASG. The same goes for the \code{VariableDeclarationStatement}s and \code{ExpressionStatement}s with \code{AssignmentExpression} inside, assigning value to a variable, represented by a writing \code{Reference}.
 
-These \code{Reference}s are only present for static scope variable accesses. New transformation rules have to be created covering the cases when an \code{Object} is dynamically introduced to a scope --- e.g., passed as a parameter for a function. This is also subject to future work.
+These \code{Reference}s are only present for static scope variable accesses. New transformation rules have to be created to cover the cases when an \code{Object} is dynamically introduced to a scope --- e.g., passed as a parameter for a function. This is also subject to future work.
 
 \Cref{fig:type-propagation} shows how the type information may propagate in the graph. After the \code{Literal}s have been tagged \circled{1}, the type information propagates to the \code{Variable} \circled{2} through the \code{VariableDeclarator} and the \code{BindingIdentifierMemberExpression}. This type information is read by the \code{IdentifierExpression} \circled{3} and the final type of the \code{BinaryExpression} based on the rules of adding a number to another number will be calculated and assigned \circled{4}.
 
@@ -397,9 +404,9 @@ These \code{Reference}s are only present for static scope variable accesses. New
 \subsection{Limitations and Challenges}
 For my thesis I have only investigated whether it is possible to build the foundations of a type inferencing system on graph pattern matching and transformations. The type inferencing system in Tern (introduced in~\Cref{sect:tern}) has already shown that it is possible to do so on in-memory AST representations with visitor patterns.
 
-In order to achieve better language coverage it is subject to future work to develop a proper representation for compound and complex data structures, handle built-in functions and methods of data types. Challenges also include handling the \code{this} references in functions and class methods; anonym functions and method calls like \code{forEach}, \code{map}, or \code{filter}.
+In order to achieve better language coverage, it is subject to future work to develop an appropriate representation for compound and complex data structures, handle built-in functions and methods of data types. Challenges also include handling the \code{this} references in functions and class methods, anonymous functions, and method calls like \code{forEach}, \code{map}, or \code{filter}.
 
-With the right constraints it is possible to approximately infer the type of a given expression and help developers with context-aware information and warning for type-related problems.
+With the right constraints it is possible to approximately infer the type of a given expression and help developers with context-aware information and warnings for type-related problems.
 
 %\section{Language Limitations}
 % object as a parameter

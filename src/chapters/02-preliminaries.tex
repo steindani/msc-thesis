@@ -207,11 +207,12 @@ An ASG is a graph representation of a parse result; the nodes represent subterms
 \end{figure}
 
 \subsubsection{Type Inference}
-In order to make sure a system behaves correctly according to the specification, a broad range of \emph{formal methods} are present. Besides \emph{model checkers}, \emph{run-time monitoring}, the most popular formal methods are \emph{type systems}.~\cite{pierce2002types} \textquote[\cite{pierce2002types}]{A type system is a syntactic method for automatically checking the absence of certain erroneous behaviors by classifying program phrases according to the kinds of values they compute.}
+\label{sect:introducing-type-inference}
+In order to make sure that a system behaves correctly according to the specification, a broad range of \emph{formal methods} can be used. Besides \emph{model checkers}, \emph{run-time monitoring}, the most popular formal methods are \emph{type systems}.~\cite{pierce2002types} \textquote[\cite{pierce2002types}]{A type system is a syntactic method for automatically checking the absence of certain erroneous behaviors by classifying program phrases according to the kinds of values they compute.}
 
-Type inference refers to the deduction of the data types of expressions, statements in the source code, usually executed during compilation and static analysis. By utilizing type inference, deducing types as \emph{interfaces}, and checking contracts between various parts of the software can yield a more consistent and bug-free code.
+Type inference refers to the deduction of the data types of expressions, statements in the source code, usually executed during compilation and static analysis. By utilizing type inference, deducing types as \emph{interfaces}, and checking contracts --- e.g., preconditions for the types of arguments, postconditions for the types of return values --- between various parts of the software can yield a more consistent and bug-free code.
 
-Type systems also help developers write the source code with context-aware assistance. With implicitly typed languages the ability to infer data types can make prototyping and developing programs in a more agile fashion, compared to explicitly typed languages. Omiting the type annotations eliminates the need to propagate changes in the source code in case of a refactor, while still executing interface checks prevent type errors at runtime.
+Type systems also help developers write the source code with context-aware assistance. With implicitly typed languages the ability to infer data types can make prototyping and developing programs occur in a more agile fashion, compared to explicitly typed languages. Omitting the type annotations eliminates the need to propagate changes in the source code in case of a refactor, while still executing interface checks prevent type errors at runtime.
 
 \paragraph{Typed JavaScript Derivations} There are several languages with type systems that compile to JavaScript, such as TypeScript\footnote{\small\url{https://www.typescriptlang.org/}}, Dart\footnote{\small\url{https://www.dartlang.org/}}, Elm\footnote{\small\url{http://elm-lang.org/}}, and Flow.
 % TODO ref Flow
