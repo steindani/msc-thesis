@@ -327,7 +327,7 @@ Type inference is a particularly difficult problem, even for statically typed la
 Following the approach of one of these tools, Tern (introduced in~\Cref{sect:tern}), first I assign type information to given nodes in the ASG, then propagate this information based on constraints and rules, detailed in this section.
 
 \subsection{Type System}
-In order to represent the types in the graph, structures are introduced and stored in the same graph database. The database has a singular \code{TypeSystem} collector node, connected to every \code{Tag}, representing a type. These \code{Tag}s are attached to a given node, meaning the node can contain a value of the given type.
+In order to represent the types in the graph, structures are introduced and stored in the same graph database. The database has a singular \code{TypeSystem} collector node, connected to every \code{Tag}, representing a type. These \code{Tag}s are attached to a given ASG node, meaning the node can contain a value of the given type.
 
 \subsubsection{Literal Types}
 Since the literal expression nodes in the ASG are explicitly annotated with their type, it is the easiest to mark these nodes with a \code{Tag}: \code{Boolean}, \code{RegExp}, \code{Infinity}, \code{Numeric}, \code{Null}, and \code{String}.
@@ -372,7 +372,7 @@ There are more than 25 types in the Shift metamodel for JavaScript. Some of thes
 		String                   &         +         & String          & $\longrightarrow$ & String  & \emph{(concatenation)} \\ \bottomrule
 	\end{tabular}
 
-	\caption{Semantics of the addition operator.}
+	\caption{Semantics of the addition operator in JavaScript.}
 	\label{table:addition-operator}
 \end{table}
 

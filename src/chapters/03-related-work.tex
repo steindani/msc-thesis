@@ -61,7 +61,7 @@ Example use cases:
 jQAssistant mainly aims at processing and validating Java projects during the continuous integration process. Its approach is similiar to mine, it also uses the same database backend --- Neo4j --- for storing the source code representation. However, instead of analyzing the semantics of the source code, it concentrates on the structural details and connections within the codebase.
 
 
-\subsection{Facebook Flow}
+\section{Facebook Flow}
 Flow~\cite{flow} is an open-source static type checker for JavaScript, written in OCaml, utilizing annotation-based language extension and type inferencing. The implicit infered types can be corrected by explicit type annotations helping the framework. Exported variable, function, and class declarations have to be explicitly annotated.
 % http://flowtype.org/docs/five-simple-examples.html\#2-adding-type-annotations
 
@@ -70,14 +70,14 @@ Since Flow requires a modified language, a new compilation step is required in o
 It is also possible to provide interface files for Flow, enabling to import third party libraries.
 % http://flowtype.org/docs/existing.html
 
-Flow utilizes control flow analysis, enabling property access detection on null or undefined values. It also executes analyses in an incremental fashion, storing the intermittent results in a persistent server and updating it in the background when the source code is changed.
+Flow utilizes control flow analysis, allowing property access detection on null or undefined values. It also executes analyses in an incremental fashion, storing the intermittent results in a persistent server and updating it in the background when the source code is changed.
 % http://flowtype.org/docs/about-flow.html
 
 
-\subsection{JSNice}
-JSNice~\cite{jsnice} is a scalable prediction engine based on Nice2Predict~\cite{nice2predict}, a learning framework for program property prediction. The novel approach of JSNice utilities machine learning; first it learns a probabilistic model from existing, prepared data, then predicts properties for unseen programs based on this model. Besides predicting names of identifiers, it also predicts type annotations of variables, thus producing both syntactic and semantic information.~\cite{jsnice15}
+\section{JSNice}
+JSNice~\cite{jsnice} is a scalable prediction engine based on Nice2Predict~\cite{nice2predict}, a learning framework for program property prediction. The novel approach of JSNice utilizes machine learning; first it learns a probabilistic model from existing, prepared data, then predicts properties for unseen programs based on this model. Besides predicting names of identifiers, it also predicts type annotations of variables, thus producing both syntactic and semantic information.~\cite{jsnice15}
 
-\subsection{Infernu}
+\section{Infernu}
 Infernu~\cite{infernu} is a type checker for JavaScript, written in Haskell. \textquote[\cite{infernu}] {Infernu's type system is designed for writing dynamic-looking code in a safe statically type-checked environment. Type annotations are not required [...] instead, Infernu infers the types of expressions by examining the code. If the inferred types contradict each other, Infernu reports the contradiction as an error.
 
 Infernu places restrictions on JS programs that are otherwise valid. In other words, Infernu is a subset of JavaScript. Infernu tries to strike a balance between type system complexity and dynamic-style coding flexibility.
@@ -85,7 +85,7 @@ Infernu places restrictions on JS programs that are otherwise valid. In other wo
 Infernu's type system is based on Damas-Hindley-Milner (and Algorithm W) with added mutable variables (monomorphically constrained using value restriction), and with row type polymorphism, equi-recursive types (constrained to go through row types), rank-2 row types (for polymorphic methods), and simple type classes. Functions are uncurried.}
 
 
-\subsection{Comparison}
+\section{Comparison}
 Although several tools are available, they are not widely used. This thesis aims to find out why and whether a graph pattern matching based approach can solve the issues and act as an universal framework. \Cref{table:comparison-of-frameworks} concludes some of the common features of the previously mentioned tools.
 
 \vfill
