@@ -4,7 +4,10 @@
 
 In this chapter I enumerate the most notable similar systems and approaches, while discussing the related scientific research.
 
-\section{Tern}
+\section{Static Analysis Frameworks}
+This section briefly introduces the various static analysis approaches and available tooling for JavaScript: what they aim for, and with what kind of constraint.
+
+\subsection{Tern}
 \label{sect:tern}
 \textquote[\cite{tern}]{Tern is a stand-alone code-analysis engine for JavaScript. It is intended to be used with a code editor plugin to enhance the editor's support for intelligent JavaScript editing. Features provided are:
 
@@ -18,10 +21,10 @@ In this chapter I enumerate the most notable similar systems and approaches, whi
 
 Tern is open-source (MIT license), written in JavaScript, and capable of running both on node.js~\cite{nodejs} and in the browser.}
 
-The Tern suite is a modular, extendable stand-alone system. Editor plugins communicate with the Tern server module, connected to the Acorn parser (introduced in~\Cref{sect:acorn}) and the inference engine. Third-party plugins can introduce implementation environmental or behavioral information for the system, for example ECMAScript module loading rules, or node.js specific variables.~\cite{tern-docs}
+The Tern suite is a modular, extendable stand-alone system. Editor plugins communicate with the Tern server module, connected to the Acorn parser (introduced in~\Cref{sect:acorn}) and the inference engine. Third-party plugins can introduce implementation environmental or behavioral information for the system, for example ECMAScript module loading rules, or node.js specific variables.~\cite{tern-docs} It uses the AST structure of Acorn (detailed in \Cref{sect:acorn}), extends the in-memory representation with type information and propagates it in the graph.
 
 
-\section{TAJS}
+\subsection{TAJS}
 Type Analyzer for JavaScript (TAJS)~\cite{tajs} is a dataflow analysis tool infering type information and call graphs developed by the programming language research group at Aarhus University, with contributions from Universität Freiburg.
 
 The current version (as of 2016) can model scripts of ECMAScript 3; it also contains model of the standard library and partial model of the HTML DOM and browser API.~\cite{tajs-git} The initial aim of TAJS was to warn programmers about the following problematic cases. This enumeration follows~\cite{jensen_type_2009}.
@@ -39,7 +42,7 @@ The current version (as of 2016) can model scripts of ECMAScript 3; it also cont
 \end{itemize}
 
 
-\section{TRICORDER}
+\subsection{TRICORDER}
 TRICORDER~\cite{tricorder} is a pluggable program analysis platform used internally at Google, helping developers and reviewers notice possible problems with code changes. The system mainly supports C$++$, Go, and Java codes, but it has support for JavaScript too.
 
 Related researches show that static analysis tools are either not used or ignored, when not configured correctly and take more time from the user than necessary. \textquote[\cite{tricorder}]{High false positive rates, confusing output, and poor integration into the developers' workflow all contribute to the lack of use in everyday development activities \cite{johnson2013don, layman2007toward}.
@@ -47,7 +50,7 @@ Related researches show that static analysis tools are either not used or ignore
 TRICORDER introduces an effective place to show warnings. Given that all developers at Google use code review tools before submitting changes, TRICORDER's primary use is to provide analysis results at code review time. This has the added benefit of enabling peer accountability, where the reviewer will see if the author chose to ignore analysis results.}
 
 
-\section{jQAssistant}
+\subsection{jQAssistant}
 \textquote[\cite{jqassistant-manual}]{jQAssistant~\cite{jqassistant} is a QA tool which allows the definition and validation of project specific rules on a structural level. It is built upon the graph database Neo4j and can easily be plugged into the build process to automate detection of constraint violations and generate reports about user defined concepts and metrics.
 
 Example use cases:
@@ -61,7 +64,7 @@ Example use cases:
 jQAssistant mainly aims at processing and validating Java projects during the continuous integration process. Its approach is similiar to mine, it also uses the same database backend --- Neo4j --- for storing the source code representation. However, instead of analyzing the semantics of the source code, it concentrates on the structural details and connections within the codebase.
 
 
-\section{Facebook Flow}
+\subsection{Facebook Flow}
 Flow~\cite{flow} is an open-source static type checker for JavaScript, written in OCaml, utilizing annotation-based language extension and type inferencing. The implicit infered types can be corrected by explicit type annotations helping the framework. Exported variable, function, and class declarations have to be explicitly annotated.
 % http://flowtype.org/docs/five-simple-examples.html\#2-adding-type-annotations
 
@@ -74,18 +77,16 @@ Flow utilizes control flow analysis, allowing property access detection on null 
 % http://flowtype.org/docs/about-flow.html
 
 
-\section{JSNice}
+\subsection{JSNice}
 JSNice~\cite{jsnice} is a scalable prediction engine based on Nice2Predict~\cite{nice2predict}, a learning framework for program property prediction. The novel approach of JSNice utilizes machine learning; first it learns a probabilistic model from existing, prepared data, then predicts properties for unseen programs based on this model. Besides predicting names of identifiers, it also predicts type annotations of variables, thus producing both syntactic and semantic information.~\cite{jsnice15}
 
-\section{Infernu}
-Infernu~\cite{infernu} is a type checker for JavaScript, written in Haskell. \textquote[\cite{infernu}] {Infernu's type system is designed for writing dynamic-looking code in a safe statically type-checked environment. Type annotations are not required [...] instead, Infernu infers the types of expressions by examining the code. If the inferred types contradict each other, Infernu reports the contradiction as an error.
+\subsection{Infernu}
+Infernu~\cite{infernu} is a type checker for JavaScript, written in Haskell. \textquote[\cite{infernu}] {Infernu's type system is designed for writing dynamic-looking code in a safe statically type-checked environment. Type annotations are not required [...] instead, Infernu infers the types of expressions by examining the code. If the inferred types contradict each other, Infernu reports the contradiction as an error.}
 
-Infernu places restrictions on JS programs that are otherwise valid. In other words, Infernu is a subset of JavaScript. Infernu tries to strike a balance between type system complexity and dynamic-style coding flexibility.
-
-Infernu's type system is based on Damas-Hindley-Milner (and Algorithm W) with added mutable variables (monomorphically constrained using value restriction), and with row type polymorphism, equi-recursive types (constrained to go through row types), rank-2 row types (for polymorphic methods), and simple type classes. Functions are uncurried.}
+Its type system is based on Damas-Hindley-Milner type system, and it places restriction on the elements and expressions that can be expressed, thus the grammar of Infernu is a subset of JavaScript's.
 
 
-\section{Comparison}
+\subsection{Comparison}
 Although several tools are available, they are not widely used. This thesis aims to find out why and whether a graph pattern matching based approach can solve the issues and act as an universal framework. \Cref{table:comparison-of-frameworks} concludes some of the common features of the previously mentioned tools.
 
 \vfill
@@ -99,6 +100,8 @@ Although several tools are available, they are not widely used. This thesis aims
 		                             & \textbf{Flow} & \textbf{jQA} & \textbf{Tern} & \textbf{TAJS} & \textbf{TRICORDER} & \textbf{My approach} \\ \midrule
 		\textbf{Open-source}         &     \yes      &   \yes       &     \yes      &     \yes      &        \no         &         \yes         \\
 		\textbf{Linting}             &     \yes      &   \somewhat  &     \somewhat &     \no       &        \yes        &         \yes         \\
+		\textbf{Multiple files}      &     \yes      &   \yes       &     \yes      &     \no       &        \yes        &         \yes         \\
+		% Global patterns?
 		\textbf{Dead code detection} &     \no       &   \somewhat  &     \no       &     \no       &        \somewhat   &         \yes         \\
 		\textbf{Type inferencing}    &     \yes      &   \somewhat  &     \yes      &     \yes      &        \somewhat   &         \somewhat    \\
 		\textbf{Languages}           &      JS*      &   Java       &      JS       &      ESX      &     JS, Go, Py     &          JS          \\ \bottomrule
