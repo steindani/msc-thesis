@@ -112,6 +112,22 @@ It is also unexpected to have the top two clusters show no correlation with the 
 
 The results are based on one-time, file-by-file import and transformation of the source code repository, containing 780 files. Since the CFG transformation in the framework is far from finished, deeper examination of the results is subject to future work.
 
+\subsection{Incremental Processing}
+Since the framework processes the changes file-by-file, it is possible to execute the analysis in an incremental fashion with file-level granularity. After every file has been processed and a new changeset is present, it is only required to update and process the modified file and the affected graph parts.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{CI-iteration-benchmark.pdf}
+  \caption{Runtime measurements of the execution of the analysis for sequential modifications.}
+  \label{fig:CI-iteration-benchmark}
+\end{figure}
+
+\Cref{fig:CI-iteration-benchmark} details the execution times for each step during the initial and the subsequent change propagations. These all consist of the same steps: 1)~the source code is parsed, then 2)~scope analysis is applied, and 3)~the resulting ASG is stored in the graph database, finally 4)~the inserted subgraph is linked to the already stored nodes, imitating the JavaScipt module import-export resolution.
+
+The initial import was executed first. After all 780 files have been processed one-by-one, the import-export linking was executed once. Subsequent modifications was simulated by removing and reprocessing a file with one of the most \code{import} statements (thus resulting in more work for the linking transformation). After each \emph{modification} the linking transformation was applied.
+
+It is visible that the incremental approach for the complete process is faster by three orders of magnitude. The linking step itself is faster by one order of magnitude for linking only one file to the others. (Please note that along with the previous figures, \Cref{fig:CI-iteration-benchmark} is logarithmically scaled on the vertical axis.)
+
 
 \section{IDE Integration}
 \label{sect:ide-integration}
