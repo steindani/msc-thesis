@@ -1,4 +1,4 @@
-[PDF output](https://github.com/steindani/msc-thesis/raw/master/StD-TDK-2016.pdf)
+[PDF output](https://github.com/steindani/msc-thesis/raw/master/StD-thesis-2016.pdf)
 
 # Graph-Based Source Code Analysis of JavaScript Repositories
 This is the repository of my Master's thesis work at the Budapest University of Technology and Economics, titled _Graph-Based Source Code Analysis of JavaScript Repositories_ and the Scientific Students' Association Report titled _Graph-Based Source Code Analysis of Dynamically Typed Languages_.
