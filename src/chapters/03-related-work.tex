@@ -5,7 +5,7 @@
 In this chapter I enumerate the most notable similar systems and approaches, while discussing the related scientific research.
 
 \section{Static Analysis Frameworks}
-This section briefly introduces the various static analysis approaches and available tooling for JavaScript: what they aim for, and with what kind of constraint.
+This section briefly introduces the various static analysis approaches and available tooling for JavaScript: what they aim for, and with what kind of limitations.
 
 \subsection{Tern}
 \label{sect:tern}
@@ -98,14 +98,14 @@ Although several tools are available, they are not widely used. This thesis aims
 	\centering
 	\begin{tabular}{l|ccccc|c}
 		\toprule
-		                             & \textbf{Flow} & \textbf{jQA} & \textbf{Tern} & \textbf{TAJS} & \textbf{TRICORDER} & \textbf{My approach} \\ \midrule
-		\textbf{Open-source}         &     \yes      &   \yes       &     \yes      &     \yes      &        \no         &         \yes         \\
-		\textbf{Linting}             &     \yes      &   \somewhat  &     \somewhat &     \no       &        \yes        &         \yes         \\
-		\textbf{Multiple files}      &     \yes      &   \yes       &     \yes      &     \no       &        \yes        &         \yes         \\
+		                                & \textbf{Flow} & \textbf{jQA} & \textbf{Tern} & \textbf{TAJS} & \textbf{TRICORDER} & \textbf{My approach} \\ \midrule
+		\textbf{Open-source}            &     \yes      &   \yes       &     \yes      &     \yes      &        \no         &         \yes         \\
+		\textbf{Linting}                &     \yes      &   \somewhat  &     \somewhat &     \no       &        \yes        &         \yes         \\
+		\textbf{Handles multiple files} &     \yes      &   \yes       &     \yes      &     \no       &        \yes        &         \yes         \\
 		% Global patterns?
-		\textbf{Dead code detection} &     \no       &   \somewhat  &     \no       &     \no       &        \somewhat   &         \yes         \\
-		\textbf{Type inferencing}    &     \yes      &   \somewhat  &     \yes      &     \yes      &        \somewhat   &         \somewhat    \\
-		\textbf{Languages}           &      JS*      &   Java       &      JS       &      ESX      &     JS, Go, Py     &          JS          \\ \bottomrule
+		\textbf{Dead code detection}    &     \no       &   \somewhat  &     \no       &     \no       &        \somewhat   &         \yes         \\
+		\textbf{Type inferencing}       &     \yes      &   \somewhat  &     \yes      &     \yes      &        \somewhat   &         \somewhat    \\
+		\textbf{Languages}              &      JS*      &   Java       &      JS       &      ESX      &     JS, Go, Py     &          JS          \\ \bottomrule
 	\end{tabular}
 
 	\caption{Comparison of static analysis frameworks.}

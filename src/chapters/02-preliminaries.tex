@@ -269,14 +269,14 @@ The challenge of big data problems shed light on that the existing disk-based sy
 
 The locality of data allows the usage of rich algorithm libraries and the choice of the adequate graph representation with respective space-time trade-off. The constraint of space allows large graphs (with millions of edges) to be stored and processed, but this may not be sufficient in all cases.
 
-Example in-memory graph toolkits: \emph{Apache Giraph}\footnote{\small\url{http://giraph.apache.org}}, \emph{Microsoft Graph Engine}\footnote{\small\url{https://www.graphengine.io}} (formerly \emph{Trinity}), \emph{Apache Spark GraphX}\footnote{\small\url{http://spark.apache.org/graphx/}}, \emph{WhiteDB}\footnote{\small\url{http://whitedb.org}}.
+Example in-memory graph toolkits: \emph{Apache Giraph}\footnote{\small\url{http://giraph.apache.org}}, \emph{Microsoft Graph Engine}\footnote{\small\url{https://www.graphengine.io}} (formerly \emph{Trinity}), \emph{Apache Spark GraphX}\footnote{\small\url{https://spark.apache.org/graphx/}}, \emph{WhiteDB}\footnote{\small\url{http://whitedb.org}}.
 
 \paragraph{Persistent, Real-Time Graph Databases}
 Persistent graph databases are the prevalent group of graph computing technologies. Unlike in-memory graph tools, graph databases persist data on hard drives, thus are able to store billions of edges on a single machine and distributed systems can handle hundreds of billions of edges. These databases can provide multi-user concurrency, transactional semantics and eventual consistency.
 
 Since global graph algorithms are not feasible, these systems are optimized for local neighborhood analysis and concurrent access. Global graph analytics are inefficient due to the communication overhead and the computational overhead, e.g., ensuring ACID transactional semantics.
 
-Example for persistent, real-time graph databases: \emph{InfiniteGraph}\footnote{\small\url{http://www.objectivity.com/products/infinitegraph/}}, \emph{Neo4j} (see \cref{sect:neo4j}), \emph{OrientDB}\footnote{\small\url{http://orientdb.com}}, and \emph{Titan}~\cite{titan}.
+Example for persistent, real-time graph databases: \emph{InfiniteGraph}\footnote{\small\url{http://www.objectivity.com/products/infinitegraph/}}, \emph{Neo4j} (see \cref{sect:neo4j}), \emph{OrientDB}\footnote{\small\url{https://orientdb.com}}, and \emph{Titan}\footnote{\small\url{http://titan.thinkaurelius.com}}.
 
 \paragraph{Batch-Processing Graph Frameworks}
 In case there is no real-time requirement for an analysis that accesses the whole dataset, batch-processing graph frameworks can be used for global analytics. Since there is also no requirement for quick response time, the applied algorithm can even scan data multiple times and leverage sequential reads from the disk. These systems can be used to periodically process data and feed back the results into real-time graph databases. Most of these frameworks utilize Hadoop for storage (HDFS) and processing algorithms implemented using the MapReduce paradigm.

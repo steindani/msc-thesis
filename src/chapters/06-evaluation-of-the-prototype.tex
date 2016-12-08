@@ -63,7 +63,7 @@ After the database has been initialized, it can receive content. This transforma
 
 \Cref{fig:import-steps} shows the characteristics of these three steps. Since even the longest source codes can be written in one line, instead of the source lines of code I have chosen the number of nodes in the transformed subgraph (model size) as the horizontal axis. The vertical axis represents the time (in milliseconds) required to perform the given transformation step. Note that both axes are logarithmic.
 
-In order to present an accurate and wide-range measurement, I have selected the repository of the Tresorit web client~\cite{tresorit-webclient}. The current version of this repository contains 780 JavaScript files, with 75\,907 lines of actual code in total. This results in 8\,437\,838 graph nodes.
+In order to present an accurate and wide-range measurement, I have selected the repository of the Tresorit\footnote{Tresorit is a secure online cloud storage service with syncing and sharing features.} web client~\cite{tresorit-webclient}. The current version of this repository contains 780 JavaScript files, with 75\,907 lines of actual code in total. This results in 8\,437\,838 graph nodes.
 
 Since the source code contains language elements not yet standardized, I translated the source code to conform ES5 before it is parsed by the Shift parser. This step is not calculated in the benchmark. The resulting files are then imported into the database one-by-one, sequentially, thus the parallel optimizations are not present in this measurement.
 
