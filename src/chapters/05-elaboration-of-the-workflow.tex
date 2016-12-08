@@ -330,7 +330,7 @@ Following the approach of one of these tools, Tern (introduced in~\Cref{sect:ter
 In order to represent the types in the graph, structures are introduced and stored in the same graph database. The database has a singular \code{TypeSystem} collector node, connected to every \code{Tag}, representing a type. These \code{Tag}s are attached to a given ASG node, meaning the node can contain a value of the given type.
 
 \subsubsection{Literal Types}
-Since the literal expression nodes in the ASG are explicitly annotated with their type, it is the easiest to mark these nodes with a \code{Tag}: \code{Boolean}, \code{RegExp}, \code{Infinity}, \code{Numeric}, \code{Null}, and \code{String}.
+Since the literal expression nodes in the ASG are explicitly annotated with their type, it is the easy to mark these with a \code{Tag}: \code{Boolean}, \code{RegExp}, \code{Infinity}, \code{Numeric}, \code{Null}, and \code{String}.
 
 \subsubsection{Classes}
 Handling classes and composite structures requires new \code{Tag}s to be introduced to the type system. The \code{Tag}s should contain information about properties and methods, along with their possible types. The topic of developing the proper representation and transformations collecting and maintaining these structures is subject to future work.
@@ -355,7 +355,7 @@ The basic algorithm for propagating type information is the following:
 \end{enumerate}
 
 \subsubsection{Expressions}
-There are more than 25 types in the Shift metamodel for JavaScript. Some of these have discriminator values, that may result in different \emph{meaning} for different input types. \code{BinaryExpression}s have an \code{Expression} on their left and rigth side each with their type information, and the operator gives \emph{meaning} (semantics) to what the resulting value can be.
+There are 28 expression types in the Shift metamodel for JavaScript. Some of these have discriminator values, that may result in different \emph{meaning} for different input types. \code{BinaryExpression}s have an \code{Expression} on their left and rigth side each with their type information, and the operator gives \emph{meaning} (semantics) to what the resulting value can be.
 
 \Cref{table:addition-operator} shows the various semantics of a simple addition (a \code{BinaryExpression} with a \code{+} sign as a discriminating \code{BinaryOperator}).~\cite{js-arithmetic-operators}
 

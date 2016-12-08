@@ -187,7 +187,7 @@ As mentioned in~\cref{sect:source-code-processing}, source code contains much mo
 ]{include/sources/oneliner.js}
 
 \subsubsection{Scope Analyzer}
-A \emph{scope analyzer} or \emph{context analyzer} produces a data structure that represents the scoping information of a program, extending the information available from an AST or an ASG. An element representing a scope in this data structure may contain, inter alia, metadata about the scope itself, the AST node related to the scope, available assets (variables, functions, etc.) in that scope.~\cite{shift-scope}
+A \emph{scope analyzer} or \emph{context analyzer} produces a data structure representing the scoping information of a program, extending the information in the AST or ASG. An element representing a scope in this data structure may contain, inter alia, metadata about the scope itself, the AST node related to the scope, available assets (variables, functions, etc.) in that scope.~\cite{shift-scope}
 
 \paragraph{Abstract Semantic Graph}
 An \emph{Abstract Semantic Graph} (ASG) differs from an Abstract Syntax Tree in two essential concepts: ASGs 1)~are not necessarily trees, and 2)~express more than the syntactic information; ASGs carry semantic information expressed with additional edges. An example of this type of edge connects variable references to their declarations.~\cite{raghavan_dex:_2004}
@@ -214,7 +214,7 @@ Type inference refers to the deduction of the data types of expressions, stateme
 
 Type systems also help developers write the source code with context-aware assistance. With implicitly typed languages the ability to infer data types can make prototyping and developing programs occur in a more agile fashion, compared to explicitly typed languages. Omitting the type annotations eliminates the need to propagate changes in the source code in case of a refactor, while still executing interface checks prevent type errors at runtime.
 
-\paragraph{Typed JavaScript Derivations} There are several languages with type systems that compile to JavaScript, such as TypeScript\footnote{\small\url{https://www.typescriptlang.org/}}, Dart\footnote{\small\url{https://www.dartlang.org/}}, Elm\footnote{\small\url{http://elm-lang.org/}}, and Flow.
+\paragraph{Typed JavaScript Derivations} There are several languages with type systems that compile to JavaScript, such as TypeScript\footnote{\small\url{https://www.typescriptlang.org/}}, Dart\footnote{\small\url{https://www.dartlang.org/}}, Elm\footnote{\small\url{http://elm-lang.org/}}, and Flow (see \Cref{sect:flow}).
 % TODO ref Flow
 
 %\subsubsection{Tooling}

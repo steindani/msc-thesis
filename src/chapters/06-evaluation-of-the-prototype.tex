@@ -124,9 +124,11 @@ Since the framework processes the changes file-by-file, it is possible to execut
 
 \Cref{fig:CI-iteration-benchmark} details the execution times for each step during the initial and the subsequent change propagations. These all consist of the same steps: 1)~the source code is parsed, then 2)~scope analysis is applied, and 3)~the resulting ASG is stored in the graph database, finally 4)~the inserted subgraph is linked to the already stored nodes, imitating the JavaScipt module import-export resolution.
 
-The initial import was executed first. After all 780 files have been processed one-by-one, the import-export linking was executed once. Subsequent modifications was simulated by removing and reprocessing a file with one of the most \code{import} statements (thus resulting in more work for the linking transformation). After each \emph{modification} the linking transformation was applied.
+The initial import was executed first, represented by the first set of bars on \Cref{fig:CI-iteration-benchmark}. After all 780 files have been processed one-by-one, the import-export linking was executed once. Subsequent modifications were simulated by removing and reprocessing a file with one of the most \code{import} statements (thus resulting in more work for the linking transformation). The linking transformation was applied after every modification.
 
-It is visible that the incremental approach for the complete process is faster by three orders of magnitude. The linking step itself is faster by one order of magnitude for linking only one file to the others. (Please note that along with the previous figures, \Cref{fig:CI-iteration-benchmark} is logarithmically scaled on the vertical axis.)
+Since the processing time of the parsing and scope analysis steps are negligible in every iteration. The most time-consuming operation is storing the graph in the database, which closely relates to the size of the graph to be stored. Thus reducing this resulted in visible difference. The incremental approach for the complete process is faster by three orders of magnitude. By reusing the already stored and linked ASG subgraphs, the incremental linking step itself is faster by one order of magnitude.
+
+Please note that along with the previous figures, \Cref{fig:CI-iteration-benchmark} is logarithmically scaled on the vertical axis.
 
 
 \section{IDE Integration}
